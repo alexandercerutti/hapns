@@ -1,0 +1,16 @@
+{
+	"name": "hapns",
+	"version": "0.0.1",
+	"description": "Handle APNs notifications delivery without hussle",
+	"main": "lib/index.js",
+	"scripts": {
+		"build": "pnpm tsc"
+	},
+	"keywords": [],
+	"author": "Alexander P. Cerutti <cerutti.alexander@gmail.com>",
+	"devDependencies": {
+		"@types/node": "^22.15.17",
+		"prettier": "^3.5.3",
+		"typescript": "^5.8.3"
+	}
+}
