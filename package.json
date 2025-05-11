@@ -16,6 +16,8 @@
 	"exports": {
 		".": "./lib/index.js",
 		"./notifications/*": "./lib/notifications/*.js",
-		"./connectors/*": "./lib/connectors/*.js"
+		"./connectors/*": "./lib/connectors/*.js",
+		"./send": "./lib/send.js",
+		"./targets/*": "./lib/targets/*.js"
 	}
 }
