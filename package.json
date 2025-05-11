@@ -15,6 +15,7 @@
 	},
 	"exports": {
 		".": "./lib/index.js",
-		"./notifications/*": "./lib/notifications/*.js"
+		"./notifications/*": "./lib/notifications/*.js",
+		"./connectors/*": "./lib/connectors/*.js"
 	}
 }
