@@ -143,7 +143,7 @@ export interface AlertNotificationBody {
 	 * This value corresponds to the [threadIdentifier](https://developer.apple.com/documentation/usernotifications/unmutablenotificationcontent/threadidentifier)
 	 * property in the [UNNotificationContent](https://developer.apple.com/documentation/usernotifications/unnotificationcontent) object.
 	 */
-	threadIdentifier?: string;
+	threadId?: string;
 
 	/**
 	 * The notification’s type. This string must correspond to the
