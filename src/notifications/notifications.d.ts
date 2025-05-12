@@ -1,8 +1,34 @@
-/**
- * @TODO determine the shared protocol for a notification
- */
+type APNPushType =
+	| "alert"
+	| "background"
+	| "controls"
+	| "fileprovider"
+	| "liveactivity"
+	| "location"
+	| "mdm"
+	| "complication"
+	| "voip"
+	| "pushtotalk";
 
-export interface Notification {}
+type ToDashedKey<T extends string> = T extends `${infer FirstLetter}${infer Rest}`
+	? Rest extends `${Uppercase<string>}${string}`
+		? `${Lowercase<FirstLetter>}-${Lowercase<ToDashedKey<Rest>>}`
+		: `${Lowercase<FirstLetter>}${ToDashedKey<Rest>}`
+	: Lowercase<T>;
+
+type ToDashed<T extends object> = {
+	[K in keyof T as K extends string ? ToDashedKey<K> : K]: T[K];
+};
+
+type APNNotificationBody<APSBody extends object, UserData extends object> = {
+	aps: ToDashed<APSBody>;
+} & UserData;
+
+export interface Notification<Body extends object, UserData extends object> {
+	readonly pushType: APNPushType;
+	readonly topic: string;
+	get body(): APNNotificationBody<Body, UserData>;
+}
 
 export type Sound =
 	| string
