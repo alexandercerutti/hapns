@@ -111,6 +111,8 @@ type Alert =
 			AlertBody &
 			AlertSubtitle);
 
+type InterruptionLevel = "passive" | "active" | "time-sensitive" | "critical";
+
 export interface AlertNotificationBody {
 	/**
 	 * The information for displaying an alert. A dictionary
@@ -173,7 +175,7 @@ export interface AlertNotificationBody {
 	 * values `“passive”`, `“active”`, `“time-sensitive”`, or `“critical”`
 	 * correspond to the [UNNotificationInterruptionLevel](https://developer.apple.com/documentation/usernotifications/unnotificationinterruptionlevel) enumeration cases.
 	 */
-	interruptionLevel?: "passive" | "active" | "time-sensitive" | "critical";
+	interruptionLevel?: InterruptionLevel;
 
 	/**
 	 * The relevance score, a number between 0 and 1, that the system
