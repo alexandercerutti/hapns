@@ -1,5 +1,5 @@
 import type { NotificationDetails } from "./notification";
-import type { Sound } from "./notifications.d.ts";
+import type { Notification, Sound } from "./notifications.d.ts";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -180,7 +180,7 @@ export interface AlertNotificationBody {
 	/**
 	 * The relevance score, a number between 0 and 1, that the system
 	 * uses to sort the notifications from your app. The highest score
-	 * gets featured in the notification summary. See relevanceScore.
+	 * gets featured in the notification summary. See [relevanceScore](https://developer.apple.com/documentation/usernotifications/unnotificationcontent/relevancescore).
 	 *
 	 * If your remote notification updates a Live Activity, you can set
 	 * any Double value; for example, 25, 50, 75, or 100.
@@ -199,4 +199,76 @@ export interface AlertNotificationBody {
 export function AlertNotification(
 	topic: string,
 	data: NotificationDetails<AlertNotificationBody, NotificationCustomData>,
-): void {}
+): Notification<AlertNotificationBody, NotificationCustomData> {
+	const { interruptionLevel, relevanceScore } = data.payload;
+
+	if (interruptionLevel && !isInterruptionLevelStandard(interruptionLevel)) {
+		throw new Error(
+			"Invalid interruption level: must be one of: 'passive', 'active', 'time-sensitive' or 'critical'. Received: " +
+				interruptionLevel,
+		);
+	}
+
+	if (relevanceScore && (relevanceScore < 0 || relevanceScore > 1)) {
+		throw new Error(
+			"Invalid relevance score: must be between 0 and 1. Received: " + relevanceScore,
+		);
+	}
+
+	if (typeof data.payload !== "object") {
+		throw new Error("Cannot build notification: payload must be an object");
+	}
+
+	if (data.userData && typeof data.userData !== "object") {
+		throw new Error("User data must be an object");
+	}
+
+	return {
+		pushType: "alert",
+		topic,
+		get body() {
+			const { payload, userData } = data;
+
+			const {
+				alert,
+				badge,
+				sound,
+				threadId,
+				category,
+				mutableContent,
+				filterCriteria,
+				interruptionLevel,
+				relevanceScore,
+				targetContentId,
+			} = payload;
+
+			return Object.create(userData || {}, {
+				aps: {
+					value: {
+						alert,
+						badge: badge ? Math.max(0, badge) : undefined,
+						sound,
+						category,
+						"thread-id": threadId,
+						"mutable-content": mutableContent,
+						"target-content-id": targetContentId,
+						"interruption-level": interruptionLevel,
+						"relevance-score": relevanceScore,
+						"filter-criteria": filterCriteria,
+					} satisfies Notification<AlertNotificationBody, NotificationCustomData>["body"]["aps"],
+					enumerable: true,
+					writable: false,
+					configurable: false,
+				},
+			});
+		},
+	} satisfies Notification<AlertNotificationBody, NotificationCustomData>;
+}
+
+function isInterruptionLevelStandard(
+	interruptionLevel: unknown,
+): interruptionLevel is InterruptionLevel {
+	return ["passive", "active", "time-sensitive", "critical"].includes(
+		interruptionLevel as InterruptionLevel,
+	);
+}
