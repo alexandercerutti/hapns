@@ -1,3 +1,5 @@
+import type { ConnectorProtocol } from "./connectors.d.ts";
+
 export interface TokenConnectorData {
 	/**
 	 * PKCS 8 file path to be read and used as the private key.
@@ -22,4 +24,8 @@ export interface TokenConnectorData {
  * @param details
  */
 
-export function TokenConnector(details: TokenConnectorData): void {}
+export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
+	return {
+		async send(notification, target) {},
+	};
+}

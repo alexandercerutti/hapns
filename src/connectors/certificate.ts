@@ -1,3 +1,5 @@
+import type { ConnectorProtocol } from "./connectors.d.ts";
+
 export interface CertificateConnectorData {
 	/**
 	 * Certificate file path to be read sent when
@@ -18,4 +20,8 @@ export interface CertificateConnectorData {
  * @param details
  */
 
-export function CertificateConnector(details: CertificateConnectorData): void {}
+export function CertificateConnector(details: CertificateConnectorData): ConnectorProtocol {
+	return {
+		async send(notification, target) {},
+	};
+}
