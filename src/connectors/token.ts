@@ -17,6 +17,11 @@ export interface TokenConnectorData {
 	teamIdentifier: string;
 }
 
+interface TokenMemory {
+	token: string;
+	creationTimestamp: number;
+}
+
 /**
  * Helps establishing a token based connection to APNs.
  * @see https://developer.apple.com/documentation/usernotifications/establishing-a-token-based-connection-to-apns
@@ -25,6 +30,11 @@ export interface TokenConnectorData {
  */
 
 export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
+	const tokenMemory: TokenMemory = {
+		token: "",
+		creationTimestamp: 0,
+	};
+
 	return {
 		async send(notification, target) {},
 	};
