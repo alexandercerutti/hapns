@@ -19,5 +19,8 @@
 		"./connectors/*": "./lib/connectors/*.js",
 		"./send": "./lib/send.js",
 		"./targets/*": "./lib/targets/*.js"
+	},
+	"dependencies": {
+		"fast-jwt": "^6.0.1"
 	}
 }
