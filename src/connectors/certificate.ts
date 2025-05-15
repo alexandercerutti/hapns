@@ -22,6 +22,6 @@ export interface CertificateConnectorData {
 
 export function CertificateConnector(details: CertificateConnectorData): ConnectorProtocol {
 	return {
-		async send(notification, target) {},
+		async send(payload) {},
 	};
 }

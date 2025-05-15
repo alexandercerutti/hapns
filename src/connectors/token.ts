@@ -52,7 +52,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 	let tokenMemory: TokenMemory | undefined = undefined;
 
 	return {
-		async send(notification, target) {
+		async send(payload) {
 			if (!tokenMemory || isTokenExpired(tokenMemory)) {
 				tokenMemory = createToken(details);
 			}
