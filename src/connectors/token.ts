@@ -22,6 +22,14 @@ export interface TokenConnectorData {
 	 * The team ID of the Apple Developer Account.
 	 */
 	teamIdentifier: string;
+
+	/**
+	 * Set to true to use the development APNs server.
+	 * Otherwise, the production server is used.
+	 *
+	 * @default false
+	 */
+	useSandbox?: boolean;
 }
 
 interface TokenMemory {
