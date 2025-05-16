@@ -1,8 +1,7 @@
 interface APNsHeaders {
-	authorization: string;
 	"apns-request-id"?: string;
-	"apns-expiration": number;
-	"apns-priority": number;
+	"apns-expiration": string;
+	"apns-priority": string;
 	"apns-push-type": string;
 
 	/**
@@ -19,11 +18,13 @@ interface APNsHeaders {
 }
 
 interface ConnectorSendPayload {
-	url: string;
+	requestPath: string;
 	headers: APNsHeaders;
 	body: Record<string, unknown>;
 }
 
 export interface ConnectorProtocol {
-	send(payload: ConnectorSendPayload): Promise<void>;
+	send(
+		payload: ConnectorSendPayload,
+	): Promise<{ apnsId: string; apnsUniqueId?: string | undefined }>;
 }

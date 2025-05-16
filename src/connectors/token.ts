@@ -1,5 +1,7 @@
 import { createSigner } from "fast-jwt";
-import type { ConnectorProtocol } from "./connectors.d.ts";
+import type { APNsHeaders, ConnectorProtocol } from "./connectors.d.ts";
+import { Pool } from "undici";
+import { getApnsErrorByReasonString } from "./apns-errors/index.js";
 
 /**
  * 2 minutes earlier. This should let us avoid
@@ -59,13 +61,79 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 	let tokenMemory: TokenMemory | undefined = undefined;
 
+	const apnBaseUrl = details.useSandbox
+		? "https://api.sandbox.push.apple.com"
+		: "https://api.push.apple.com";
+
+	const pool = new Pool(apnBaseUrl, {
+		allowH2: true,
+		/**
+		 * @TODO evaluate if we should increase the number of connections
+		 * to the APNs server. Might be interesting or useful if user is
+		 * sending a lot of notifications at once.
+		 */
+		pipelining: 1,
+	});
+
 	return {
 		async send(payload) {
+			if (!payload.headers || typeof payload.headers !== "object") {
+				throw new Error("Payload headers are missing or are not an object.");
+			}
+
+			if (!payload.body || typeof payload.body !== "object") {
+				throw new Error("Payload body is missing or is not an object.");
+			}
+
 			if (!tokenMemory || isTokenExpired(tokenMemory)) {
 				tokenMemory = createToken(details);
 			}
 
 			const { token } = tokenMemory;
+
+			const headers: Partial<APNsHeaders> & { authorization: string } = {
+				...payload.headers,
+				authorization: `Bearer ${token}`,
+			};
+
+			const body = JSON.stringify(payload.body);
+
+			const response = await pool.request({
+				method: "POST",
+				path: payload.requestPath,
+				headers,
+				body,
+			});
+
+			const {
+				"apns-id": apnsId,
+				// Only for broadcast
+				"apns-request-id": apnsRequestId,
+				"apns-unique-id": apnsUniqueId,
+			} = response.headers as Record<string, string>;
+
+			if (response.statusCode === 200) {
+				return {
+					apnsId: apnsId || apnsRequestId,
+					apnsUniqueId,
+				};
+			}
+
+			const { reason } = (await response.body.json()) as { reason: string; timestamp?: number };
+
+			const ApnsErrorForReason = getApnsErrorByReasonString(reason);
+
+			throw new ApnsErrorForReason(apnsId || apnsRequestId || "");
+
+			/**
+			 * apns-channel-id -> Required Broadcast, non-existing rest
+			 * apns-expiration -> Required Broadcast, optional rest
+			 * apns-priority -> Required Broadcast, optional rest
+			 * apns-push-type -> Required Broadcast,
+			 * apns-collapse-id -> Non existing broadcast, optional rest
+			 * apns-topic -> non existing broadcast, required rest
+			 * apns-request-id -> non existing broadcast, required rest
+			 */
 
 			/**
 			 * @TODO implement sending the notification
