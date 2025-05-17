@@ -23,8 +23,11 @@ interface ConnectorSendPayload {
 	body: Record<string, unknown>;
 }
 
+interface DeliveryResult {
+	apnsId: string;
+	apnsUniqueId?: string | undefined;
+}
+
 export interface ConnectorProtocol {
-	send(
-		payload: ConnectorSendPayload,
-	): Promise<{ apnsId: string; apnsUniqueId?: string | undefined }>;
+	send(payload: ConnectorSendPayload): Promise<DeliveryResult>;
 }
