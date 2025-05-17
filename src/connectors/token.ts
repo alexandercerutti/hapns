@@ -124,20 +124,6 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 			const ApnsErrorForReason = getApnsErrorByReasonString(reason);
 
 			throw new ApnsErrorForReason(apnsId || apnsRequestId || "");
-
-			/**
-			 * apns-channel-id -> Required Broadcast, non-existing rest
-			 * apns-expiration -> Required Broadcast, optional rest
-			 * apns-priority -> Required Broadcast, optional rest
-			 * apns-push-type -> Required Broadcast,
-			 * apns-collapse-id -> Non existing broadcast, optional rest
-			 * apns-topic -> non existing broadcast, required rest
-			 * apns-request-id -> non existing broadcast, required rest
-			 */
-
-			/**
-			 * @TODO implement sending the notification
-			 */
 		},
 	};
 }
