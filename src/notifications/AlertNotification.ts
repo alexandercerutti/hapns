@@ -1,5 +1,4 @@
-import type { NotificationDetails } from "./notification";
-import type { Notification, Sound } from "./notifications.d.ts";
+import type { NotificationDetails, Notification, Sound } from "./notifications.d.ts";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -200,7 +199,8 @@ export function AlertNotification(
 	topic: string,
 	data: NotificationDetails<AlertNotificationBody, NotificationCustomData>,
 ): Notification<AlertNotificationBody, NotificationCustomData> {
-	const { interruptionLevel, relevanceScore } = data.payload;
+	const { payload, expiration, appData, collapseID, priority } = data;
+	const { interruptionLevel, relevanceScore } = payload;
 
 	if (interruptionLevel && !isInterruptionLevelStandard(interruptionLevel)) {
 		throw new Error(
@@ -215,19 +215,22 @@ export function AlertNotification(
 		);
 	}
 
-	if (typeof data.payload !== "object") {
+	if (typeof payload !== "object") {
 		throw new Error("Cannot build notification: payload must be an object");
 	}
 
-	if (data.userData && typeof data.userData !== "object") {
+	if (appData && typeof appData !== "object") {
 		throw new Error("User data must be an object");
 	}
 
 	return {
 		pushType: "alert",
 		topic,
+		expiration: expiration ?? 0,
+		collapseID: collapseID ?? undefined,
+		priority: priority ?? 10,
 		get body() {
-			const { payload, userData } = data;
+			const { payload, appData } = data;
 
 			const {
 				alert,
@@ -242,7 +245,7 @@ export function AlertNotification(
 				targetContentId,
 			} = payload;
 
-			return Object.create(userData || {}, {
+			return Object.create(appData || {}, {
 				aps: {
 					value: {
 						alert,

@@ -24,7 +24,19 @@ type APNNotificationBody<APSBody extends object, UserData extends object> = {
 	aps: ToDashed<APSBody>;
 } & UserData;
 
-export interface Notification<Body extends object, UserData extends object> {
+export interface NotificationDetails<
+	Payload extends object = Record<string, string>,
+	AppData extends object = Record<string, string>,
+> {
+	expiration?: number;
+	collapseID?: string;
+	priority?: 1 | 5 | 10;
+	payload: Payload;
+	appData?: AppData;
+}
+
+export interface Notification<Body extends object, UserData extends object>
+	extends Omit<NotificationDetails, "payload" | "appData"> {
 	readonly pushType: APNPushType;
 	readonly topic: string;
 	get body(): APNNotificationBody<Body, UserData>;
