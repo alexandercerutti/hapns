@@ -25,28 +25,26 @@ export async function send(
 		throw new Error("Target is missing or is not a valid target.");
 	}
 
-	return target.prepareForDelivery().then(async (payload) => {
-		const headers: APNsHeaders = {
-			"apns-expiration": String(notification.expiration || 0),
-			"apns-priority": String(notification.priority || 1),
-			"apns-topic": notification.topic,
-			"apns-push-type": notification.pushType,
-			"apns-collapse-id": notification.collapseID,
-			"apns-channel-id": undefined,
-			...(payload.headers || {}),
-		};
+	const headers: APNsHeaders = {
+		"apns-expiration": String(notification.expiration || 0),
+		"apns-priority": String(notification.priority || 1),
+		"apns-topic": notification.topic,
+		"apns-push-type": notification.pushType,
+		"apns-collapse-id": notification.collapseID,
+		"apns-channel-id": undefined,
+		...(target.headers || {}),
+	};
 
-		const body = {
-			...notification.body,
-			...(payload.body || {}),
-		};
+	const body = {
+		...notification.body,
+		...(target.body || {}),
+	};
 
-		const deliveryResult = await connector.send({
-			requestPath: payload.requestPath,
-			headers,
-			body,
-		});
-
-		return deliveryResult;
+	const deliveryResult = await connector.send({
+		requestPath: target.requestPath,
+		headers,
+		body,
 	});
+
+	return deliveryResult;
 }

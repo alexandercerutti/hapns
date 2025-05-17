@@ -1,4 +1,4 @@
-import type { NotificationTarget, TargetPayload } from "./target.d.ts";
+import type { NotificationTarget } from "./target.d.ts";
 
 const DEVICE_DELIVERY_PATH = "/3/device/";
 
@@ -8,14 +8,6 @@ export function Device(deviceToken: string): NotificationTarget {
 	}
 
 	return {
-		prepareForDelivery(): PromiseLike<TargetPayload> {
-			return {
-				then(onfulfilled, _onrejected) {
-					return onfulfilled?.({
-						requestPath: `${DEVICE_DELIVERY_PATH}${deviceToken}`,
-					});
-				},
-			} as PromiseLike<TargetPayload>;
-		},
+		requestPath: `${DEVICE_DELIVERY_PATH}${deviceToken}`,
 	};
 }
