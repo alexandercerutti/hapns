@@ -200,23 +200,26 @@ export function AlertNotification(
 	data: NotificationDetails<AlertNotificationBody, NotificationCustomData>,
 ): Notification<AlertNotificationBody, NotificationCustomData> {
 	const { payload, expiration, appData, collapseID, priority } = data;
-	const { interruptionLevel, relevanceScore } = payload;
 
-	if (interruptionLevel && !isInterruptionLevelStandard(interruptionLevel)) {
-		throw new Error(
-			"Invalid interruption level: must be one of: 'passive', 'active', 'time-sensitive' or 'critical'. Received: " +
-				interruptionLevel,
-		);
-	}
+	if (payload) {
+		if (typeof payload !== "object") {
+			throw new Error("Cannot build notification: payload must be an object");
+		}
 
-	if (relevanceScore && (relevanceScore < 0 || relevanceScore > 1)) {
-		throw new Error(
-			"Invalid relevance score: must be between 0 and 1. Received: " + relevanceScore,
-		);
-	}
+		const { interruptionLevel, relevanceScore } = payload;
 
-	if (typeof payload !== "object") {
-		throw new Error("Cannot build notification: payload must be an object");
+		if (interruptionLevel && !isInterruptionLevelStandard(interruptionLevel)) {
+			throw new Error(
+				"Invalid interruption level: must be one of: 'passive', 'active', 'time-sensitive' or 'critical'. Received: " +
+					interruptionLevel,
+			);
+		}
+
+		if (relevanceScore && (relevanceScore < 0 || relevanceScore > 1)) {
+			throw new Error(
+				"Invalid relevance score: must be between 0 and 1. Received: " + relevanceScore,
+			);
+		}
 	}
 
 	if (appData && typeof appData !== "object") {

@@ -31,7 +31,7 @@ export interface NotificationDetails<
 	expiration?: number;
 	collapseID?: string;
 	priority?: 1 | 5 | 10;
-	payload: Payload;
+	payload?: Payload;
 	appData?: AppData;
 }
 
