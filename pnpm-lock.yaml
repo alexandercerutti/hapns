@@ -18,6 +18,9 @@ importers:
       '@types/node':
         specifier: ^22.15.17
         version: 22.15.17
+      hapns:
+        specifier: workspace:^
+        version: 'link:'
       prettier:
         specifier: ^3.5.3
         version: 3.5.3

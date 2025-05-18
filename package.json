@@ -11,13 +11,14 @@
 	"devDependencies": {
 		"@types/node": "^22.15.17",
 		"prettier": "^3.5.3",
-		"typescript": "^5.8.3"
+		"typescript": "^5.8.3",
+		"hapns": "workspace:^"
 	},
 	"exports": {
 		".": "./lib/index.js",
 		"./notifications/*": "./lib/notifications/*.js",
 		"./connectors/*": "./lib/connectors/*.js",
-		"./send": "./lib/send.js",
+		"./send": "./lib/send/index.js",
 		"./targets/*": "./lib/targets/*.js",
 		"./channels/*": "./lib/channels/*.js"
 	},
