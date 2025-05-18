@@ -127,7 +127,7 @@ function createToken(details: TokenConnectorData): TokenMemory {
 	const signer = createSigner({
 		algorithm: "ES256",
 		kid: details.keyId,
-		iss: details.teamIdentifier,
+		key: new TextDecoder().decode(details.key),
 	});
 
 	const token = signer({
