@@ -1,5 +1,5 @@
-import type { APNsHeaders, ConnectorProtocol, DeliveryResult } from "../connectors/connectors.d.ts";
-import type { Notification } from "../notifications/notifications.d.ts";
+import type { APNsHeaders, ConnectorProtocol, DeliveryResult } from "../connectors/connector.js";
+import type { Notification } from "../notifications/notification.js";
 import type { NotificationTarget } from "../targets/target.js";
 
 export async function send(

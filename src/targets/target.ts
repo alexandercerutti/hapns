@@ -1,4 +1,4 @@
-import type { APNsHeaders } from "../connectors/connectors.d.ts";
+import type { APNsHeaders } from "../connectors/connector.js";
 
 export interface NotificationTarget {
 	getBaseUrl(useSandbox: boolean): string;

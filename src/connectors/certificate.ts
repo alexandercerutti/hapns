@@ -1,4 +1,4 @@
-import type { ConnectorProtocol } from "./connectors.d.ts";
+import type { ConnectorProtocol } from "./connector.js";
 
 export interface CertificateConnectorData {
 	/**

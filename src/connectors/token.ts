@@ -1,6 +1,6 @@
 import { createSigner } from "fast-jwt";
 import { Pool } from "undici";
-import type { ConnectorProtocol } from "./connectors.d.ts";
+import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
 
 /**

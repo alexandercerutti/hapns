@@ -1,4 +1,4 @@
-import type { NotificationDetails } from "./notifications.d.ts";
+import type { NotificationDetails } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS

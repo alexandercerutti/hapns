@@ -1,6 +1,6 @@
 import type { Dispatcher } from "undici";
 
-interface APNsHeaders {
+export interface APNsHeaders {
 	"apns-request-id"?: string;
 	"apns-expiration": string;
 	"apns-priority": string;
@@ -19,7 +19,7 @@ interface APNsHeaders {
 	"apns-collapse-id"?: string;
 }
 
-interface ConnectorSendPayload<Headers extends object> {
+export interface ConnectorSendPayload<Headers extends object> {
 	method: "POST" | "GET" | "DELETE";
 	baseUrl: string;
 	requestPath: string;
@@ -27,12 +27,12 @@ interface ConnectorSendPayload<Headers extends object> {
 	body: Record<string, unknown>;
 }
 
-interface DeliveryResult {
+export interface DeliveryResult {
 	apnsId: string;
 	apnsUniqueId?: string | undefined;
 }
 
-interface ConnectorProtocol {
+export interface ConnectorProtocol {
 	send<Headers extends object>(
 		payload: ConnectorSendPayload<Headers>,
 	): Promise<Dispatcher.ResponseData<null>>;

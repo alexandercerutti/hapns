@@ -1,4 +1,4 @@
-import type { ConnectorProtocol } from "../connectors/connectors.d.ts";
+import type { ConnectorProtocol } from "../connectors/connector.js";
 import { BroadcastChannel } from "../targets/BroadcastChannel.js";
 
 interface BroadcastChannelSettings {
