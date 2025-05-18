@@ -39,7 +39,7 @@ interface TokenMemory {
  */
 
 export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
-	if (!details.key || ArrayBuffer.isView(details.key)) {
+	if (!details.key || !ArrayBuffer.isView(details.key)) {
 		throw new Error("Token connector field 'key' is missing or is not an Uint8Array.");
 	}
 
