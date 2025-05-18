@@ -78,7 +78,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 			const body = JSON.stringify(payload.body);
 
-			const poolId = `${payload.baseUrl}+${payload.method || "POST"}`;
+			const poolId = `${payload.method || "POST"} ${payload.baseUrl}`;
 			let pool = pools.get(poolId);
 
 			if (!pool) {
