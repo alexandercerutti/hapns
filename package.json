@@ -3,6 +3,7 @@
 	"version": "0.0.1",
 	"description": "Handle APNs notifications delivery without hussle",
 	"main": "lib/index.js",
+	"type": "module",
 	"scripts": {
 		"build": "pnpm tsc"
 	},
