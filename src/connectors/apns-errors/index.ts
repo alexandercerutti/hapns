@@ -55,7 +55,9 @@ type ApnsErrorConstructor = new (apnsId: string) => Error;
 const ApnsErrorMap = new Map<ReasonsWithError, ApnsErrorConstructor>();
 
 export function getApnsErrorByReasonString(reason: string): ApnsErrorConstructor {
-	const ApnsError = ApnsErrorMap.get(reason as ReasonsWithError);
+	const ApnsError = ApnsErrorMap.get(
+		(reason.endsWith("Error") ? reason : `${reason}Error`) as ReasonsWithError,
+	);
 
 	if (!ApnsError) {
 		throw new Error(`Unknown APNs error reason received: ${reason}`);
