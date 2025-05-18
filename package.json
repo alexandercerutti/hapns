@@ -18,7 +18,8 @@
 		"./notifications/*": "./lib/notifications/*.js",
 		"./connectors/*": "./lib/connectors/*.js",
 		"./send": "./lib/send.js",
-		"./targets/*": "./lib/targets/*.js"
+		"./targets/*": "./lib/targets/*.js",
+		"./channels/*": "./lib/channels/*.js"
 	},
 	"dependencies": {
 		"fast-jwt": "^6.0.1",
