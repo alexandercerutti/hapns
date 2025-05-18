@@ -118,7 +118,7 @@ export interface AlertNotificationBody {
 	 * is recommended. If you specify a string, the alert
 	 * displays your string as the body text.
 	 */
-	alert: Alert;
+	alert: Alert | Record<never, never>;
 
 	/**
 	 * The number to display in a badge on your app’s icon.
