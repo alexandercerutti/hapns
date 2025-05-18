@@ -235,6 +235,10 @@ export function AlertNotification(
 		get body() {
 			const { payload, appData } = data;
 
+			if (!payload) {
+				return Object.create(appData || {});
+			}
+
 			const {
 				alert,
 				badge,
