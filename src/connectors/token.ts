@@ -78,7 +78,8 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 			const body = JSON.stringify(payload.body);
 
-			let pool = pools.get(payload.baseUrl);
+			const poolId = `${payload.baseUrl}+${payload.method || "POST"}`;
+			let pool = pools.get(poolId);
 
 			if (!pool) {
 				pool = new Pool(payload.baseUrl, {
@@ -91,11 +92,11 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 					pipelining: 1,
 				});
 
-				pools.set(payload.baseUrl, pool);
+				pools.set(poolId, pool);
 			}
 
 			const response = await pool.request({
-				method: "POST",
+				method: payload.method,
 				path: payload.requestPath,
 				headers,
 				body,

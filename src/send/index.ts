@@ -42,6 +42,7 @@ export async function send(
 	};
 
 	const response = await connector.send({
+		method: "POST",
 		baseUrl: target.getBaseUrl(useSandbox),
 		requestPath: target.requestPath,
 		headers,

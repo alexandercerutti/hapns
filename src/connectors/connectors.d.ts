@@ -20,6 +20,7 @@ interface APNsHeaders {
 }
 
 interface ConnectorSendPayload<Headers extends object> {
+	method: "POST" | "GET" | "DELETE";
 	baseUrl: string;
 	requestPath: string;
 	headers: Headers;
