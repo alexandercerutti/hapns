@@ -8,6 +8,9 @@ export function Device(deviceToken: string): NotificationTarget {
 	}
 
 	return {
+		getBaseUrl(useSandbox: boolean = false) {
+			return useSandbox ? "https://api.sandbox.push.apple.com" : "https://api.push.apple.com";
+		},
 		requestPath: `${DEVICE_DELIVERY_PATH}${deviceToken}`,
 	};
 }

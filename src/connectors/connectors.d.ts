@@ -18,6 +18,7 @@ interface APNsHeaders {
 }
 
 interface ConnectorSendPayload {
+	baseUrl: string;
 	requestPath: string;
 	headers: APNsHeaders;
 	body: Record<string, unknown>;

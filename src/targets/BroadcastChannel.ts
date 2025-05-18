@@ -8,6 +8,9 @@ export function BroadcastChannel(channelId: string, bundleId: string): Notificat
 	}
 
 	return {
+		getBaseUrl(useSandbox: boolean = false) {
+			return useSandbox ? "https://api.sandbox.push.apple.com" : "https://api.push.apple.com";
+		},
 		requestPath: `${BROADCAST_DELIVERY_PATH}${bundleId}`,
 		headers: {
 			"apns-channel-id": channelId,

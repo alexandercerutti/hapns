@@ -6,6 +6,7 @@ export async function send(
 	connector: ConnectorProtocol,
 	notification: Notification<object, object>,
 	target: NotificationTarget,
+	useSandbox: boolean = false,
 ): Promise<DeliveryResult> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new Error("Connector is missing or is not a valid connector.");
@@ -40,7 +41,8 @@ export async function send(
 		...(target.body || {}),
 	};
 
-	const deliveryResult = await connector.send({
+	const response = await connector.send({
+		baseUrl: target.getBaseUrl(useSandbox),
 		requestPath: target.requestPath,
 		headers,
 		body,

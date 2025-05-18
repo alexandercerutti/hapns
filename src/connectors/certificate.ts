@@ -11,14 +11,6 @@ export interface CertificateConnectorData {
 	 * The private key file path for the certificate
 	 */
 	key: string;
-
-	/**
-	 * Set to true to use the development APNs server.
-	 * Otherwise, the production server is used.
-	 *
-	 * @default false
-	 */
-	useSandbox?: boolean;
 }
 
 /**

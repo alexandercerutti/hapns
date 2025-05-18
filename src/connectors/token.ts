@@ -24,14 +24,6 @@ export interface TokenConnectorData {
 	 * The team ID of the Apple Developer Account.
 	 */
 	teamIdentifier: string;
-
-	/**
-	 * Set to true to use the development APNs server.
-	 * Otherwise, the production server is used.
-	 *
-	 * @default false
-	 */
-	useSandbox?: boolean;
 }
 
 interface TokenMemory {
@@ -61,19 +53,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 	let tokenMemory: TokenMemory | undefined = undefined;
 
-	const apnBaseUrl = details.useSandbox
-		? "https://api.sandbox.push.apple.com"
-		: "https://api.push.apple.com";
-
-	const pool = new Pool(apnBaseUrl, {
-		allowH2: true,
-		/**
-		 * @TODO evaluate if we should increase the number of connections
-		 * to the APNs server. Might be interesting or useful if user is
-		 * sending a lot of notifications at once.
-		 */
-		pipelining: 1,
-	});
+	const pools = new Map<string, Pool>();
 
 	return {
 		async send(payload) {
@@ -97,6 +77,22 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 			};
 
 			const body = JSON.stringify(payload.body);
+
+			let pool = pools.get(payload.baseUrl);
+
+			if (!pool) {
+				pool = new Pool(payload.baseUrl, {
+					allowH2: true,
+					/**
+					 * @TODO evaluate if we should increase the number of connections
+					 * to the APNs server. Might be interesting or useful if user is
+					 * sending a lot of notifications at once.
+					 */
+					pipelining: 1,
+				});
+
+				pools.set(payload.baseUrl, pool);
+			}
 
 			const response = await pool.request({
 				method: "POST",
