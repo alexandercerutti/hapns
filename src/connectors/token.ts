@@ -1,6 +1,6 @@
 import { createSigner } from "fast-jwt";
-import type { APNsHeaders, ConnectorProtocol } from "./connectors.d.ts";
 import { Pool } from "undici";
+import type { ConnectorProtocol } from "./connectors.d.ts";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
 
 /**
@@ -71,7 +71,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 			const { token } = tokenMemory;
 
-			const headers: Partial<APNsHeaders> & { authorization: string } = {
+			const headers: typeof payload.headers & { authorization: string } = {
 				...payload.headers,
 				authorization: `Bearer ${token}`,
 			};
@@ -101,25 +101,19 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 				body,
 			});
 
-			const {
-				"apns-id": apnsId,
-				// Only for broadcast
-				"apns-request-id": apnsRequestId,
-				"apns-unique-id": apnsUniqueId,
-			} = response.headers as Record<string, string>;
+			if (response.statusCode !== 200) {
+				const { reason } = (await response.body.json()) as { reason: string; timestamp?: number };
+				const { "apns-id": apnsId, "apns-request-id": apnsRequestId } = response.headers as Record<
+					string,
+					string
+				>;
 
-			if (response.statusCode === 200) {
-				return {
-					apnsId: apnsId || apnsRequestId,
-					apnsUniqueId,
-				};
+				const ApnsErrorForReason = getApnsErrorByReasonString(reason);
+
+				throw new ApnsErrorForReason(apnsId || apnsRequestId || "");
 			}
 
-			const { reason } = (await response.body.json()) as { reason: string; timestamp?: number };
-
-			const ApnsErrorForReason = getApnsErrorByReasonString(reason);
-
-			throw new ApnsErrorForReason(apnsId || apnsRequestId || "");
+			return response;
 		},
 	};
 }

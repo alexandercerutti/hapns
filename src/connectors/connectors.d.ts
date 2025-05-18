@@ -1,3 +1,5 @@
+import type { Dispatcher } from "undici";
+
 interface APNsHeaders {
 	"apns-request-id"?: string;
 	"apns-expiration": string;
@@ -17,10 +19,10 @@ interface APNsHeaders {
 	"apns-collapse-id"?: string;
 }
 
-interface ConnectorSendPayload {
+interface ConnectorSendPayload<Headers extends object> {
 	baseUrl: string;
 	requestPath: string;
-	headers: APNsHeaders;
+	headers: Headers;
 	body: Record<string, unknown>;
 }
 
@@ -29,6 +31,8 @@ interface DeliveryResult {
 	apnsUniqueId?: string | undefined;
 }
 
-export interface ConnectorProtocol {
-	send(payload: ConnectorSendPayload): Promise<DeliveryResult>;
+interface ConnectorProtocol {
+	send<Headers extends object>(
+		payload: ConnectorSendPayload<Headers>,
+	): Promise<Dispatcher.ResponseData<null>>;
 }

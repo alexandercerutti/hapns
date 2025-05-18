@@ -48,5 +48,15 @@ export async function send(
 		body,
 	});
 
-	return deliveryResult;
+	const {
+		"apns-id": apnsId,
+		// Only for broadcast
+		"apns-request-id": apnsRequestId,
+		"apns-unique-id": apnsUniqueId,
+	} = response.headers as Record<string, string>;
+
+	return {
+		apnsId: apnsId || apnsRequestId,
+		apnsUniqueId,
+	};
 }
