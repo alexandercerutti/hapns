@@ -26,15 +26,16 @@ export async function send(
 		throw new Error("Target is missing or is not a valid target.");
 	}
 
-	const headers: APNsHeaders = {
+	const headers = {
 		"apns-expiration": String(notification.expiration || 0),
 		"apns-priority": String(notification.priority || 1),
 		"apns-topic": notification.topic,
 		"apns-push-type": notification.pushType,
 		"apns-collapse-id": notification.collapseID,
 		"apns-channel-id": undefined,
+		"apns-request-id": undefined,
 		...(target.headers || {}),
-	};
+	} satisfies APNsHeaders;
 
 	const body = {
 		...notification.body,

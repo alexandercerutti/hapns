@@ -19,7 +19,7 @@ export interface APNsHeaders {
 	"apns-collapse-id"?: string;
 }
 
-export interface ConnectorSendPayload<Headers extends object> {
+export interface ConnectorSendPayload<Headers extends Record<string, string | undefined>> {
 	method: "POST" | "GET" | "DELETE";
 	baseUrl: string;
 	requestPath: string;
@@ -33,7 +33,7 @@ export interface DeliveryResult {
 }
 
 export interface ConnectorProtocol {
-	send<Headers extends object>(
+	send<Headers extends Record<string, string | undefined>>(
 		payload: ConnectorSendPayload<Headers>,
 	): Promise<Dispatcher.ResponseData<null>>;
 }
