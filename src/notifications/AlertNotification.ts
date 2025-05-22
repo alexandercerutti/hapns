@@ -11,6 +11,10 @@ interface AlertLocalizableTitle {
 	 * The key for a localized title string. Specify this key instead of the
 	 * title key to retrieve the title from your app’s Localizable.strings
 	 * files. The value must contain the name of a key in your strings file.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `title` property.
 	 */
 	"title-loc-key": string;
 
@@ -20,6 +24,10 @@ interface AlertLocalizableTitle {
 	 * `title-loc-key` is replaced by a value from this array. The first item
 	 * in the array replaces the first instance of the %@ character in the
 	 * string, the second item replaces the second instance, and so on.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `title` property.
 	 */
 	"title-loc-args"?: string[];
 }
@@ -31,8 +39,12 @@ type AlertTitle =
 			 * The title of the notification. Apple Watch displays this string in the
 			 * short look notification interface.
 			 * Specify a string that’s quickly understood by the user.
+			 *
+			 * ---
+			 *
+			 * Mutually exclusive with `title-loc-key` and `title-loc-args`.
 			 */
-			title: string;
+			title?: string;
 			"title-loc-key"?: never;
 			"title-loc-args"?: never;
 	  };
@@ -43,6 +55,10 @@ interface AlertLocalizableSubtitle {
 	 * subtitle key, to retrieve the subtitle from your app’s
 	 * Localizable.strings file. The value must contain the name of a key in
 	 * your strings file.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `subtitle` property.
 	 */
 	"subtitle-loc-key": string;
 
@@ -52,6 +68,10 @@ interface AlertLocalizableSubtitle {
 	 * subtitle-loc-key is replaced by a value from this array. The first
 	 * item in the array replaces the first instance of the %@ character in
 	 * the string, the second item replaces the second instance, and so on.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `subtitle` property.
 	 */
 	"subtitle-loc-args"?: string[];
 }
@@ -61,8 +81,12 @@ type AlertSubtitle =
 	| {
 			/**
 			 * Additional information that explains the purpose of the notification.
+			 *
+			 * ---
+			 *
+			 * Mutually exclusive with `subtitle-loc-key` and `subtitle-loc-args`.
 			 */
-			subtitle: string;
+			subtitle?: string;
 			"subtitle-loc-key"?: never;
 			"subtitle-loc-args"?: never;
 	  };
@@ -73,6 +97,10 @@ interface AlertLocalizableBody {
 	 * the body key, to retrieve the message text from your app’s
 	 * Localizable.strings file. The value must contain the name of a key
 	 * in your strings file.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `body`.
 	 */
 	"loc-key": string;
 
@@ -82,6 +110,10 @@ interface AlertLocalizableBody {
 	 * is replaced by a value from this array. The first item in the array
 	 * replaces the first instance of the %@ character in the string, the
 	 * second item replaces the second instance, and so on.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `body`.
 	 */
 	"loc-args"?: string[];
 }
@@ -91,8 +123,12 @@ type AlertBody =
 	| {
 			/**
 			 * The content of the alert message.
+			 *
+			 * ---
+			 *
+			 * Mutually exclusive with `loc-key` and `loc-args`.
 			 */
-			body: string;
+			body?: string;
 			"loc-key"?: never;
 			"loc-args"?: never;
 	  };
@@ -123,6 +159,18 @@ export interface AlertNotificationBody {
 	/**
 	 * The number to display in a badge on your app’s icon.
 	 * Specify 0 to remove the current badge, if any.
+	 *
+	 * ---
+	 *
+	 * Additionally, in order to update badge for notification, the user must
+	 * have the app set to receive notification with explicit support
+	 * to `UNAuthorizationOptions.badge`.
+	 *
+	 * @example
+	 *
+	 * ```swift
+	 * notificationCenter.requestAuthorization(options: [.badge])
+	 * ```
 	 */
 	badge?: number;
 
@@ -134,6 +182,18 @@ export interface AlertNotificationBody {
 	 * this key for regular notifications. For critical alerts, use
 	 * the sound dictionary instead. For information about how to
 	 * prepare sounds, see [UNNotificationSound](https://developer.apple.com/documentation/usernotifications/unnotificationsound).
+	 *
+	 * ---
+	 *
+	 * Additionally, to receive a sound for notification, the user must
+	 * have the app set to receive notification with explicit support
+	 * to `UNAuthorizationOptions.sound`.
+	 *
+	 * @example
+	 *
+	 * ```swift
+	 * notificationCenter.requestAuthorization(options: [.alert, .badge, .sound])
+	 * ```
 	 */
 	sound?: Sound;
 
