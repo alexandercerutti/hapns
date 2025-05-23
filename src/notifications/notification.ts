@@ -21,7 +21,7 @@ type ToDashed<T extends object> = {
 };
 
 type APNNotificationBody<APSBody extends object, UserData extends object> = {
-	aps: ToDashed<APSBody>;
+	aps: ToDashed<APSBody> | Record<never, never>;
 } & UserData;
 
 export interface NotificationDetails<
