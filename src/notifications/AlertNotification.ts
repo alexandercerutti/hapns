@@ -32,22 +32,20 @@ interface AlertLocalizableTitle {
 	"title-loc-args"?: string[];
 }
 
-type AlertTitle =
-	| AlertLocalizableTitle
-	| {
-			/**
-			 * The title of the notification. Apple Watch displays this string in the
-			 * short look notification interface.
-			 * Specify a string that’s quickly understood by the user.
-			 *
-			 * ---
-			 *
-			 * Mutually exclusive with `title-loc-key` and `title-loc-args`.
-			 */
-			title?: string;
-			"title-loc-key"?: never;
-			"title-loc-args"?: never;
-	  };
+type AlertTitle = {
+	/**
+	 * The title of the notification. Apple Watch displays this string in the
+	 * short look notification interface.
+	 * Specify a string that’s quickly understood by the user.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `title-loc-key` and `title-loc-args`.
+	 */
+	title?: string;
+	"title-loc-key"?: never;
+	"title-loc-args"?: never;
+};
 
 interface AlertLocalizableSubtitle {
 	/**
@@ -76,20 +74,18 @@ interface AlertLocalizableSubtitle {
 	"subtitle-loc-args"?: string[];
 }
 
-type AlertSubtitle =
-	| AlertLocalizableSubtitle
-	| {
-			/**
-			 * Additional information that explains the purpose of the notification.
-			 *
-			 * ---
-			 *
-			 * Mutually exclusive with `subtitle-loc-key` and `subtitle-loc-args`.
-			 */
-			subtitle?: string;
-			"subtitle-loc-key"?: never;
-			"subtitle-loc-args"?: never;
-	  };
+type AlertSubtitle = {
+	/**
+	 * Additional information that explains the purpose of the notification.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `subtitle-loc-key` and `subtitle-loc-args`.
+	 */
+	subtitle?: string;
+	"subtitle-loc-key"?: never;
+	"subtitle-loc-args"?: never;
+};
 
 interface AlertLocalizableBody {
 	/**
@@ -118,84 +114,106 @@ interface AlertLocalizableBody {
 	"loc-args"?: string[];
 }
 
-type AlertBody =
-	| AlertLocalizableBody
-	| {
-			/**
-			 * The content of the alert message.
-			 *
-			 * ---
-			 *
-			 * Mutually exclusive with `loc-key` and `loc-args`.
-			 */
-			body?: string;
-			"loc-key"?: never;
-			"loc-args"?: never;
-	  };
+type AlertBody = {
+	/**
+	 * The content of the alert message.
+	 *
+	 * ---
+	 *
+	 * Mutually exclusive with `loc-key` and `loc-args`.
+	 */
+	body?: string;
+	"loc-key"?: never;
+	"loc-args"?: never;
+};
+
+type InterruptionLevel = "passive" | "active" | "time-sensitive" | "critical";
+
+/**
+ * Empty alert is possible, but doesn't allow badge or sound.
+ */
+
+type EmptyAlert = Record<never, never>;
 
 type Alert =
 	| string
-	| ({
+	| ((
+			| ((AlertLocalizableTitle | { title: string }) & AlertBody & AlertSubtitle)
+			| ((AlertLocalizableBody | { body: string }) & AlertTitle & AlertSubtitle)
+			| ((AlertLocalizableSubtitle | { subtitle: string }) & AlertTitle & AlertBody)
+	  ) & {
 			/**
 			 * The name of the launch image file to display. If the user chooses to
 			 * launch your app, the contents of the specified image or storyboard
 			 * file are displayed instead of your app’s normal launch image.
 			 */
 			"launch-image"?: string;
-	  } & AlertTitle &
-			AlertBody &
-			AlertSubtitle);
+	  });
 
-type InterruptionLevel = "passive" | "active" | "time-sensitive" | "critical";
+export type AlertNotificationBody = (
+	| {
+			/**
+			 * The information for displaying an alert. A dictionary
+			 * is recommended. If you specify a string, the alert
+			 * displays your string as the body text.
+			 */
+			alert: EmptyAlert;
+			badge?: never;
+			sound?: never;
+	  }
+	| {
+			/**
+			 * The information for displaying an alert. A dictionary
+			 * is recommended. If you specify a string, the alert
+			 * displays your string as the body text.
+			 */
+			alert: Alert;
 
-export interface AlertNotificationBody {
-	/**
-	 * The information for displaying an alert. A dictionary
-	 * is recommended. If you specify a string, the alert
-	 * displays your string as the body text.
-	 */
-	alert: Alert | Record<never, never>;
+			/**
+			 * The number to display in a badge on your app’s icon.
+			 * Specify 0 to remove the current badge, if any.
+			 *
+			 * ---
+			 *
+			 * Additionally, in order to update badge for notification, the user must
+			 * have the app set to receive notification with explicit support
+			 * to `UNAuthorizationOptions.badge`.
+			 *
+			 * @example
+			 *
+			 * ```swift
+			 * notificationCenter.requestAuthorization(options: [.badge])
+			 * ```
+			 */
+			badge?: number;
 
-	/**
-	 * The number to display in a badge on your app’s icon.
-	 * Specify 0 to remove the current badge, if any.
-	 *
-	 * ---
-	 *
-	 * Additionally, in order to update badge for notification, the user must
-	 * have the app set to receive notification with explicit support
-	 * to `UNAuthorizationOptions.badge`.
-	 *
-	 * @example
-	 *
-	 * ```swift
-	 * notificationCenter.requestAuthorization(options: [.badge])
-	 * ```
-	 */
-	badge?: number;
-
-	/**
-	 * The name of a sound file in your app’s main bundle or in the
-	 * Library/Sounds folder of your app’s container directory.
-	 *
-	 * Specify the string “default” to play the system sound. Use
-	 * this key for regular notifications. For critical alerts, use
-	 * the sound dictionary instead. For information about how to
-	 * prepare sounds, see [UNNotificationSound](https://developer.apple.com/documentation/usernotifications/unnotificationsound).
-	 *
-	 * ---
-	 *
-	 * Additionally, to receive a sound for notification, the user must
-	 * have the app set to receive notification with explicit support
-	 * to `UNAuthorizationOptions.sound`.
-	 *
-	 * @example
-	 *
-	 * ```swift
-	 * notificationCenter.requestAuthorization(options: [.alert, .badge, .sound])
-	 * ```
-	 */
-	sound?: Sound;
+			/**
+			 * The name of a sound file in your app’s main bundle or in the
+			 * Library/Sounds folder of your app’s container directory.
+			 *
+			 * Specify the string “default” to play the system sound. Use
+			 * this key for regular notifications. For critical alerts, use
+			 * the sound dictionary instead. For information about how to
+			 * prepare sounds, see [UNNotificationSound](https://developer.apple.com/documentation/usernotifications/unnotificationsound).
+			 *
+			 * ---
+			 *
+			 * Additionally, to receive a sound for notification, the user must
+			 * have the app set to receive notification with explicit support
+			 * to `UNAuthorizationOptions.sound`.
+			 *
+			 * @example
+			 *
+			 * ```swift
+			 * notificationCenter.requestAuthorization(options: [.alert, .badge, .sound])
+			 * ```
+			 */
+			sound?: Sound;
+	  }
+) & {
+	// *************************************************************************** //
+	// *** NEXT PROPERTIES ARE ALLOWED IN BOTH ALERTS AND EMPTY ALERTS OBJECTS *** //
+	// *************************************************************************** //
 
 	/**
 	 * An app-specific identifier for grouping related notifications.
@@ -253,7 +271,7 @@ export interface AlertNotificationBody {
 	 * For more information, see [SetFocusFilterIntent](https://developer.apple.com/documentation/AppIntents/SetFocusFilterIntent).
 	 */
 	filterCriteria?: string;
-}
+};
 
 export function AlertNotification(
 	topic: string,
