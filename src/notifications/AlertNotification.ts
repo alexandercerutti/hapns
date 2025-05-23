@@ -157,7 +157,7 @@ export type AlertNotificationBody = (
 			 * is recommended. If you specify a string, the alert
 			 * displays your string as the body text.
 			 */
-			alert: EmptyAlert;
+			alert?: EmptyAlert;
 			badge?: never;
 			sound?: never;
 	  }
@@ -314,13 +314,13 @@ export function AlertNotification(
 			const { payload, appData } = data;
 
 			if (!payload) {
-				return Object.create(appData || {});
+				return {
+					...appData,
+					aps: {},
+				};
 			}
 
 			const {
-				alert,
-				badge,
-				sound,
 				threadId,
 				category,
 				mutableContent,
@@ -330,13 +330,12 @@ export function AlertNotification(
 				targetContentId,
 			} = payload;
 
-			return Object.create(appData || {}, {
-				aps: {
-					value: {
-						alert,
-						badge: badge ? Math.max(0, badge) : undefined,
-						sound,
-						category,
+			if (!payload.alert || isEmptyAlert(payload.alert)) {
+				return {
+					...appData,
+					aps: {
+						alert: {},
+						category: category,
 						"thread-id": threadId,
 						"mutable-content": mutableContent,
 						"target-content-id": targetContentId,
@@ -344,11 +343,26 @@ export function AlertNotification(
 						"relevance-score": relevanceScore,
 						"filter-criteria": filterCriteria,
 					} satisfies Notification<AlertNotificationBody, NotificationCustomData>["body"]["aps"],
-					enumerable: true,
-					writable: false,
-					configurable: false,
-				},
-			});
+				};
+			}
+
+			const { alert, badge, sound } = payload;
+
+			return {
+				...appData,
+				aps: {
+					alert,
+					badge: badge ? Math.max(0, badge) : undefined,
+					sound,
+					category,
+					"thread-id": threadId,
+					"mutable-content": mutableContent,
+					"target-content-id": targetContentId,
+					"interruption-level": interruptionLevel,
+					"relevance-score": relevanceScore,
+					"filter-criteria": filterCriteria,
+				} satisfies Notification<AlertNotificationBody, NotificationCustomData>["body"]["aps"],
+			};
 		},
 	} satisfies Notification<AlertNotificationBody, NotificationCustomData>;
 }
@@ -359,4 +373,8 @@ function isInterruptionLevelStandard(
 	return ["passive", "active", "time-sensitive", "critical"].includes(
 		interruptionLevel as InterruptionLevel,
 	);
+}
+
+function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
+	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
 }
