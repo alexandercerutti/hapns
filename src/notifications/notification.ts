@@ -20,9 +20,9 @@ type ToDashed<T extends object> = {
 	[K in keyof T as K extends string ? ToDashedKey<K> : K]: T[K];
 };
 
-type APNNotificationBody<APSBody extends object, UserData extends object> = {
+type APNNotificationBody<APSBody extends object> = {
 	aps: ToDashed<APSBody> | Record<never, never>;
-} & UserData;
+};
 
 export interface NotificationDetails<
 	Payload extends object = Record<string, string>,
@@ -39,7 +39,7 @@ export interface Notification<Body extends object, UserData extends object>
 	extends Omit<NotificationDetails, "payload" | "appData"> {
 	readonly pushType: APNPushType;
 	readonly topic: string;
-	get body(): APNNotificationBody<Body, UserData>;
+	get body(): APNNotificationBody<Body> & UserData;
 }
 
 export type Sound =
