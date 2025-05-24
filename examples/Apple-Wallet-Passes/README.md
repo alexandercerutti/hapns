@@ -10,6 +10,6 @@ Run the following commands to run the server. This project uses [`pnpm`](https:/
 
 ```sh
 $ pnpm install
-$ pnpm run:example:token // or
+$ pnpm run:example:token # or
 $ pnpm run:example:certificates
 ```
