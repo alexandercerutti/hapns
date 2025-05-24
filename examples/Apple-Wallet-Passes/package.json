@@ -1,0 +1,14 @@
+{
+	"name": "@hapns/apple-wallet-update-example",
+	"private": true,
+	"main": "index.js",
+	"scripts": {
+		"run:example:token": "node ./connector-token.js",
+		"run:example:certificates": "node ./connector-certificates.js"
+	},
+	"license": "ISC",
+	"dependencies": {
+		"hapns": "workspace:*"
+	},
+	"packageManager": "pnpm@10.11.0"
+}
