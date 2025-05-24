@@ -2,9 +2,10 @@ import type { NotificationDetails, Notification, Sound } from "./notification.js
 
 /**
  * Empty interface on purpose to allow for TS
- * autocompletion to be extended by the user
+ * autocompletion to be extended by the user.
+ * Must be exported to allow extending in the user's code.
  */
-interface NotificationCustomData {}
+export interface NotificationCustomData {}
 
 interface AlertLocalizableTitle {
 	/**
