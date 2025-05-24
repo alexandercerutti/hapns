@@ -26,5 +26,8 @@
 	"dependencies": {
 		"fast-jwt": "^6.0.1",
 		"undici": "^7.9.0"
-	}
+	},
+	"files": [
+		"lib/**/*"
+	]
 }
