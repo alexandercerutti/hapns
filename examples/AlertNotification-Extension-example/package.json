@@ -1,0 +1,13 @@
+{
+	"name": "@hapns/alert-notification-extension-example",
+	"private": true,
+	"main": "index.js",
+	"scripts": {
+		"run:example": "node ./application-alert-notification.js"
+	},
+	"license": "ISC",
+	"dependencies": {
+		"hapns": "workspace:*"
+	},
+	"packageManager": "pnpm@10.11.0"
+}

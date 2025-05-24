@@ -1,0 +1,13 @@
+{
+	"name": "@hapns/location-notification-example",
+	"private": true,
+	"main": "index.js",
+	"scripts": {
+		"run:example": ""
+	},
+	"license": "ISC",
+	"dependencies": {
+		"hapns": "workspace:*"
+	},
+	"packageManager": "pnpm@10.11.0"
+}

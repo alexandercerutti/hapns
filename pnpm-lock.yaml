@@ -28,6 +28,72 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  examples/AlertNotification-Extension-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/AlertNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/BackgroundNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/ComplicationNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/ControlsNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/FileProviderNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/LiveActivityNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/LocationNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/MDMNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/PushToTalkNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
+  examples/VoipNotification-example:
+    dependencies:
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
 packages:
 
   '@lukeed/ms@2.0.2':
