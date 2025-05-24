@@ -1,6 +1,12 @@
 // @ts-check
 
 /**
+ * @variant
+ *
+ * This is the Typescript version of the same example.
+ * The only difference here is that we define an extension for
+ * app data to be sent in the notification.
+ *
  * @instructions
  *
  * This example requires setting up, first, an application that registers
@@ -64,6 +70,12 @@ const connector = TokenConnector({
 	teamIdentifier: TEAM_ID,
 });
 
+declare module "hapns/notifications/AlertNotification" {
+	export interface NotificationCustomData {
+		myCustomData: string;
+	}
+}
+
 const notification = AlertNotification(APNS_TOPIC, {
 	payload: {
 		alert: {
@@ -74,13 +86,7 @@ const notification = AlertNotification(APNS_TOPIC, {
 		badge: 0,
 	},
 	appData: {
-		/**
-		 * Autocompletetion here works because we have typechecking
-		 * on JS files active AND the typescript example, which defines
-		 * an extension to appData. So, we have it here just to
-		 * avoid showing the type error.
-		 */
-		myCustomData: "Hello World",
+		myCustomData: "This is a custom data",
 	},
 	priority: 10,
 });
