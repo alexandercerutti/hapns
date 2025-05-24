@@ -3,7 +3,7 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
-		"run:example": "node ./application-background-notification.js"
+		"run:example": "node ./server.js"
 	},
 	"license": "ISC",
 	"dependencies": {
