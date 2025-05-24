@@ -1,6 +1,6 @@
-# Complication Notification example
+# FileProvider Notification example
 
-This is an example for usage of `hapns`' `ComplicationNotification`.
+This is an example for usage of `hapns`' `FileProviderNotification`.
 
 It is accompanied with an example iOS App that showcases how the notification is received and used by the application itself.
 
