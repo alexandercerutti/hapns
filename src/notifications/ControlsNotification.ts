@@ -1,4 +1,4 @@
-import type { NotificationDetails } from "./notification.js";
+import type { Notification, NotificationDetails } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -10,4 +10,19 @@ export interface NotificationCustomData {}
 export function ControlsNotification(
 	topic: string,
 	data: NotificationDetails<Record<string, string>, NotificationCustomData>,
-): void {}
+): Notification<Record<string, string>, NotificationCustomData> {
+	const { expiration = 0, collapseID, priority = 10 } = data;
+
+	return {
+		pushType: "controls",
+		topic,
+		get body() {
+			return {
+				aps: {},
+			};
+		},
+		expiration,
+		collapseID,
+		priority,
+	};
+}
