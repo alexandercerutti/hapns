@@ -281,6 +281,10 @@ export function AlertNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<AlertNotificationBody> {
+	if (!topic || typeof topic !== "string") {
+		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
+	}
+
 	const { payload, expiration, appData, collapseID, priority } = data;
 
 	if (payload) {

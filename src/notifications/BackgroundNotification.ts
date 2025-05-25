@@ -21,6 +21,10 @@ export function BackgroundNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<BackgroundNotificationBody> {
+	if (!topic || typeof topic !== "string") {
+		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
+	}
+
 	const { expiration = 0, collapseID, appData } = data;
 
 	return {

@@ -13,6 +13,10 @@ export function MDMNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
+	if (!topic || typeof topic !== "string") {
+		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
+	}
+
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {
