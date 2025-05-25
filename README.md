@@ -13,15 +13,13 @@ This library is organized in modules so that a developer can import exclusively 
 
 Notifications are organized by _Push-Type_, one function per _Push-Type_, one module per function.
 
-Apple Wallet Passes update support is included (comes for free).
+Apple Wallet Passes update support is included.
 
 Broadcast channels (iOS 18) are supported as well, with the functions needed to create, read, delete and get all the channels as per [Apple Developer Documentation](https://developer.apple.com/documentation/usernotifications/setting-up-broadcast-push-notifications).
 
 ## API Documentation
 
 An extended API Documentation is available [in the wiki](https://github.com/alexandercerutti/hapns/wiki/API-Documentation-Reference). Where needed, repo folders include README files to specify details.
-
----
 
 ## Getting started with the right mental model
 
