@@ -1,3 +1,3 @@
-# TODO
+# iOS App Example for Alert Notification
 
-This is a placeholder file for an example app for iOS for Alert Notifications.
+This is a sample example application that supports the APNs registration and notification receiving.
