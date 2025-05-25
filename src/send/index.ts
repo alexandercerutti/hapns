@@ -4,7 +4,7 @@ import type { NotificationTarget } from "../targets/target.js";
 
 export async function send(
 	connector: ConnectorProtocol,
-	notification: Notification<object, object>,
+	notification: Notification<object>,
 	target: NotificationTarget,
 	useSandbox: boolean = false,
 ): Promise<DeliveryResult> {
