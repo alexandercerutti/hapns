@@ -81,6 +81,8 @@ interface LiveActivityNotificationBody {
 type NotificationData = NotificationHeaders &
 	NotificationBody<LiveActivityNotificationBody, NotificationCustomData>;
 
+const TOPIC_SUFFIX = ".push-type.liveactivity";
+
 /**
  * Creates a notification about an ongoing Live Activity
  *
@@ -101,11 +103,11 @@ export function LiveActivityNotification(
 				throw new TypeError("Topic must be a string");
 			}
 
-			if (topic.endsWith(".push-type.liveactivity")) {
+			if (topic.endsWith(TOPIC_SUFFIX)) {
 				return topic;
 			}
 
-			return `${topic}.push-type.liveactivity`;
+			return `${topic}${TOPIC_SUFFIX}`;
 		},
 		body: {
 			aps: {},

@@ -10,6 +10,8 @@ export interface NotificationCustomData {}
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
+const TOPIC_SUFFIX = ".pushkit.fileprovider";
+
 /**
  * Creates a notification about an update to a file provider extension.
  *
@@ -30,11 +32,11 @@ export function FileProviderNotification(
 				throw new TypeError("Topic must be a string");
 			}
 
-			if (topic.endsWith(".pushkit.fileprovider")) {
+			if (topic.endsWith(TOPIC_SUFFIX)) {
 				return topic;
 			}
 
-			return `${topic}.pushkit.fileprovider`;
+			return `${topic}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			return {

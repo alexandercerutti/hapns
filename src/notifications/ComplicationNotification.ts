@@ -10,6 +10,8 @@ export interface NotificationCustomData {}
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
+const TOPIC_SUFFIX = ".complication";
+
 /**
  * Creates a notification for a WatchOS app complications to update.
  *
@@ -30,11 +32,11 @@ export function ComplicationNotification(
 				throw new TypeError("Topic must be a string");
 			}
 
-			if (topic.endsWith(".complication")) {
+			if (topic.endsWith(TOPIC_SUFFIX)) {
 				return topic;
 			}
 
-			return `${topic}.complication`;
+			return `${topic}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			return {

@@ -9,6 +9,8 @@ export interface NotificationCustomData {}
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
+const TOPIC_SUFFIX = ".voip";
+
 /**
  * Create a notification about an incoming VoIP call through PushKit.
  *
@@ -29,11 +31,11 @@ export function VoipNotification(
 				throw new TypeError("Topic must be a string");
 			}
 
-			if (topic.endsWith(".voip")) {
+			if (topic.endsWith(TOPIC_SUFFIX)) {
 				return topic;
 			}
 
-			return `${topic}.voip`;
+			return `${topic}${TOPIC_SUFFIX}`;
 		},
 		body: {
 			aps: {},

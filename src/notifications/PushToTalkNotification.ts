@@ -9,6 +9,8 @@ export interface NotificationCustomData {}
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
+const TOPIC_SUFFIX = ".voip-ptt";
+
 /**
  * Create a Push-to-Talk notification.
  *
@@ -29,11 +31,11 @@ export function PushToTalkNotification(
 				throw new TypeError("Topic must be a string");
 			}
 
-			if (topic.endsWith(".voip-ptt")) {
+			if (topic.endsWith(TOPIC_SUFFIX)) {
 				return topic;
 			}
 
-			return `${topic}.voip-ptt`;
+			return `${topic}${TOPIC_SUFFIX}`;
 		},
 		body: {
 			aps: {},

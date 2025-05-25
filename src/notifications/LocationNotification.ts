@@ -16,6 +16,8 @@ type LocationAllowedPriorities = 5 | 10;
 type NotificationData = NotificationHeaders<LocationAllowedPriorities> &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
+const TOPIC_SUFFIX = ".location-query";
+
 /**
  * Creates a notification about a location query of the user.
  *
@@ -36,11 +38,11 @@ export function LocationNotification(
 				throw new TypeError("Topic must be a string");
 			}
 
-			if (topic.endsWith(".location-query")) {
+			if (topic.endsWith(TOPIC_SUFFIX)) {
 				return topic;
 			}
 
-			return `${topic}.location-query`;
+			return `${topic}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			return {
