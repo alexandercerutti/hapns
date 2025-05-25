@@ -1,4 +1,4 @@
-import type { Notification, NotificationDetails } from "./notification.js";
+import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -11,13 +11,16 @@ interface BackgroundNotificationBody {
 	contentAvailable: 1;
 }
 
+type NotificationData = NotificationHeaders &
+	Omit<
+		NotificationBody<BackgroundNotificationBody, NotificationCustomData>,
+		"priority" | "payload"
+	>;
+
 export function BackgroundNotification(
 	topic: string,
-	data: Omit<
-		NotificationDetails<Record<string, string>, NotificationCustomData>,
-		"priority" | "payload"
-	>,
-): Notification<BackgroundNotificationBody, NotificationCustomData> {
+	data: NotificationData,
+): Notification<BackgroundNotificationBody> {
 	const { expiration = 0, collapseID, appData } = data;
 
 	return {
@@ -31,7 +34,7 @@ export function BackgroundNotification(
 				...appData,
 				aps: {
 					"content-available": 1,
-				} satisfies Notification<BackgroundNotificationBody, NotificationCustomData>["body"]["aps"],
+				} satisfies Notification<BackgroundNotificationBody>["body"]["aps"],
 			};
 		},
 	};

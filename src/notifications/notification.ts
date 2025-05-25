@@ -1,4 +1,28 @@
-type APNPushType =
+type ToDashedKey<T extends string> = T extends `${infer FirstLetter}${infer Rest}`
+	? Rest extends `${Uppercase<string>}${string}`
+		? `${Lowercase<FirstLetter>}-${Lowercase<ToDashedKey<Rest>>}`
+		: `${Lowercase<FirstLetter>}${ToDashedKey<Rest>}`
+	: Lowercase<T>;
+
+type ToDashed<T extends object> = {
+	[K in keyof T as K extends string ? ToDashedKey<K> : K]: T[K];
+};
+
+export interface NotificationBody<
+	NotificationPayload extends object = Record<string, string>,
+	AppPayload extends object = Record<string, string>,
+> {
+	payload?: NotificationPayload;
+	appData?: AppPayload;
+}
+
+export interface NotificationHeaders<Priority extends 1 | 5 | 10 = 1 | 5 | 10> {
+	expiration?: number;
+	collapseID?: string;
+	priority?: Priority;
+}
+
+type PushType =
 	| "alert"
 	| "background"
 	| "controls"
@@ -10,36 +34,13 @@ type APNPushType =
 	| "voip"
 	| "pushtotalk";
 
-type ToDashedKey<T extends string> = T extends `${infer FirstLetter}${infer Rest}`
-	? Rest extends `${Uppercase<string>}${string}`
-		? `${Lowercase<FirstLetter>}-${Lowercase<ToDashedKey<Rest>>}`
-		: `${Lowercase<FirstLetter>}${ToDashedKey<Rest>}`
-	: Lowercase<T>;
-
-type ToDashed<T extends object> = {
-	[K in keyof T as K extends string ? ToDashedKey<K> : K]: T[K];
-};
-
-type APNNotificationBody<APSBody extends object> = {
-	aps: ToDashed<APSBody> | Record<never, never>;
-};
-
-export interface NotificationDetails<
-	Payload extends object = Record<string, string>,
-	AppData extends object = Record<string, string>,
-> {
-	expiration?: number;
-	collapseID?: string;
-	priority?: 1 | 5 | 10;
-	payload?: Payload;
-	appData?: AppData;
-}
-
-export interface Notification<Body extends object, UserData extends object>
-	extends Omit<NotificationDetails, "payload" | "appData"> {
-	readonly pushType: APNPushType;
+export interface Notification<Body extends object, Priority extends 1 | 5 | 10 = 1 | 5 | 10>
+	extends Omit<NotificationHeaders<Priority>, "payload" | "appData"> {
+	readonly pushType: PushType;
 	readonly topic: string;
-	get body(): APNNotificationBody<Body> & UserData;
+	body: {
+		aps: ToDashed<Body> | Record<never, never>;
+	};
 }
 
 export type Sound =

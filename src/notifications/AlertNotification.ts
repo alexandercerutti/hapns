@@ -1,4 +1,4 @@
-import type { NotificationDetails, Notification, Sound } from "./notification.js";
+import type { NotificationHeaders, Notification, Sound, NotificationBody } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -274,10 +274,13 @@ export type AlertNotificationBody = (
 	filterCriteria?: string;
 };
 
+type NotificationData = NotificationHeaders &
+	NotificationBody<AlertNotificationBody, NotificationCustomData>;
+
 export function AlertNotification(
 	topic: string,
-	data: NotificationDetails<AlertNotificationBody, NotificationCustomData>,
-): Notification<AlertNotificationBody, NotificationCustomData> {
+	data: NotificationData,
+): Notification<AlertNotificationBody> {
 	const { payload, expiration, appData, collapseID, priority } = data;
 
 	if (payload) {
@@ -343,7 +346,7 @@ export function AlertNotification(
 						"interruption-level": interruptionLevel,
 						"relevance-score": relevanceScore,
 						"filter-criteria": filterCriteria,
-					} satisfies Notification<AlertNotificationBody, NotificationCustomData>["body"]["aps"],
+					} satisfies Notification<AlertNotificationBody>["body"]["aps"],
 				};
 			}
 
@@ -362,10 +365,10 @@ export function AlertNotification(
 					"interruption-level": interruptionLevel,
 					"relevance-score": relevanceScore,
 					"filter-criteria": filterCriteria,
-				} satisfies Notification<AlertNotificationBody, NotificationCustomData>["body"]["aps"],
+				} satisfies Notification<AlertNotificationBody>["body"]["aps"],
 			};
 		},
-	} satisfies Notification<AlertNotificationBody, NotificationCustomData>;
+	} satisfies Notification<AlertNotificationBody>;
 }
 
 function isInterruptionLevelStandard(

@@ -1,4 +1,4 @@
-import type { Notification, NotificationDetails } from "./notification.js";
+import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -7,6 +7,9 @@ import type { Notification, NotificationDetails } from "./notification.js";
  */
 export interface NotificationCustomData {}
 
+type NotificationData = NotificationHeaders &
+	NotificationBody<Record<string, string>, NotificationCustomData>;
+
 /**
  * @param topic The topic of the notification. It will be suffixed, if needed, with `.pushkit.fileprovider`.
  * @param data
@@ -14,8 +17,8 @@ export interface NotificationCustomData {}
  */
 export function FileProviderNotification(
 	topic: string,
-	data: NotificationDetails<Record<string, string>, NotificationCustomData>,
-): Notification<Record<string, string>, NotificationCustomData> {
+	data: NotificationData,
+): Notification<Record<string, string>> {
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {

@@ -1,4 +1,4 @@
-import type { NotificationDetails } from "./notification.js";
+import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 /**
  * Empty interface on purpose to allow for TS
  * autocompletion to be extended by the user.
@@ -6,7 +6,10 @@ import type { NotificationDetails } from "./notification.js";
  */
 export interface NotificationCustomData {}
 
+type NotificationData = NotificationHeaders &
+	NotificationBody<Record<string, string>, NotificationCustomData>;
+
 export function MDMNotification(
 	topic: string,
-	data: NotificationDetails<Record<string, string>, NotificationCustomData>,
-): void {}
+	data: NotificationData,
+): Notification<Record<string, string>> {}

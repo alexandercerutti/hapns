@@ -1,4 +1,4 @@
-import type { Notification, NotificationDetails } from "./notification.js";
+import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -7,10 +7,13 @@ import type { Notification, NotificationDetails } from "./notification.js";
  */
 export interface NotificationCustomData {}
 
+type NotificationData = NotificationHeaders &
+	NotificationBody<Record<string, string>, NotificationCustomData>;
+
 export function ControlsNotification(
 	topic: string,
-	data: NotificationDetails<Record<string, string>, NotificationCustomData>,
-): Notification<Record<string, string>, NotificationCustomData> {
+	data: NotificationData,
+): Notification<Record<string, string>> {
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {

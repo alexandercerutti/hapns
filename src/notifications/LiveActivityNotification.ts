@@ -1,4 +1,4 @@
-import type { NotificationDetails } from "./notification.js";
+import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -7,7 +7,7 @@ import type { NotificationDetails } from "./notification.js";
  */
 export interface NotificationCustomData {}
 
-interface LiveActivityNotificationDetails {
+interface LiveActivityNotificationBody {
 	/**
 	 * The UNIX timestamp that represents the date at which a Live Activity
 	 * becomes stale, or out of date.
@@ -78,7 +78,10 @@ interface LiveActivityNotificationDetails {
 	attributes: Record<string, unknown>;
 }
 
+type NotificationData = NotificationHeaders &
+	NotificationBody<LiveActivityNotificationBody, NotificationCustomData>;
+
 export function LiveActivityNotification(
 	topic: string,
-	data: NotificationDetails<LiveActivityNotificationDetails, NotificationCustomData>,
-): void {}
+	data: NotificationData,
+): Notification<LiveActivityNotificationBody> {}
