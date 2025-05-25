@@ -3,7 +3,7 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
-		"run:example": "node ./server.js"
+		"run:example": "node ./server.mjs"
 	},
 	"license": "ISC",
 	"dependencies": {
