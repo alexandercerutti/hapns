@@ -41,7 +41,7 @@ const DEVICE_TOKEN = "";
  */
 const APNS_TOPIC = "";
 
-const TOKEN_KEY_PATH = "../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8";
+const TOKEN_KEY_PATH = "../../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8";
 
 const KEY_ID = "6WB99KX6YJ";
 const TEAM_ID = "F53WB8AE67";
