@@ -81,6 +81,13 @@ interface LiveActivityNotificationBody {
 type NotificationData = NotificationHeaders &
 	NotificationBody<LiveActivityNotificationBody, NotificationCustomData>;
 
+/**
+ * Creates a notification about an ongoing Live Activity
+ *
+ * @param topic The topic of the notification. It will be suffixed, if needed, with `.push-type.liveactivity`.
+ * @param data
+ * @returns
+ */
 export function LiveActivityNotification(
 	topic: string,
 	data: NotificationData,

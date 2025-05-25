@@ -10,6 +10,13 @@ export interface NotificationCustomData {}
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
+/**
+ * Creates a notification about the need of controls to be reloaded.
+ *
+ * @param topic The topic of the notification.
+ * @param data
+ * @returns
+ */
 export function ControlsNotification(
 	topic: string,
 	data: NotificationData,

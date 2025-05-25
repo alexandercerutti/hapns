@@ -11,6 +11,8 @@ type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
 /**
+ * Creates a notification about an update to a file provider extension.
+ *
  * @param topic The topic of the notification. It will be suffixed, if needed, with `.pushkit.fileprovider`.
  * @param data
  * @returns

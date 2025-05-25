@@ -11,6 +11,7 @@ type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
 /**
+ * Creates a notification for a WatchOS app complications to update.
  *
  * @param topic The topic of the notification. It will be suffixed, if needed, with `.complication`.
  * @param data
