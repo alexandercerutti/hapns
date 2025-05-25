@@ -84,4 +84,27 @@ type NotificationData = NotificationHeaders &
 export function LiveActivityNotification(
 	topic: string,
 	data: NotificationData,
-): Notification<LiveActivityNotificationBody> {}
+): Notification<LiveActivityNotificationBody> {
+	const { expiration = 0, collapseID, priority = 10 } = data;
+
+	return {
+		pushType: "liveactivity",
+		get topic() {
+			if (typeof topic !== "string") {
+				throw new TypeError("Topic must be a string");
+			}
+
+			if (topic.endsWith(".push-type.liveactivity")) {
+				return topic;
+			}
+
+			return `${topic}.push-type.liveactivity`;
+		},
+		body: {
+			aps: {},
+		},
+		expiration,
+		collapseID,
+		priority,
+	};
+}
