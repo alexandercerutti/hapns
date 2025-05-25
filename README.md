@@ -54,6 +54,7 @@ const KEY_ID = "<your key id>";
 const TEAM_ID = "<your team identifier>";
 const DEVICE_TOKEN = "...";
 const APNS_TOPIC = "<app bundle id>";
+const USE_SANDBOX = true;
 
 const p8key = new Uint8Array(fs.readFileSync(TOKEN_KEY_PATH));
 
