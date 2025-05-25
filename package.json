@@ -2,7 +2,6 @@
 	"name": "hapns",
 	"version": "0.0.1",
 	"description": "Handle APNs notifications delivery without hussle",
-	"main": "lib/index.js",
 	"type": "module",
 	"scripts": {
 		"build": "pnpm tsc"
@@ -15,8 +14,15 @@
 		"typescript": "^5.8.3",
 		"hapns": "workspace:^"
 	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alexandercerutti/hapns.git"
+	},
+	"bugs": {
+		"url": "https://github.com/alexandercerutti/hapns/issues"
+	},
 	"exports": {
-		".": "./lib/index.js",
 		"./notifications/*": "./lib/notifications/*.js",
 		"./connectors/*": "./lib/connectors/*.js",
 		"./send": "./lib/send/index.js",
@@ -29,5 +35,8 @@
 	},
 	"files": [
 		"lib/**/*"
-	]
+	],
+	"engines": {
+		"node": ">=22.0.0"
+	}
 }
