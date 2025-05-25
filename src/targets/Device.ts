@@ -1,4 +1,4 @@
-import type { NotificationTarget } from "./target.d.ts";
+import type { NotificationTarget } from "./target.js";
 
 const DEVICE_DELIVERY_PATH = "/3/device/";
 
