@@ -7,6 +7,12 @@ import type { Notification, NotificationDetails } from "./notification.js";
  */
 export interface NotificationCustomData {}
 
+/**
+ *
+ * @param topic The topic of the notification. It will be suffixed, if needed, with `.complication`.
+ * @param data
+ * @returns
+ */
 export function ComplicationNotification(
 	topic: string,
 	data: NotificationDetails<Record<string, string>, NotificationCustomData>,
