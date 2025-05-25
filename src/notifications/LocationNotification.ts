@@ -6,14 +6,21 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  */
 export interface NotificationCustomData {}
 
-type NotificationData = NotificationHeaders &
+/**
+ * "If the location query requires an immediate response from the
+ * Location Push Service Extension, set notification apns-priority
+ * to 10; otherwise, use 5"
+ */
+type LocationAllowedPriorities = 5 | 10;
+
+type NotificationData = NotificationHeaders<LocationAllowedPriorities> &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
 export function LocationNotification(
 	topic: string,
 	data: NotificationData,
-): Notification<Record<string, string>> {
-	const { expiration = 0, collapseID, priority = 10 } = data;
+): Notification<Record<string, string>, LocationAllowedPriorities> {
+	const { expiration = 0, collapseID, priority = 5 } = data;
 
 	return {
 		pushType: "location",
