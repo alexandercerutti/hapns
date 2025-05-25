@@ -12,4 +12,17 @@ type NotificationData = NotificationHeaders &
 export function MDMNotification(
 	topic: string,
 	data: NotificationData,
-): Notification<Record<string, string>> {}
+): Notification<Record<string, string>> {
+	const { expiration = 0, collapseID, priority = 10 } = data;
+
+	return {
+		pushType: "mdm",
+		topic,
+		body: {
+			aps: {},
+		},
+		expiration,
+		collapseID,
+		priority,
+	};
+}
