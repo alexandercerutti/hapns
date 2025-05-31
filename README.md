@@ -2,13 +2,13 @@
 	<br>
 	<picture>
 		<source media="(prefers-color-scheme: dark)"
-			srcset="https://github.com/alexandercerutti/hapns/raw/feature/readme/logo/assets/logo-dark.svg?sanitize=true"
+			srcset="https://github.com/alexandercerutti/hapns/raw/master/assets/logo-dark.svg?sanitize=true"
 			width="600"
 		>
 		<img
 			width="600"
 			alt="Passkit-generator logo for light mode"
-			src="https://github.com/alexandercerutti/hapns/raw/feature/readme/logo/assets/logo-light.svg?sanitize=true"
+			src="https://github.com/alexandercerutti/hapns/raw/master/assets/logo-light.svg?sanitize=true"
 		>
 	</picture>
 	<br>
