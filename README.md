@@ -1,6 +1,18 @@
-# Hapns
-
-Push notification happen. Create them delightfully.
+<div align="center">
+	<br>
+	<picture>
+		<source media="(prefers-color-scheme: dark)"
+			srcset="https://github.com/alexandercerutti/hapns/raw/feature/readme/logo/assets/logo-dark.svg?sanitize=true"
+			width="600"
+		>
+		<img
+			width="600"
+			alt="Passkit-generator logo for light mode"
+			src="https://github.com/alexandercerutti/hapns/raw/feature/readme/logo/assets/logo-light.svg?sanitize=true"
+		>
+	</picture>
+	<br>
+</div>
 
 > [!CAUTION]
 > This library is still in development and not production-ready yet. It lacks of support of some functionalities and complete examples, although everything is setup. Feedback and contributions are very welcome.
