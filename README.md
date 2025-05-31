@@ -3,15 +3,17 @@
 	<picture>
 		<source media="(prefers-color-scheme: dark)"
 			srcset="https://github.com/alexandercerutti/hapns/raw/master/assets/logo-dark.svg?sanitize=true"
+			alt="hapns logo for light mode"
 			width="600"
 		>
 		<img
 			width="600"
-			alt="Passkit-generator logo for light mode"
+			alt="hapns logo for light mode"
 			src="https://github.com/alexandercerutti/hapns/raw/master/assets/logo-light.svg?sanitize=true"
 		>
 	</picture>
 	<br>
+
 </div>
 
 > [!CAUTION]
