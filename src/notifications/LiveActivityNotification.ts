@@ -47,8 +47,11 @@ type LiveActivityNotificationBody = {
 			 * For more information, see `Updating and ending your Live Activity
 			 * with ActivityKit push notifications`.
 			 *
+			 * ---
+			 *
 			 * Implementation note: this is optional: if not provided, it will
-			 * fallback to `Date.now()`.
+			 * fallback to `Date.now()`. This could be useful if you are sending
+			 * frequent updates and might not be able to ensure an order.
 			 */
 			timestamp?: number;
 
