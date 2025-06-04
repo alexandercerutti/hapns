@@ -120,7 +120,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 }
 
 function isTokenExpired(tokenMemory: TokenMemory): boolean {
-	return tokenMemory.issuedAt + TOKEN_VALIDITY_TIME_1H >= Date.now();
+	return Date.now() >= tokenMemory.issuedAt + TOKEN_VALIDITY_TIME_1H;
 }
 
 function createToken(details: TokenConnectorData): TokenMemory {
