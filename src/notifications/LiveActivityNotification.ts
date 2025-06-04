@@ -7,6 +7,8 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  */
 export interface NotificationCustomData {}
 
+type AlertField = string | { "loc-key": string; "loc-args"?: string[] };
+
 type LiveActivityNotificationBody = {
 	/**
 	 * The UNIX timestamp that represents the date at which a Live Activity
@@ -64,6 +66,31 @@ type LiveActivityNotificationBody = {
 			 * your Live Activity with ActivityKit push notifications`.
 			 */
 			dismissalDate?: number;
+
+			/**
+			 * Alert will light up the device in case of critical notifications and play
+			 * a sound, if provided.
+			 *
+			 * Title and body are shown as a traditional alert notification on the devices
+			 * that do not support Live Activities. Both are mandatory for a notification
+			 * to run.
+			 */
+			alert?: {
+				title: AlertField;
+				body: AlertField;
+
+				/**
+				 * The exact filename of the sound file to play when the
+				 * notification is received.
+				 *
+				 * Please note that, for Live Activities, you cannot
+				 * specify other details (just like classic Alert notifications).
+				 *
+				 * If not specified, the system will play the default sound
+				 * (like you specified "default" as value).
+				 */
+				sound?: string;
+			};
 	  }
 	| {
 			/**
@@ -97,6 +124,31 @@ type LiveActivityNotificationBody = {
 			 * with ActivityKit push notifications`.
 			 */
 			attributes: Record<string, unknown>;
+
+			/**
+			 * Alert will light up the device in case of critical notifications and play
+			 * a sound, if provided.
+			 *
+			 * Title and body are shown as a traditional alert notification on the devices
+			 * that do not support Live Activities. Both are mandatory for a notification
+			 * to run.
+			 */
+			alert: {
+				title: AlertField;
+				body: AlertField;
+
+				/**
+				 * The exact filename of the sound file to play when the
+				 * notification is received.
+				 *
+				 * Please note that, for Live Activities, you cannot
+				 * specify other details (just like classic Alert notifications).
+				 *
+				 * If not specified, the system will play the default sound
+				 * (like you specified "default" as value).
+				 */
+				sound?: string;
+			};
 	  }
 );
 
@@ -141,25 +193,82 @@ export function LiveActivityNotification(
 						event,
 						"stale-date": staleDate,
 						"attributes-type": attributesType,
-						attributes: attributes,
+						alert: {
+							title: payload.alert?.title,
+							body: payload.alert?.body,
+							sound: payload.alert?.sound || "default",
+						},
 					} satisfies Notification<LiveActivityNotificationBody>["body"]["aps"],
 				};
 			}
 
-			const { contentState, timestamp = Date.now(), dismissalDate } = payload;
+			const { contentState, timestamp = Date.now(), dismissalDate, alert } = payload;
 
-			return {
+			const notificationBody = {
 				aps: {
 					event,
 					"stale-date": staleDate,
 					"content-state": contentState,
 					timestamp,
 					"dismissal-date": dismissalDate,
+					alert: createNotificationAlertBody(alert),
 				} satisfies Notification<LiveActivityNotificationBody>["body"]["aps"],
 			};
+
+			return notificationBody;
 		},
 		expiration,
 		collapseID,
 		priority: Math.max(5, Math.min(priority, 10)) as 5 | 10,
+	};
+}
+
+function validateAlertField(content: AlertField): AlertField | undefined {
+	if (typeof content === "string") {
+		return content;
+	}
+
+	if (typeof content !== "object" || !content["loc-key"]) {
+		return undefined;
+	}
+
+	const nextBody: AlertField = {
+		"loc-key": content["loc-key"],
+		"loc-args": content["loc-args"],
+	};
+
+	if (Array.isArray(content["loc-args"])) {
+		nextBody["loc-args"] = content["loc-args"].filter((arg) => typeof arg === "string");
+	}
+
+	return nextBody;
+}
+
+function createNotificationAlertBody(
+	alert: LiveActivityNotificationBody["alert"] | undefined,
+): LiveActivityNotificationBody["alert"] {
+	if (!alert) {
+		return undefined;
+	}
+
+	if (typeof alert !== "object") {
+		throw new TypeError(
+			"Alert must be a string or an object with 'title' and 'body' properties. Cannot create live notification.",
+		);
+	}
+
+	const title = validateAlertField(alert.title);
+	const body = validateAlertField(alert.body);
+
+	if (!title || !body) {
+		throw new TypeError(
+			"Alert object specified but either 'title' or 'body' are invalid strings or objects. Cannot create live notification.",
+		);
+	}
+
+	return {
+		title,
+		body,
+		sound: alert.sound || "default",
 	};
 }
