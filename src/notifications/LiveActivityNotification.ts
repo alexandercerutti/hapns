@@ -319,7 +319,7 @@ function validateAlertField(content: AlertField): AlertField | undefined {
 
 	const nextBody: AlertField = {
 		"loc-key": content["loc-key"],
-		"loc-args": content["loc-args"],
+		"loc-args": undefined,
 	};
 
 	if (Array.isArray(content["loc-args"])) {
