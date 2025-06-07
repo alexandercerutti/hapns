@@ -4,7 +4,8 @@
 	"description": "Handle APNs notifications delivery without hussle",
 	"type": "module",
 	"scripts": {
-		"build": "pnpm tsc"
+		"build": "pnpm tsc",
+		"prepublishOnly": "pnpm build"
 	},
 	"keywords": [],
 	"author": "Alexander P. Cerutti <cerutti.alexander@gmail.com>",
