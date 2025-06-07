@@ -309,12 +309,18 @@ export function LiveActivityNotification(
 }
 
 function validateAlertField(content: AlertField): AlertField | undefined {
+	if (!content) {
+		return undefined;
+	}
+
 	if (typeof content === "string") {
 		return content;
 	}
 
 	if (typeof content !== "object" || !content["loc-key"]) {
-		return undefined;
+		throw new TypeError(
+			"Invalid alert field: must be a string or an object with 'loc-key' property.",
+		);
 	}
 
 	const nextBody: AlertField = {
