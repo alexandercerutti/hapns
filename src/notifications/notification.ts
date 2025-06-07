@@ -12,7 +12,7 @@ export interface NotificationBody<
 	NotificationPayload extends object = Record<string, string>,
 	AppPayload extends object = Record<string, string>,
 > {
-	payload?: NotificationPayload;
+	payload: NotificationPayload;
 	appData?: AppPayload;
 }
 
