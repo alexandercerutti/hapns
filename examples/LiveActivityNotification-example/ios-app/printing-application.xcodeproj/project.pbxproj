@@ -1,0 +1,569 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		113263582DED04FB00E35AFF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 113263572DED04FB00E35AFF /* WidgetKit.framework */; };
+		1132635A2DED04FB00E35AFF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 113263592DED04FB00E35AFF /* SwiftUI.framework */; };
+		1132636B2DED04FD00E35AFF /* PrintingTimeActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 113263552DED04FB00E35AFF /* PrintingTimeActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		113263732DED05AA00E35AFF /* PrintingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113263722DED057F00E35AFF /* PrintingAttributes.swift */; };
+		113263742DED05AA00E35AFF /* PrintingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113263722DED057F00E35AFF /* PrintingAttributes.swift */; };
+		113263D72DEFBFD900E35AFF /* Playtime.m4r in Resources */ = {isa = PBXBuildFile; fileRef = 113263D62DEFBFD900E35AFF /* Playtime.m4r */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		113263692DED04FD00E35AFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1132633B2DECAEF800E35AFF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 113263542DED04FB00E35AFF;
+			remoteInfo = "fake-food-delivery-laExtension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		113263702DED04FD00E35AFF /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1132636B2DED04FD00E35AFF /* PrintingTimeActivityExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		113263432DECAEF800E35AFF /* printing-application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "printing-application.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		113263552DED04FB00E35AFF /* PrintingTimeActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PrintingTimeActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		113263572DED04FB00E35AFF /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		113263592DED04FB00E35AFF /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		113263722DED057F00E35AFF /* PrintingAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintingAttributes.swift; sourceTree = "<group>"; };
+		113263D62DEFBFD900E35AFF /* Playtime.m4r */ = {isa = PBXFileReference; lastKnownFileType = file; path = Playtime.m4r; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1132636C2DED04FD00E35AFF /* Exceptions for "PrintingTimeActivity" folder in "PrintingTimeActivityExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 113263542DED04FB00E35AFF /* PrintingTimeActivityExtension */;
+		};
+		113263902DED214800E35AFF /* Exceptions for "PrintingTimeActivity" folder in "printing-application" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PrintingTimeActivity.swift,
+			);
+			target = 113263422DECAEF800E35AFF /* printing-application */;
+		};
+		113264162DF2200900E35AFF /* Exceptions for "printing-application" folder in "printing-application" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+				PrintActionButton.swift,
+				PrintingActivityModel.swift,
+				PrintingActivityTimer.swift,
+				PrintingApplication.swift,
+			);
+			target = 113263422DECAEF800E35AFF /* printing-application */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		113263452DECAEF800E35AFF /* la-example */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "la-example";
+			sourceTree = "<group>";
+		};
+		1132635B2DED04FB00E35AFF /* PrintingTimeActivity */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				113263902DED214800E35AFF /* Exceptions for "PrintingTimeActivity" folder in "printing-application" target */,
+				1132636C2DED04FD00E35AFF /* Exceptions for "PrintingTimeActivity" folder in "PrintingTimeActivityExtension" target */,
+			);
+			path = PrintingTimeActivity;
+			sourceTree = "<group>";
+		};
+		113264012DF21F5100E35AFF /* printing-application */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				113264162DF2200900E35AFF /* Exceptions for "printing-application" folder in "printing-application" target */,
+			);
+			path = "printing-application";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		113263402DECAEF800E35AFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113263522DED04FB00E35AFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1132635A2DED04FB00E35AFF /* SwiftUI.framework in Frameworks */,
+				113263582DED04FB00E35AFF /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1132633A2DECAEF800E35AFF = {
+			isa = PBXGroup;
+			children = (
+				113263712DED056B00E35AFF /* Shared */,
+				113263452DECAEF800E35AFF /* la-example */,
+				1132635B2DED04FB00E35AFF /* PrintingTimeActivity */,
+				113264012DF21F5100E35AFF /* printing-application */,
+				113263562DED04FB00E35AFF /* Frameworks */,
+				113263442DECAEF800E35AFF /* Products */,
+				113263D62DEFBFD900E35AFF /* Playtime.m4r */,
+			);
+			sourceTree = "<group>";
+		};
+		113263442DECAEF800E35AFF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				113263432DECAEF800E35AFF /* printing-application.app */,
+				113263552DED04FB00E35AFF /* PrintingTimeActivityExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		113263562DED04FB00E35AFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				113263572DED04FB00E35AFF /* WidgetKit.framework */,
+				113263592DED04FB00E35AFF /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		113263712DED056B00E35AFF /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				113263722DED057F00E35AFF /* PrintingAttributes.swift */,
+			);
+			indentWidth = 2;
+			path = Shared;
+			sourceTree = "<group>";
+			tabWidth = 2;
+			usesTabs = 1;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		113263422DECAEF800E35AFF /* printing-application */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1132634E2DECAEFA00E35AFF /* Build configuration list for PBXNativeTarget "printing-application" */;
+			buildPhases = (
+				1132633F2DECAEF800E35AFF /* Sources */,
+				113263402DECAEF800E35AFF /* Frameworks */,
+				113263412DECAEF800E35AFF /* Resources */,
+				113263702DED04FD00E35AFF /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1132636A2DED04FD00E35AFF /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				113263452DECAEF800E35AFF /* la-example */,
+			);
+			name = "printing-application";
+			packageProductDependencies = (
+			);
+			productName = "la-example";
+			productReference = 113263432DECAEF800E35AFF /* printing-application.app */;
+			productType = "com.apple.product-type.application";
+		};
+		113263542DED04FB00E35AFF /* PrintingTimeActivityExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1132636D2DED04FD00E35AFF /* Build configuration list for PBXNativeTarget "PrintingTimeActivityExtension" */;
+			buildPhases = (
+				113263512DED04FB00E35AFF /* Sources */,
+				113263522DED04FB00E35AFF /* Frameworks */,
+				113263532DED04FB00E35AFF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1132635B2DED04FB00E35AFF /* PrintingTimeActivity */,
+			);
+			name = PrintingTimeActivityExtension;
+			packageProductDependencies = (
+			);
+			productName = "fake-food-delivery-laExtension";
+			productReference = 113263552DED04FB00E35AFF /* PrintingTimeActivityExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1132633B2DECAEF800E35AFF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					113263422DECAEF800E35AFF = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					113263542DED04FB00E35AFF = {
+						CreatedOnToolsVersion = 16.3;
+					};
+				};
+			};
+			buildConfigurationList = 1132633E2DECAEF800E35AFF /* Build configuration list for PBXProject "printing-application" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1132633A2DECAEF800E35AFF;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 113263442DECAEF800E35AFF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				113263422DECAEF800E35AFF /* printing-application */,
+				113263542DED04FB00E35AFF /* PrintingTimeActivityExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		113263412DECAEF800E35AFF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				113263D72DEFBFD900E35AFF /* Playtime.m4r in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113263532DED04FB00E35AFF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1132633F2DECAEF800E35AFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				113263732DED05AA00E35AFF /* PrintingAttributes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113263512DED04FB00E35AFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				113263742DED05AA00E35AFF /* PrintingAttributes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1132636A2DED04FD00E35AFF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 113263542DED04FB00E35AFF /* PrintingTimeActivityExtension */;
+			targetProxy = 113263692DED04FD00E35AFF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1132634C2DECAEFA00E35AFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1132634D2DECAEFA00E35AFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1132634F2DECAEFA00E35AFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "printing-application/printing-application.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alexandercerutti.printing-application";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		113263502DECAEFA00E35AFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "printing-application/printing-application.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alexandercerutti.printing-application";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1132636E2DED04FD00E35AFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PrintingTimeActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PrintingTimeActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alexandercerutti.printing-application.printingtimeactivityextension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1132636F2DED04FD00E35AFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PrintingTimeActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PrintingTimeActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alexandercerutti.printing-application.printingtimeactivityextension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1132633E2DECAEF800E35AFF /* Build configuration list for PBXProject "printing-application" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1132634C2DECAEFA00E35AFF /* Debug */,
+				1132634D2DECAEFA00E35AFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1132634E2DECAEFA00E35AFF /* Build configuration list for PBXNativeTarget "printing-application" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1132634F2DECAEFA00E35AFF /* Debug */,
+				113263502DECAEFA00E35AFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1132636D2DED04FD00E35AFF /* Build configuration list for PBXNativeTarget "PrintingTimeActivityExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1132636E2DED04FD00E35AFF /* Debug */,
+				1132636F2DED04FD00E35AFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1132633B2DECAEF800E35AFF /* Project object */;
+}
