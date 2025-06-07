@@ -42,6 +42,11 @@ export async function send(
 		...(target.body || {}),
 	};
 
+	/**
+	 * @developmentonly Will be removed when the code will reach v1.0.0
+	 */
+	console.log("APNS request body:", body);
+
 	const response = await connector.send({
 		method: "POST",
 		baseUrl: target.getBaseUrl(useSandbox),
