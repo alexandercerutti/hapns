@@ -1,11 +1,5 @@
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
-/**
- * Empty interface on purpose to allow for TS
- * autocompletion to be extended by the user.
- * Must be exported to allow extending in the user's code.
- */
-export interface NotificationCustomData {}
 
 /**
  * "If the location query requires an immediate response from the
@@ -14,8 +8,7 @@ export interface NotificationCustomData {}
  */
 type LocationAllowedPriorities = 5 | 10;
 
-type NotificationData = NotificationHeaders<LocationAllowedPriorities> &
-	NotificationBody<Record<string, string>, NotificationCustomData>;
+type NotificationData = NotificationHeaders<LocationAllowedPriorities>;
 
 const TOPIC_SUFFIX = ".location-query";
 
