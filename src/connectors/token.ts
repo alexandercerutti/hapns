@@ -2,12 +2,38 @@ import { createSigner } from "fast-jwt";
 import { Pool } from "undici";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
+import { createError } from "../errors/create.js";
 
 /**
  * 2 minutes earlier. This should let us avoid
  * any kind of error from expired token from the server.
  */
 const TOKEN_VALIDITY_TIME_1H = 58 * 60 * 1000;
+
+const INVALID_KEY_ERROR = createError(
+	"INVALID_KEY_ERROR",
+	"Cannot setup token connector: field 'key' is missing or is not an Uint8Array.",
+);
+
+const INVALID_KEY_ID_ERROR = createError(
+	"INVALID_KEY_ID_ERROR",
+	"Cannot setup token connector: field 'keyId' is invalid (missing or not a string).",
+);
+
+const INVALID_TEAM_IDENTIFIER_ERROR = createError(
+	"INVALID_TEAM_IDENTIFIER_ERROR",
+	"Cannot setup token connector: field 'teamIdentifier' is missing or is not a string.",
+);
+
+const INVALID_HEADERS_ERROR = createError(
+	"INVALID_HEADERS_ERROR",
+	"Cannot send request: payload headers are missing or are not an object.",
+);
+
+const INVALID_BODY_ERROR = createError(
+	"INVALID_BODY_ERROR",
+	"Cannot send request: payload body is missing or is not an object.",
+);
 
 export interface TokenConnectorData {
 	/**
@@ -40,15 +66,15 @@ interface TokenMemory {
 
 export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 	if (!details.key || !ArrayBuffer.isView(details.key)) {
-		throw new Error("Token connector field 'key' is missing or is not an Uint8Array.");
+		throw new INVALID_KEY_ERROR();
 	}
 
-	if (!details.keyId) {
-		throw new Error("Token connector field 'keyId' is missing.");
+	if (!details.keyId || typeof details.keyId !== "string") {
+		throw new INVALID_KEY_ID_ERROR();
 	}
 
-	if (!details.teamIdentifier) {
-		throw new Error("Token connector field 'teamIdentifier' is missing.");
+	if (!details.teamIdentifier || typeof details.teamIdentifier !== "string") {
+		throw new INVALID_TEAM_IDENTIFIER_ERROR();
 	}
 
 	let tokenMemory: TokenMemory | undefined = undefined;
@@ -58,11 +84,11 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 	return {
 		async send(payload) {
 			if (!payload.headers || typeof payload.headers !== "object") {
-				throw new Error("Payload headers are missing or are not an object.");
+				throw new INVALID_HEADERS_ERROR();
 			}
 
 			if (!payload.body || typeof payload.body !== "object") {
-				throw new Error("Payload body is missing or is not an object.");
+				throw new INVALID_BODY_ERROR();
 			}
 
 			if (!tokenMemory || isTokenExpired(tokenMemory)) {

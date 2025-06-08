@@ -1,3 +1,5 @@
+import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
+import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
@@ -21,11 +23,11 @@ export function BackgroundNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<BackgroundNotificationBody> {
-	if (!topic || typeof topic !== "string") {
-		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
-	}
+	assertTopicProvided(topic);
 
 	const { expiration = 0, collapseID, appData } = data;
+
+	assertValidAppData(appData);
 
 	return {
 		pushType: "background",
@@ -35,7 +37,7 @@ export function BackgroundNotification(
 		priority: 5,
 		get body() {
 			return {
-				...appData,
+				...(appData || {}),
 				aps: {
 					"content-available": 1,
 				} satisfies Notification<BackgroundNotificationBody>["body"]["aps"],

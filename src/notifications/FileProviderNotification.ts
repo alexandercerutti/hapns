@@ -1,3 +1,4 @@
+import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
@@ -23,9 +24,7 @@ export function FileProviderNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
-	if (!topic || typeof topic !== "string") {
-		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
-	}
+	assertTopicProvided(topic);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 

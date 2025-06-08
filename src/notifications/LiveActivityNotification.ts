@@ -1,3 +1,5 @@
+import { assertValidPayload } from "../errors/assertions/payload-exists.js";
+import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 
 /**
@@ -233,11 +235,12 @@ export function LiveActivityNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<LiveActivityNotificationBody> {
-	if (!topic || typeof topic !== "string") {
-		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
-	}
+	assertTopicProvided(topic);
 
 	const { expiration = 0, collapseID, priority = 10, payload } = data;
+
+	assertValidPayload(payload);
+
 	const { event, staleDate, timestamp = Date.now(), relevanceScore, contentState, alert } = payload;
 
 	return {

@@ -1,6 +1,27 @@
 import { Pool } from "undici";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
+import { createError } from "../errors/create.js";
+
+const INVALID_CERT_ERROR = createError(
+	"INVALID_CERT_ERROR",
+	"Cannot setup Certificate connector: field 'cert' is missing or is not an Uint8Array.",
+);
+
+const INVALID_KEY_ERROR = createError(
+	"INVALID_KEY_ERROR",
+	"Cannot setup Certificate connector: field 'key' is missing or is not an Uint8Array.",
+);
+
+const INVALID_HEADERS_ERROR = createError(
+	"INVALID_HEADERS_ERROR",
+	"Cannot send request: payload headers are missing or are not an object.",
+);
+
+const INVALID_BODY_ERROR = createError(
+	"INVALID_BODY_ERROR",
+	"Cannot send request: payload body is missing or is not an object.",
+);
 
 export interface CertificateConnectorData {
 	/**
@@ -44,11 +65,11 @@ export interface CertificateConnectorData {
 
 export function CertificateConnector(details: CertificateConnectorData): ConnectorProtocol {
 	if (!details.cert || !ArrayBuffer.isView(details.cert)) {
-		throw new Error("Certificate connector field 'cert' is missing or is not an Uint8Array.");
+		throw new INVALID_CERT_ERROR();
 	}
 
 	if (!details.key || !ArrayBuffer.isView(details.key)) {
-		throw new Error("Certificate connector field 'key' is missing or is not an Uint8Array.");
+		throw new INVALID_KEY_ERROR();
 	}
 
 	const pools = new Map<string, Pool>();
@@ -56,11 +77,11 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 	return {
 		async send(payload) {
 			if (!payload.headers || typeof payload.headers !== "object") {
-				throw new Error("Payload headers are missing or are not an object.");
+				throw new INVALID_HEADERS_ERROR();
 			}
 
 			if (!payload.body || typeof payload.body !== "object") {
-				throw new Error("Payload body is missing or is not an object.");
+				throw new INVALID_BODY_ERROR();
 			}
 
 			const body = JSON.stringify(payload.body);

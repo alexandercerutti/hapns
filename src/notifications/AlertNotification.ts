@@ -1,4 +1,10 @@
 import type { NotificationHeaders, Notification, Sound, NotificationBody } from "./notification.js";
+import { assertValidPayload } from "../errors/assertions/payload-exists.js";
+import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import type { InterruptionLevel } from "../errors/assertions/interruption-level-valid.js";
+import { assertInterruptionLevelValid } from "../errors/assertions/interruption-level-valid.js";
+import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
+import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -127,8 +133,6 @@ type AlertBody = {
 	"loc-key"?: never;
 	"loc-args"?: never;
 };
-
-type InterruptionLevel = "passive" | "active" | "time-sensitive" | "critical";
 
 /**
  * Empty alert is possible, but doesn't allow badge or sound.
@@ -281,36 +285,20 @@ export function AlertNotification(
 	topic: string,
 	data: NotificationData,
 ): Notification<AlertNotificationBody> {
-	if (!topic || typeof topic !== "string") {
-		throw new TypeError("Cannot create notification: topic must be a non-empty string.");
-	}
+	assertTopicProvided(topic);
 
 	const { payload, expiration, appData, collapseID, priority } = data;
 
 	if (payload) {
-		if (typeof payload !== "object") {
-			throw new Error("Cannot build notification: payload must be an object");
-		}
+		assertValidPayload(payload);
 
 		const { interruptionLevel, relevanceScore } = payload;
 
-		if (interruptionLevel && !isInterruptionLevelStandard(interruptionLevel)) {
-			throw new Error(
-				"Invalid interruption level: must be one of: 'passive', 'active', 'time-sensitive' or 'critical'. Received: " +
-					interruptionLevel,
-			);
-		}
-
-		if (relevanceScore && (relevanceScore < 0 || relevanceScore > 1)) {
-			throw new Error(
-				"Invalid relevance score: must be between 0 and 1. Received: " + relevanceScore,
-			);
-		}
+		assertInterruptionLevelValid(interruptionLevel);
+		assertRelevanceScoreValid(relevanceScore, 0, 1);
 	}
 
-	if (appData && typeof appData !== "object") {
-		throw new Error("User data must be an object");
-	}
+	assertValidAppData(appData);
 
 	return {
 		pushType: "alert",
@@ -373,14 +361,6 @@ export function AlertNotification(
 			};
 		},
 	} satisfies Notification<AlertNotificationBody>;
-}
-
-function isInterruptionLevelStandard(
-	interruptionLevel: unknown,
-): interruptionLevel is InterruptionLevel {
-	return ["passive", "active", "time-sensitive", "critical"].includes(
-		interruptionLevel as InterruptionLevel,
-	);
 }
 
 function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
