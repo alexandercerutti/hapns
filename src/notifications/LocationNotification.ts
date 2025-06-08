@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { APSBody, Notification, NotificationHeaders } from "./notification.js";
 
@@ -30,6 +31,7 @@ export function LocationNotification(
 
 	return {
 		pushType: "location",
+		supportedConnectors: Connector.Token,
 		get topic() {
 			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
 				return appBundleId;

@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
 	APSBody,
@@ -41,6 +42,7 @@ export function PushToTalkNotification(
 
 	return {
 		pushType: "pushtotalk",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
 			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
 				return appBundleId;

@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import { createError } from "../errors/create.js";
 import type {
@@ -54,6 +55,7 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 
 	return {
 		pushType: "voip",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
 			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
 				return appBundleId;

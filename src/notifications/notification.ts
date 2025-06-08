@@ -1,3 +1,5 @@
+import { Connector } from "../connectors/connector.js";
+
 type ToDashedKey<T extends string> = T extends `${infer FirstLetter}${infer Rest}`
 	? Rest extends `${Uppercase<string>}${string}`
 		? `${Lowercase<FirstLetter>}-${Lowercase<ToDashedKey<Rest>>}`
@@ -40,6 +42,7 @@ export interface APSBody<BodyProperties extends object> {
 
 export interface Notification<Body extends object, Priority extends 1 | 5 | 10 = 1 | 5 | 10>
 	extends Omit<NotificationHeaders<Priority>, "payload" | "appData"> {
+	readonly supportedConnectors: number;
 	readonly pushType: PushType;
 	readonly topic: string;
 	body: Body;

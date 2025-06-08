@@ -11,6 +11,7 @@ import type { InterruptionLevel } from "../errors/assertions/interruption-level-
 import { assertInterruptionLevelValid } from "../errors/assertions/interruption-level-valid.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
+import { Connector } from "../connectors/connector.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -313,6 +314,7 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 
 	return {
 		pushType: "alert",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
 		expiration: expiration ?? 0,
 		collapseID: collapseID ?? undefined,

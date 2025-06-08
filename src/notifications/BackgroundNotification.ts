@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
@@ -38,6 +39,7 @@ export function BackgroundNotification(
 
 	return {
 		pushType: "background",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
 		expiration,
 		collapseID,

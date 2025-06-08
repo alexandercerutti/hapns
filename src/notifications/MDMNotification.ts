@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
@@ -27,6 +28,7 @@ export function MDMNotification(mdmUid: string, data: NotificationData): Notific
 
 	return {
 		pushType: "mdm",
+		supportedConnectors: Connector.Certificate,
 		topic: mdmUid,
 		body: {
 			mdm: data.payload.mdm,

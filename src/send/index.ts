@@ -23,6 +23,11 @@ const TARGET_INVALID_ERROR = createError(
 	"Cannot send notification: Target is missing or is not a valid target.",
 );
 
+const UNSUPPORTED_CONNECTOR_ERROR = createError(
+	"UNSUPPORTED_CONNECTOR_ERROR",
+	"Cannot send notification: Notification type does not support the provided connector type.",
+);
+
 export async function send(
 	connector: ConnectorProtocol,
 	notification: Notification<object>,
@@ -43,6 +48,10 @@ export async function send(
 
 	if (!target || typeof target !== "object") {
 		throw new TARGET_INVALID_ERROR();
+	}
+
+	if (!(notification.supportedConnectors & connector.connectionType)) {
+		throw new UNSUPPORTED_CONNECTOR_ERROR();
 	}
 
 	const headers = {

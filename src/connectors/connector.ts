@@ -1,5 +1,11 @@
 import type { Dispatcher } from "undici";
 
+export const Connector = {
+	Certificate: 0b001,
+	Token: /***/ 0b010,
+} as const;
+export type Connector = (typeof Connector)[keyof typeof Connector];
+
 export interface APNsHeaders {
 	"apns-request-id"?: string;
 	"apns-expiration": string;
@@ -33,6 +39,7 @@ export interface DeliveryResult {
 }
 
 export interface ConnectorProtocol {
+	readonly connectionType: Connector;
 	send<Headers extends Record<string, string | undefined>>(
 		payload: ConnectorSendPayload<Headers>,
 	): Promise<Dispatcher.ResponseData<null>>;

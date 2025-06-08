@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
 	APSBody,
@@ -34,6 +35,7 @@ export function ControlsNotification(
 
 	return {
 		pushType: "controls",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
 		get body() {
 			return {

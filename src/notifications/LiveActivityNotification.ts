@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
@@ -254,6 +255,7 @@ export function LiveActivityNotification(
 
 	return {
 		pushType: "liveactivity",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
 			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
 				return appBundleId;

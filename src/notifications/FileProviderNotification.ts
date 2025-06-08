@@ -1,3 +1,4 @@
+import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
 	APSBody,
@@ -36,6 +37,7 @@ export function FileProviderNotification(
 
 	return {
 		pushType: "fileprovider",
+		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
 			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
 				return appBundleId;

@@ -1,4 +1,5 @@
 import { Pool } from "undici";
+import { Connector } from "./connector.js";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
 import { createError } from "../errors/create.js";
@@ -75,6 +76,7 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 	const pools = new Map<string, Pool>();
 
 	return {
+		connectionType: Connector.Certificate,
 		async send(payload) {
 			if (!payload.headers || typeof payload.headers !== "object") {
 				throw new INVALID_HEADERS_ERROR();
