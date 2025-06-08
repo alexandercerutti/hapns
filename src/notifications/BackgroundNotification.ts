@@ -1,6 +1,11 @@
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
+import type {
+	APSBody,
+	Notification,
+	NotificationBody,
+	NotificationHeaders,
+} from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -19,10 +24,12 @@ type NotificationData = NotificationHeaders &
 		"priority" | "payload"
 	>;
 
+type NotificationObject = Notification<APSBody<BackgroundNotificationBody>>;
+
 export function BackgroundNotification(
 	appBundleId: string,
 	data: NotificationData,
-): Notification<BackgroundNotificationBody> {
+): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, appData } = data;
@@ -40,7 +47,7 @@ export function BackgroundNotification(
 				...(appData || {}),
 				aps: {
 					"content-available": 1,
-				} satisfies Notification<BackgroundNotificationBody>["body"]["aps"],
+				} satisfies NotificationObject["body"]["aps"],
 			};
 		},
 	};

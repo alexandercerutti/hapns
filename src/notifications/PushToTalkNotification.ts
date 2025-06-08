@@ -1,5 +1,10 @@
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
+import type {
+	APSBody,
+	Notification,
+	NotificationBody,
+	NotificationHeaders,
+} from "./notification.js";
 /**
  * Empty interface on purpose to allow for TS
  * autocompletion to be extended by the user.
@@ -15,6 +20,7 @@ export interface NotificationCustomAppData {}
  */
 type NotificationData = Omit<NotificationHeaders, "expiration" | "priority"> &
 	NotificationBody<Record<string, string>, NotificationCustomAppData>;
+type NotificationObject = Notification<APSBody<Record<string, string>>>;
 
 const TOPIC_SUFFIX = ".voip-ptt";
 
@@ -28,7 +34,7 @@ const TOPIC_SUFFIX = ".voip-ptt";
 export function PushToTalkNotification(
 	appBundleId: string,
 	data: NotificationData,
-): Notification<Record<string, string>> {
+): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { collapseID } = data;

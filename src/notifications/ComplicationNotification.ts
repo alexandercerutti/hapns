@@ -1,5 +1,10 @@
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
+import type {
+	APSBody,
+	Notification,
+	NotificationBody,
+	NotificationHeaders,
+} from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -10,6 +15,7 @@ export interface NotificationCustomAppData {}
 
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomAppData>;
+type NotificationObject = Notification<APSBody<Record<string, string>>>;
 
 const TOPIC_SUFFIX = ".complication";
 
@@ -23,7 +29,7 @@ const TOPIC_SUFFIX = ".complication";
 export function ComplicationNotification(
 	appBundleId: string,
 	data: NotificationData,
-): Notification<Record<string, string>> {
+): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;

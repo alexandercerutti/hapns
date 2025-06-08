@@ -9,11 +9,12 @@ export interface NotificationCustomAppData {}
 
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomAppData>;
+type NotificationObject = Notification<Record<string, string>>;
 
 export function MDMNotification(
 	mdmUid: string,
 	data: NotificationData,
-): Notification<Record<string, string>> {
+): NotificationObject {
 	assertTopicProvided(mdmUid);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;

@@ -1,5 +1,5 @@
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
+import type { APSBody, Notification, NotificationHeaders } from "./notification.js";
 
 /**
  * "If the location query requires an immediate response from the
@@ -9,6 +9,7 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
 type LocationAllowedPriorities = 5 | 10;
 
 type NotificationData = NotificationHeaders<LocationAllowedPriorities>;
+type NotificationObject = Notification<APSBody<Record<string, string>>, LocationAllowedPriorities>;
 
 const TOPIC_SUFFIX = ".location-query";
 
@@ -22,7 +23,7 @@ const TOPIC_SUFFIX = ".location-query";
 export function LocationNotification(
 	appBundleId: string,
 	data: NotificationData,
-): Notification<Record<string, string>, LocationAllowedPriorities> {
+): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 5 } = data;

@@ -1,7 +1,12 @@
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
+import type {
+	APSBody,
+	Notification,
+	NotificationBody,
+	NotificationHeaders,
+} from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -223,6 +228,8 @@ type LiveActivityNotificationBody = {
 type NotificationData = NotificationHeaders &
 	NotificationBody<LiveActivityNotificationBody, NotificationCustomAppData>;
 
+type NotificationObject = Notification<APSBody<LiveActivityNotificationBody>>;
+
 const TOPIC_SUFFIX = ".push-type.liveactivity";
 
 /**
@@ -235,7 +242,7 @@ const TOPIC_SUFFIX = ".push-type.liveactivity";
 export function LiveActivityNotification(
 	appBundleId: string,
 	data: NotificationData,
-): Notification<LiveActivityNotificationBody> {
+): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10, payload } = data;
@@ -272,7 +279,7 @@ export function LiveActivityNotification(
 							body: payload.alert?.body,
 							sound: payload.alert?.sound || "default",
 						},
-					} satisfies Notification<LiveActivityNotificationBody>["body"]["aps"],
+					} satisfies NotificationObject["body"]["aps"],
 				};
 			}
 
@@ -288,7 +295,7 @@ export function LiveActivityNotification(
 						"relevance-score": relevanceScore,
 						"dismissal-date": dismissalDate,
 						alert: createNotificationAlertBody(alert),
-					} satisfies Notification<LiveActivityNotificationBody>["body"]["aps"],
+					} satisfies NotificationObject["body"]["aps"],
 				};
 
 				return notificationBody;
@@ -302,7 +309,7 @@ export function LiveActivityNotification(
 					"relevance-score": relevanceScore,
 					timestamp,
 					alert: createNotificationAlertBody(alert),
-				} satisfies Notification<LiveActivityNotificationBody>["body"]["aps"],
+				} satisfies NotificationObject["body"]["aps"],
 			};
 
 			return notificationBody;

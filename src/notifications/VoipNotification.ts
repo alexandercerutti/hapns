@@ -1,6 +1,11 @@
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import { createError } from "../errors/create.js";
-import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
+import type {
+	APSBody,
+	Notification,
+	NotificationBody,
+	NotificationHeaders,
+} from "./notification.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -10,6 +15,7 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
 export interface NotificationCustomAppData {}
 
 type NotificationData = NotificationHeaders & NotificationBody<never, NotificationCustomAppData>;
+type NotificationObject = Notification<APSBody<Record<string, string>>>;
 
 const EXPIRATION_TOO_BIG_ERROR = createError(
 	"EXPIRATION_TOO_BIG",
@@ -39,10 +45,7 @@ const TOPIC_SUFFIX = ".voip";
  * @param data
  * @returns
  */
-export function VoipNotification(
-	appBundleId: string,
-	data: NotificationData,
-): Notification<Record<string, string>> {
+export function VoipNotification(appBundleId: string, data: NotificationData): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;

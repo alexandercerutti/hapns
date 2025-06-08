@@ -1,4 +1,10 @@
-import type { NotificationHeaders, Notification, Sound, NotificationBody } from "./notification.js";
+import type {
+	NotificationHeaders,
+	Notification,
+	Sound,
+	NotificationBody,
+	APSBody,
+} from "./notification.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { InterruptionLevel } from "../errors/assertions/interruption-level-valid.js";
@@ -280,6 +286,7 @@ export type AlertNotificationBody = (
 
 type NotificationData = NotificationHeaders &
 	NotificationBody<AlertNotificationBody, NotificationCustomAppData>;
+type NotificationObject = Notification<APSBody<AlertNotificationBody>>;
 
 /**
  *
@@ -288,10 +295,7 @@ type NotificationData = NotificationHeaders &
  * @returns
  */
 
-export function AlertNotification(
-	appBundleId: string,
-	data: NotificationData,
-): Notification<AlertNotificationBody> {
+export function AlertNotification(appBundleId: string, data: NotificationData): NotificationObject {
 	assertTopicProvided(appBundleId);
 
 	const { payload, expiration, appData, collapseID, priority } = data;
@@ -345,7 +349,7 @@ export function AlertNotification(
 						"interruption-level": interruptionLevel,
 						"relevance-score": relevanceScore,
 						"filter-criteria": filterCriteria,
-					} satisfies Notification<AlertNotificationBody>["body"]["aps"],
+					} satisfies NotificationObject["body"]["aps"],
 				};
 			}
 
@@ -364,10 +368,10 @@ export function AlertNotification(
 					"interruption-level": interruptionLevel,
 					"relevance-score": relevanceScore,
 					"filter-criteria": filterCriteria,
-				} satisfies Notification<AlertNotificationBody>["body"]["aps"],
+				} satisfies NotificationObject["body"]["aps"],
 			};
 		},
-	} satisfies Notification<AlertNotificationBody>;
+	} satisfies NotificationObject;
 }
 
 function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {

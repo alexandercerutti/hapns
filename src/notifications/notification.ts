@@ -34,13 +34,15 @@ type PushType =
 	| "voip"
 	| "pushtotalk";
 
+export interface APSBody<BodyProperties extends object> {
+	readonly aps: ToDashed<BodyProperties> | Record<never, never>;
+}
+
 export interface Notification<Body extends object, Priority extends 1 | 5 | 10 = 1 | 5 | 10>
 	extends Omit<NotificationHeaders<Priority>, "payload" | "appData"> {
 	readonly pushType: PushType;
 	readonly topic: string;
-	body: {
-		aps: ToDashed<Body> | Record<never, never>;
-	};
+	body: Body;
 }
 
 export type Sound =
