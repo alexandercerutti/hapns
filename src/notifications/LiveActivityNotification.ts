@@ -8,7 +8,7 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  * autocompletion to be extended by the user.
  * Must be exported to allow extending in the user's code.
  */
-export interface NotificationCustomData {}
+export interface NotificationCustomAppData {}
 
 type AlertField = string | { "loc-key": string; "loc-args"?: string[] };
 
@@ -221,7 +221,7 @@ type LiveActivityNotificationBody = {
 );
 
 type NotificationData = NotificationHeaders &
-	NotificationBody<LiveActivityNotificationBody, NotificationCustomData>;
+	NotificationBody<LiveActivityNotificationBody, NotificationCustomAppData>;
 
 const TOPIC_SUFFIX = ".push-type.liveactivity";
 

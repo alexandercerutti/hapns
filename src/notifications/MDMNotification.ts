@@ -5,10 +5,10 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  * autocompletion to be extended by the user.
  * Must be exported to allow extending in the user's code.
  */
-export interface NotificationCustomData {}
+export interface NotificationCustomAppData {}
 
 type NotificationData = NotificationHeaders &
-	NotificationBody<Record<string, string>, NotificationCustomData>;
+	NotificationBody<Record<string, string>, NotificationCustomAppData>;
 
 export function MDMNotification(
 	mdmUid: string,

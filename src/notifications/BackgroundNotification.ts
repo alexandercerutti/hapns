@@ -7,7 +7,7 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  * autocompletion to be extended by the user.
  * Must be exported to allow extending in the user's code.
  */
-export interface NotificationCustomData {}
+export interface NotificationCustomAppData {}
 
 interface BackgroundNotificationBody {
 	contentAvailable: 1;
@@ -15,7 +15,7 @@ interface BackgroundNotificationBody {
 
 type NotificationData = NotificationHeaders &
 	Omit<
-		NotificationBody<BackgroundNotificationBody, NotificationCustomData>,
+		NotificationBody<BackgroundNotificationBody, NotificationCustomAppData>,
 		"priority" | "payload"
 	>;
 

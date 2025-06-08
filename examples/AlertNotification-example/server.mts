@@ -71,7 +71,7 @@ const connector = TokenConnector({
 });
 
 declare module "hapns/notifications/AlertNotification" {
-	export interface NotificationCustomData {
+	export interface NotificationCustomAppData {
 		myCustomData: string;
 	}
 }

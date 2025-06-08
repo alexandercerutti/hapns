@@ -7,9 +7,9 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  * autocompletion to be extended by the user.
  * Must be exported to allow extending in the user's code.
  */
-export interface NotificationCustomData {}
+export interface NotificationCustomAppData {}
 
-type NotificationData = NotificationHeaders & NotificationBody<never, NotificationCustomData>;
+type NotificationData = NotificationHeaders & NotificationBody<never, NotificationCustomAppData>;
 
 const EXPIRATION_TOO_BIG_ERROR = createError(
 	"EXPIRATION_TOO_BIG",
