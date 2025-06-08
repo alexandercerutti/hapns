@@ -227,15 +227,15 @@ const TOPIC_SUFFIX = ".push-type.liveactivity";
 /**
  * Creates a notification about an ongoing Live Activity
  *
- * @param topic The topic of the notification. It will be suffixed, if needed, with `.push-type.liveactivity`.
+ * @param appBundleId The topic of the notification. It will be suffixed, if needed, with `.push-type.liveactivity`.
  * @param data
  * @returns
  */
 export function LiveActivityNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<LiveActivityNotificationBody> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10, payload } = data;
 
@@ -246,11 +246,11 @@ export function LiveActivityNotification(
 	return {
 		pushType: "liveactivity",
 		get topic() {
-			if (topic.endsWith(TOPIC_SUFFIX)) {
-				return topic;
+			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
+				return appBundleId;
 			}
 
-			return `${topic}${TOPIC_SUFFIX}`;
+			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			if (event === "start") {

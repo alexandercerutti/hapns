@@ -281,11 +281,18 @@ export type AlertNotificationBody = (
 type NotificationData = NotificationHeaders &
 	NotificationBody<AlertNotificationBody, NotificationCustomData>;
 
+/**
+ *
+ * @param appBundleId
+ * @param data
+ * @returns
+ */
+
 export function AlertNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<AlertNotificationBody> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { payload, expiration, appData, collapseID, priority } = data;
 
@@ -302,7 +309,7 @@ export function AlertNotification(
 
 	return {
 		pushType: "alert",
-		topic,
+		topic: appBundleId,
 		expiration: expiration ?? 0,
 		collapseID: collapseID ?? undefined,
 		priority: priority ?? 10,

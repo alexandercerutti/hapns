@@ -22,26 +22,26 @@ const TOPIC_SUFFIX = ".location-query";
 /**
  * Creates a notification about a location query of the user.
  *
- * @param topic The topic of the notification. It will be suffixed, if needed, with `.location-query`.
+ * @param appBundleId The topic of the notification. It will be suffixed, if needed, with `.location-query`.
  * @param data
  * @returns
  */
 export function LocationNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<Record<string, string>, LocationAllowedPriorities> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 5 } = data;
 
 	return {
 		pushType: "location",
 		get topic() {
-			if (topic.endsWith(TOPIC_SUFFIX)) {
-				return topic;
+			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
+				return appBundleId;
 			}
 
-			return `${topic}${TOPIC_SUFFIX}`;
+			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			return {

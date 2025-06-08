@@ -16,26 +16,26 @@ const TOPIC_SUFFIX = ".pushkit.fileprovider";
 /**
  * Creates a notification about an update to a file provider extension.
  *
- * @param topic The topic of the notification. It will be suffixed, if needed, with `.pushkit.fileprovider`.
+ * @param appBundleId It will be suffixed, if needed, with `.pushkit.fileprovider`.
  * @param data
  * @returns
  */
 export function FileProviderNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {
 		pushType: "fileprovider",
 		get topic() {
-			if (topic.endsWith(TOPIC_SUFFIX)) {
-				return topic;
+			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
+				return appBundleId;
 			}
 
-			return `${topic}${TOPIC_SUFFIX}`;
+			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			return {

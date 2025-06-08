@@ -15,26 +15,26 @@ const TOPIC_SUFFIX = ".voip-ptt";
 /**
  * Create a Push-to-Talk notification.
  *
- * @param topic The topic of the notification. It will be suffixed, if needed, with `.voip-ptt`.
+ * @param appBundleId The topic of the notification. It will be suffixed, if needed, with `.voip-ptt`.
  * @param data
  * @returns
  */
 export function PushToTalkNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {
 		pushType: "pushtotalk",
 		get topic() {
-			if (topic.endsWith(TOPIC_SUFFIX)) {
-				return topic;
+			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
+				return appBundleId;
 			}
 
-			return `${topic}${TOPIC_SUFFIX}`;
+			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
 		body: {
 			aps: {},

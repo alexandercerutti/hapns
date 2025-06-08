@@ -11,16 +11,16 @@ type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomData>;
 
 export function MDMNotification(
-	topic: string,
+	mdmUid: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
-	assertTopicProvided(topic);
+	assertTopicProvided(mdmUid);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {
 		pushType: "mdm",
-		topic,
+		topic: mdmUid,
 		body: {
 			aps: {},
 		},

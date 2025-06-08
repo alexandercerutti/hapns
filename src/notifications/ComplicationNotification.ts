@@ -16,26 +16,26 @@ const TOPIC_SUFFIX = ".complication";
 /**
  * Creates a notification for a WatchOS app complications to update.
  *
- * @param topic The topic of the notification. It will be suffixed, if needed, with `.complication`.
+ * @param appBundleId The topic of the notification. It will be suffixed, if needed, with `.complication`.
  * @param data
  * @returns
  */
 export function ComplicationNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {
 		pushType: "complication",
 		get topic() {
-			if (topic.endsWith(TOPIC_SUFFIX)) {
-				return topic;
+			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
+				return appBundleId;
 			}
 
-			return `${topic}${TOPIC_SUFFIX}`;
+			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
 		get body() {
 			return {

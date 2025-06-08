@@ -20,10 +20,10 @@ type NotificationData = NotificationHeaders &
 	>;
 
 export function BackgroundNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<BackgroundNotificationBody> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, appData } = data;
 
@@ -31,7 +31,7 @@ export function BackgroundNotification(
 
 	return {
 		pushType: "background",
-		topic,
+		topic: appBundleId,
 		expiration,
 		collapseID,
 		priority: 5,

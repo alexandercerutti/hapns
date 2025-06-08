@@ -14,21 +14,21 @@ type NotificationData = NotificationHeaders &
 /**
  * Creates a notification about the need of controls to be reloaded.
  *
- * @param topic The topic of the notification.
+ * @param appBundleId The topic of the notification.
  * @param data
  * @returns
  */
 export function ControlsNotification(
-	topic: string,
+	appBundleId: string,
 	data: NotificationData,
 ): Notification<Record<string, string>> {
-	assertTopicProvided(topic);
+	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
 	return {
 		pushType: "controls",
-		topic,
+		topic: appBundleId,
 		get body() {
 			return {
 				aps: {},
