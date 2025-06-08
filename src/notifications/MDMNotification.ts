@@ -1,3 +1,4 @@
+import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 /**
@@ -7,15 +8,20 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  */
 export interface NotificationCustomAppData {}
 
+/**
+ * @see https://developer.apple.com/documentation/devicemanagement/sending-mdm-commands-to-a-device#Initiate-Polling-for-MDM-Commands
+ */
+interface MDMNotificationBody {
+	mdm: string;
+}
+
 type NotificationData = NotificationHeaders &
 	NotificationBody<Record<string, string>, NotificationCustomAppData>;
-type NotificationObject = Notification<Record<string, string>>;
+type NotificationObject = Notification<MDMNotificationBody>;
 
-export function MDMNotification(
-	mdmUid: string,
-	data: NotificationData,
-): NotificationObject {
+export function MDMNotification(mdmUid: string, data: NotificationData): NotificationObject {
 	assertTopicProvided(mdmUid);
+	assertValidPayload(data.payload);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
@@ -23,7 +29,7 @@ export function MDMNotification(
 		pushType: "mdm",
 		topic: mdmUid,
 		body: {
-			aps: {},
+			mdm: data.payload.mdm,
 		},
 		expiration,
 		collapseID,
