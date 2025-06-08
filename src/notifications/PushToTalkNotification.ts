@@ -7,7 +7,13 @@ import type { Notification, NotificationBody, NotificationHeaders } from "./noti
  */
 export interface NotificationCustomAppData {}
 
-type NotificationData = NotificationHeaders &
+/**
+ * Expiration is automatically set to 0 and
+ * priority to 10, as per Apple requirements / suggestions.
+ *
+ * @see https://developer.apple.com/documentation/pushtotalk/creating-a-push-to-talk-app#Receive-audio
+ */
+type NotificationData = Omit<NotificationHeaders, "expiration" | "priority"> &
 	NotificationBody<Record<string, string>, NotificationCustomAppData>;
 
 const TOPIC_SUFFIX = ".voip-ptt";
@@ -25,7 +31,7 @@ export function PushToTalkNotification(
 ): Notification<Record<string, string>> {
 	assertTopicProvided(appBundleId);
 
-	const { expiration = 0, collapseID, priority = 10 } = data;
+	const { collapseID } = data;
 
 	return {
 		pushType: "pushtotalk",
@@ -39,8 +45,8 @@ export function PushToTalkNotification(
 		body: {
 			aps: {},
 		},
-		expiration,
 		collapseID,
-		priority,
+		expiration: 0,
+		priority: 10,
 	};
 }
