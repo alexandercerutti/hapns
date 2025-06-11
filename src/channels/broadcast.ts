@@ -11,13 +11,18 @@ interface BroadcastChannelSettings {
 const BROADCAST_SANDBOX_BASE_URL = "https://api-manage-broadcast.sandbox.push.apple.com:2195";
 const BROADCAST_PRODUCTION_BASE_URL = "https://api-manage-broadcast.push.apple.com:2196";
 
+const CONNECTOR_INVALID_ERROR = createError(
+	"CONNECTOR_INVALID_ERROR",
+	"Cannot manage broadcast channel: Connector is missing or is not a valid connector.",
+);
+
 export async function createBroadcastChannel(
 	connector: ConnectorProtocol,
 	settings: BroadcastChannelSettings,
 	useSandbox: boolean = false,
 ): Promise<BroadcastChannel> {
 	if (!connector || typeof connector.send !== "function") {
-		throw new Error("Connector is missing or is not a valid connector.");
+		throw new CONNECTOR_INVALID_ERROR();
 	}
 
 	if (!settings || typeof settings !== "object") {
@@ -69,7 +74,7 @@ export async function readChannel(
 	useSandbox: boolean = false,
 ): Promise<ChannelReadResponseBody> {
 	if (!connector || typeof connector.send !== "function") {
-		throw new Error("Connector is missing or is not a valid connector.");
+		throw new CONNECTOR_INVALID_ERROR();
 	}
 
 	if (!channelId || typeof channelId !== "string") {
@@ -116,7 +121,7 @@ export async function deleteChannel(
 	useSandbox: boolean = false,
 ): Promise<{ success: true; apnsRequestId: string }> {
 	if (!connector || typeof connector.send !== "function") {
-		throw new Error("Connector is missing or is not a valid connector.");
+		throw new CONNECTOR_INVALID_ERROR();
 	}
 
 	if (!channelId || typeof channelId !== "string") {
@@ -165,7 +170,7 @@ export async function readAllChannels(
 	useSandbox: boolean = false,
 ): Promise<BroadcastChannel[]> {
 	if (!connector || typeof connector.send !== "function") {
-		throw new Error("Connector is missing or is not a valid connector.");
+		throw new CONNECTOR_INVALID_ERROR();
 	}
 
 	if (!bundleId || typeof bundleId !== "string") {
