@@ -184,7 +184,6 @@ export async function readAllChannels(
 		baseUrl,
 		requestPath: `/1/apps/${bundleId}/all-channels`,
 		headers: {},
-		body: {},
 	});
 
 	const { channels } = (await channelReadResponse.body.json()) as { channels: string[] };
