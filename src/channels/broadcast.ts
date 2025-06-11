@@ -52,6 +52,11 @@ export async function createBroadcastChannel(
 	return BroadcastChannel(channelId, settings.bundleId);
 }
 
+interface SourceChannelReadResponseBody {
+	"message-storage-policy": number;
+	"push-type": string;
+}
+
 interface ChannelReadResponseBody {
 	messageStoragePolicy: number;
 	pushType: string;
@@ -86,11 +91,10 @@ export async function readChannel(
 		baseUrl,
 		requestPath: `/1/apps/${bundleId}/channels`,
 		headers: channelHeaders,
-		body: {},
 	});
 
-	const { messageStoragePolicy, pushType } =
-		(await channelReadResponse.body.json()) as ChannelReadResponseBody;
+	const { "message-storage-policy": messageStoragePolicy, "push-type": pushType } =
+		(await channelReadResponse.body.json()) as SourceChannelReadResponseBody;
 
 	return {
 		messageStoragePolicy,
