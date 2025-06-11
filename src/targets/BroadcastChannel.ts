@@ -4,6 +4,7 @@ const BROADCAST_DELIVERY_PATH = "/4/device/";
 
 export interface BroadcastChannel extends NotificationTarget {
 	channelId: string;
+	bundleId: string;
 }
 
 export function BroadcastChannel(channelId: string, bundleId: string): BroadcastChannel {
@@ -17,6 +18,7 @@ export function BroadcastChannel(channelId: string, bundleId: string): Broadcast
 
 	return {
 		channelId,
+		bundleId,
 		getBaseUrl(useSandbox: boolean = false) {
 			return useSandbox ? "https://api.sandbox.push.apple.com" : "https://api.push.apple.com";
 		},
