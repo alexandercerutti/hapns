@@ -45,7 +45,7 @@ export async function createBroadcastChannel(
 		requestPath: `/1/apps/${settings.bundleId}/channels`,
 		headers: channelHeaders,
 		body: {
-			messageStoragePolicy: settings.messageStoragePolicy,
+			"message-storage-policy": settings.messageStoragePolicy,
 			"push-type": "LiveActivity",
 		},
 	});
