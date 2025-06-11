@@ -70,21 +70,18 @@ interface ChannelReadResponseBody {
 
 export async function readChannel(
 	connector: ConnectorProtocol,
-	channelId: string,
-	bundleId: string,
+	bChannel: BroadcastChannel,
 	useSandbox: boolean = false,
 ): Promise<ChannelReadResponseBody> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
 	}
 
-	if (!channelId || typeof channelId !== "string") {
-		throw new Error("Channel ID is missing or is not a string.");
+	if (!isBroadcastChannel(bChannel)) {
+		throw new Error("Channel is missing or is not a valid BroadcastChannel object.");
 	}
 
-	if (!bundleId || typeof bundleId !== "string") {
-		throw new Error("Bundle ID is missing or is not a string.");
-	}
+	const { channelId, bundleId } = bChannel;
 
 	const baseUrl = useSandbox ? BROADCAST_SANDBOX_BASE_URL : BROADCAST_PRODUCTION_BASE_URL;
 
@@ -117,21 +114,18 @@ export async function readChannel(
  */
 export async function deleteChannel(
 	connector: ConnectorProtocol,
-	channelId: string,
-	bundleId: string,
+	bChannel: BroadcastChannel,
 	useSandbox: boolean = false,
 ): Promise<{ success: true; apnsRequestId: string }> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
 	}
 
-	if (!channelId || typeof channelId !== "string") {
-		throw new Error("Channel ID is missing or is not a string.");
+	if (!isBroadcastChannel(bChannel)) {
+		throw new Error("Channel is missing or is not a valid BroadcastChannel object.");
 	}
 
-	if (!bundleId || typeof bundleId !== "string") {
-		throw new Error("Bundle ID is missing or is not a string.");
-	}
+	const { channelId, bundleId } = bChannel;
 
 	const baseUrl = useSandbox ? BROADCAST_SANDBOX_BASE_URL : BROADCAST_PRODUCTION_BASE_URL;
 
@@ -154,6 +148,13 @@ export async function deleteChannel(
 		success: true,
 		apnsRequestId,
 	};
+}
+
+function isBroadcastChannel(channel: {}): channel is BroadcastChannel {
+	return (
+		(channel && typeof channel === "object" && "channelId" in channel && "bundleId" in channel) ||
+		false
+	);
 }
 
 /**
