@@ -1,4 +1,5 @@
 import { Pool } from "undici";
+import type { Dispatcher } from "undici";
 import { Connector } from "./connector.js";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
@@ -82,12 +83,6 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 				throw new INVALID_HEADERS_ERROR();
 			}
 
-			if (!payload.body || typeof payload.body !== "object") {
-				throw new INVALID_BODY_ERROR();
-			}
-
-			const body = JSON.stringify(payload.body);
-
 			const poolId = `${payload.method || "POST"} ${payload.baseUrl}`;
 			let pool = pools.get(poolId);
 
@@ -112,12 +107,22 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 				pools.set(poolId, pool);
 			}
 
-			const response = await pool.request({
+			const requestOptions: Dispatcher.RequestOptions = {
 				method: payload.method,
 				path: payload.requestPath,
 				headers: payload.headers,
-				body,
-			});
+				body: undefined,
+			};
+
+			if (payload.method !== "GET") {
+				if (!payload.body || typeof payload.body !== "object") {
+					throw new INVALID_BODY_ERROR();
+				}
+
+				requestOptions.body = JSON.stringify(payload.body);
+			}
+
+			const response = await pool.request(requestOptions);
 
 			if (response.statusCode !== 200) {
 				const { reason } = (await response.body.json()) as { reason: string; timestamp?: number };

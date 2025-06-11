@@ -25,14 +25,19 @@ export interface APNsHeaders {
 	"apns-collapse-id"?: string;
 }
 
-export interface ConnectorSendPayload<Headers extends Record<string, string | undefined>> {
-	method: "POST" | "GET" | "DELETE";
+export type ConnectorSendPayload<Headers extends Record<string, string | undefined>> = {
 	baseUrl: string;
 	requestPath: string;
 	headers: Headers;
-	body: Record<string, unknown>;
-}
-
+} & (
+	| {
+			method: "POST" | "DELETE";
+			body: Record<string, unknown>;
+	  }
+	| {
+			method: "GET";
+	  }
+);
 export interface DeliveryResult {
 	apnsId: string;
 	apnsUniqueId?: string | undefined;
