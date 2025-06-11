@@ -124,7 +124,7 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 
 			const response = await pool.request(requestOptions);
 
-			if (response.statusCode !== 200) {
+			if (![200, 201].includes(response.statusCode)) {
 				const { reason } = (await response.body.json()) as { reason: string; timestamp?: number };
 				const { "apns-id": apnsId, "apns-request-id": apnsRequestId } = response.headers as Record<
 					string,
