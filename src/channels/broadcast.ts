@@ -137,7 +137,7 @@ export async function deleteChannel(
 	const channelDeleteResponse = await connector.send({
 		method: "DELETE",
 		baseUrl,
-		requestPath: `/1/apps/${channelId}/channels`,
+		requestPath: `/1/apps/${bundleId}/channels`,
 		headers: {
 			"apns-channel-id": channelId,
 		},
