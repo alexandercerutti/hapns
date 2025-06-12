@@ -125,11 +125,11 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 				body: undefined,
 			};
 
-			if (payload.method !== "GET") {
-				if (!payload.body || typeof payload.body !== "object") {
-					throw new INVALID_BODY_ERROR();
-				}
+			if (payload.method === "POST" && (!payload.body || typeof payload.body !== "object")) {
+				throw new INVALID_BODY_ERROR();
+			}
 
+			if (payload.method !== "GET") {
 				requestOptions.body = JSON.stringify(payload.body);
 			}
 

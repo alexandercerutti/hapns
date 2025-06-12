@@ -136,7 +136,6 @@ export async function deleteChannel(
 		headers: {
 			"apns-channel-id": channelId,
 		},
-		body: {},
 	});
 
 	const { "apns-request-id": apnsRequestId } = channelDeleteResponse.headers as Record<

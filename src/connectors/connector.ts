@@ -31,8 +31,12 @@ export type ConnectorSendPayload<Headers extends Record<string, string | undefin
 	headers: Headers;
 } & (
 	| {
-			method: "POST" | "DELETE";
+			method: "POST";
 			body: Record<string, unknown>;
+	  }
+	| {
+			method: "DELETE";
+			body?: Record<string, unknown> | undefined;
 	  }
 	| {
 			method: "GET";
