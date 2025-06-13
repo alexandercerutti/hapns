@@ -1,6 +1,6 @@
 import type { ConnectorProtocol } from "../connectors/connector.js";
 import { createError } from "../errors/create.js";
-import { BroadcastChannel } from "../targets/BroadcastChannel.js";
+import { BroadcastChannel } from "../targets/broadcastchannel.js";
 
 interface BroadcastChannelSettings {
 	bundleId: string;
