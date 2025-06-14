@@ -6,7 +6,6 @@ interface BroadcastChannelSettings {
 	bundleId: string;
 	messageStoragePolicy?: 1 | 0;
 	apnsRequestId?: string;
-	useSandbox?: boolean;
 }
 
 const BROADCAST_SANDBOX_BASE_URL = "https://api-manage-broadcast.sandbox.push.apple.com:2195";
