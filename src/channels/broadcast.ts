@@ -39,13 +39,17 @@ export async function createBroadcastChannel(
 		"apns-request-id": settings.apnsRequestId || "",
 	};
 
+	const storagePolicy = settings.messageStoragePolicy
+		? Math.max(0, Math.min(settings.messageStoragePolicy, 1))
+		: undefined;
+
 	const channelCreationResponse = await connector.send({
 		method: "POST",
 		baseUrl,
 		requestPath: `/1/apps/${settings.bundleId}/channels`,
 		headers: channelHeaders,
 		body: {
-			"message-storage-policy": settings.messageStoragePolicy,
+			"message-storage-policy": storagePolicy,
 			"push-type": "LiveActivity",
 		},
 	});
