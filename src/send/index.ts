@@ -8,7 +8,7 @@ type WithSandbox<T extends object> = T & {
 };
 
 type SendingOptions = WithSandbox<{
-	apnsId: string;
+	apnsId?: string;
 }>;
 
 const CONNECTOR_INVALID_ERROR = createError(
