@@ -7,6 +7,10 @@ type WithSandbox<T extends object> = T & {
 	useSandbox?: boolean;
 };
 
+type SendingOptions = WithSandbox<{
+	apnsId: string;
+}>;
+
 const CONNECTOR_INVALID_ERROR = createError(
 	"CONNECTOR_INVALID_ERROR",
 	"Cannot send notification: Connector is missing or is not a valid connector.",
@@ -36,7 +40,7 @@ export async function send(
 	connector: ConnectorProtocol,
 	notification: Notification<object>,
 	target: NotificationTarget,
-	settings: WithSandbox<{ apnsId: string }>,
+	settings: SendingOptions,
 ): Promise<DeliveryResult> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
