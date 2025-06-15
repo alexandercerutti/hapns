@@ -2,10 +2,17 @@ import type { ConnectorProtocol } from "../connectors/connector.js";
 import { createError } from "../errors/create.js";
 import { BroadcastChannel } from "../targets/broadcastchannel.js";
 
+type WithRequestId<T extends object> = T & {
+	apnsRequestId?: string;
+};
+
+type WithSandbox<T extends object> = T & {
+	useSandbox?: boolean;
+};
+
 interface BroadcastChannelSettings {
 	bundleId: string;
 	messageStoragePolicy?: 1 | 0;
-	apnsRequestId?: string;
 }
 
 const BROADCAST_SANDBOX_BASE_URL = "https://api-manage-broadcast.sandbox.push.apple.com:2195";
@@ -18,8 +25,7 @@ const CONNECTOR_INVALID_ERROR = createError(
 
 export async function createBroadcastChannel(
 	connector: ConnectorProtocol,
-	settings: BroadcastChannelSettings,
-	useSandbox: boolean = false,
+	settings: WithSandbox<WithRequestId<BroadcastChannelSettings>>,
 ): Promise<BroadcastChannel> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -33,20 +39,22 @@ export async function createBroadcastChannel(
 		throw new Error("Settings bundleId is missing or is not a string.");
 	}
 
+	const { useSandbox = false, apnsRequestId, bundleId, messageStoragePolicy } = settings;
+
 	const baseUrl = useSandbox ? BROADCAST_SANDBOX_BASE_URL : BROADCAST_PRODUCTION_BASE_URL;
 
 	const channelHeaders = {
-		"apns-request-id": settings.apnsRequestId || "",
+		"apns-request-id": apnsRequestId,
 	};
 
-	const storagePolicy = settings.messageStoragePolicy
-		? Math.max(0, Math.min(settings.messageStoragePolicy, 1))
+	const storagePolicy = messageStoragePolicy
+		? Math.max(0, Math.min(messageStoragePolicy, 1))
 		: undefined;
 
 	const channelCreationResponse = await connector.send({
 		method: "POST",
 		baseUrl,
-		requestPath: `/1/apps/${settings.bundleId}/channels`,
+		requestPath: `/1/apps/${bundleId}/channels`,
 		headers: channelHeaders,
 		body: {
 			"message-storage-policy": storagePolicy,
@@ -58,7 +66,7 @@ export async function createBroadcastChannel(
 
 	const { "apns-channel-id": channelId } = headers as Record<string, string>;
 
-	return BroadcastChannel(channelId, settings.bundleId);
+	return BroadcastChannel(channelId, bundleId);
 }
 
 interface SourceChannelReadResponseBody {
@@ -74,7 +82,7 @@ interface ChannelReadResponseBody {
 export async function readChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
-	useSandbox: boolean = false,
+	settings: WithSandbox<WithRequestId<{}>> = {},
 ): Promise<ChannelReadResponseBody> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -85,11 +93,13 @@ export async function readChannel(
 	}
 
 	const { channelId, bundleId } = bChannel;
+	const { useSandbox = false, apnsRequestId } = settings ?? {};
 
 	const baseUrl = useSandbox ? BROADCAST_SANDBOX_BASE_URL : BROADCAST_PRODUCTION_BASE_URL;
 
 	const channelHeaders = {
-		"apns-channel-id": channelId || "",
+		"apns-channel-id": channelId,
+		"apns-request-id": apnsRequestId,
 	};
 
 	const channelReadResponse = await connector.send({
@@ -118,7 +128,7 @@ export async function readChannel(
 export async function deleteChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
-	useSandbox: boolean = false,
+	settings: WithSandbox<WithRequestId<{}>> = {},
 ): Promise<{ success: true; apnsRequestId: string }> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -129,6 +139,7 @@ export async function deleteChannel(
 	}
 
 	const { channelId, bundleId } = bChannel;
+	const { useSandbox = false, apnsRequestId } = settings ?? {};
 
 	const baseUrl = useSandbox ? BROADCAST_SANDBOX_BASE_URL : BROADCAST_PRODUCTION_BASE_URL;
 
@@ -138,17 +149,15 @@ export async function deleteChannel(
 		requestPath: `/1/apps/${bundleId}/channels`,
 		headers: {
 			"apns-channel-id": channelId,
+			"apns-request-id": apnsRequestId,
 		},
 	});
 
-	const { "apns-request-id": apnsRequestId } = channelDeleteResponse.headers as Record<
-		string,
-		string
-	>;
+	const { "apns-request-id": requestId } = channelDeleteResponse.headers as Record<string, string>;
 
 	return {
 		success: true,
-		apnsRequestId,
+		apnsRequestId: requestId,
 	};
 }
 
@@ -171,7 +180,7 @@ function isBroadcastChannel(channel: {}): channel is BroadcastChannel {
 export async function readAllChannels(
 	connector: ConnectorProtocol,
 	bundleId: string,
-	useSandbox: boolean = false,
+	settings: WithSandbox<WithRequestId<{}>> = {},
 ): Promise<BroadcastChannel[]> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -181,13 +190,17 @@ export async function readAllChannels(
 		throw new Error("Bundle ID is missing or is not a string.");
 	}
 
+	const { useSandbox = false, apnsRequestId } = settings ?? {};
+
 	const baseUrl = useSandbox ? BROADCAST_SANDBOX_BASE_URL : BROADCAST_PRODUCTION_BASE_URL;
 
 	const channelReadResponse = await connector.send({
 		method: "GET",
 		baseUrl,
 		requestPath: `/1/apps/${bundleId}/all-channels`,
-		headers: {},
+		headers: {
+			"apns-request-id": apnsRequestId,
+		},
 	});
 
 	const { channels } = (await channelReadResponse.body.json()) as { channels: string[] };
