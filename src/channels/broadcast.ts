@@ -79,10 +79,12 @@ interface ChannelReadResponseBody {
 	pushType: string;
 }
 
+type ChannelReadSettings = WithSandbox<WithRequestId<{}>>;
+
 export async function readChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
-	settings: WithSandbox<WithRequestId<{}>> = {},
+	settings: ChannelReadSettings = {},
 ): Promise<ChannelReadResponseBody> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -118,6 +120,8 @@ export async function readChannel(
 	};
 }
 
+type ChannelDeleteSettings = WithSandbox<WithRequestId<{}>>;
+
 /**
  * Sends a request to delete an existing broadcast channel.
  *
@@ -128,7 +132,7 @@ export async function readChannel(
 export async function deleteChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
-	settings: WithSandbox<WithRequestId<{}>> = {},
+	settings: ChannelDeleteSettings = {},
 ): Promise<{ success: true; apnsRequestId: string }> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -180,7 +184,7 @@ function isBroadcastChannel(channel: {}): channel is BroadcastChannel {
 export async function readAllChannels(
 	connector: ConnectorProtocol,
 	bundleId: string,
-	settings: WithSandbox<WithRequestId<{}>> = {},
+	settings: ChannelReadSettings = {},
 ): Promise<BroadcastChannel[]> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
