@@ -3,6 +3,10 @@ import { createError } from "../errors/create.js";
 import type { Notification } from "../notifications/notification.js";
 import type { NotificationTarget } from "../targets/target.js";
 
+type WithSandbox<T extends object> = T & {
+	useSandbox?: boolean;
+};
+
 const CONNECTOR_INVALID_ERROR = createError(
 	"CONNECTOR_INVALID_ERROR",
 	"Cannot send notification: Connector is missing or is not a valid connector.",
@@ -32,7 +36,7 @@ export async function send(
 	connector: ConnectorProtocol,
 	notification: Notification<object>,
 	target: NotificationTarget,
-	useSandbox: boolean = false,
+	settings: WithSandbox<{ apnsId: string }>,
 ): Promise<DeliveryResult> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
@@ -54,6 +58,8 @@ export async function send(
 		throw new UNSUPPORTED_CONNECTOR_ERROR();
 	}
 
+	const { useSandbox = false, apnsId } = settings;
+
 	const headers = {
 		"apns-expiration": String(notification.expiration || 0),
 		"apns-priority": String(notification.priority || 1),
@@ -62,6 +68,7 @@ export async function send(
 		"apns-collapse-id": notification.collapseID,
 		"apns-channel-id": undefined,
 		"apns-request-id": undefined,
+		"apns-id": apnsId,
 		...(target.headers || {}),
 	} satisfies APNsHeaders;
 
@@ -84,14 +91,14 @@ export async function send(
 	});
 
 	const {
-		"apns-id": apnsId,
+		"apns-id": apnsResponseId,
 		// Only for broadcast
 		"apns-request-id": apnsRequestId,
 		"apns-unique-id": apnsUniqueId,
 	} = response.headers as Record<string, string>;
 
 	return {
-		apnsId: apnsId || apnsRequestId,
+		apnsId: apnsResponseId || apnsRequestId,
 		apnsUniqueId,
 	};
 }

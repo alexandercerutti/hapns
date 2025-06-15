@@ -1,4 +1,5 @@
 import type { Dispatcher } from "undici";
+import type { PushType } from "../notifications/notification.js";
 
 export const Connector = {
 	Certificate: 0b001,
@@ -7,15 +8,16 @@ export const Connector = {
 export type Connector = (typeof Connector)[keyof typeof Connector];
 
 export interface APNsHeaders {
-	"apns-request-id"?: string;
+	"apns-id"?: string;
 	"apns-expiration": string;
 	"apns-priority": string;
-	"apns-push-type": string;
+	"apns-push-type": PushType;
 
 	/**
 	 * Only broadcast notifications
 	 */
 	"apns-channel-id"?: string;
+	"apns-request-id"?: string;
 
 	/**
 	 * Only classic notifications,

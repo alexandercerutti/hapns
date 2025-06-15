@@ -24,7 +24,7 @@ export interface NotificationHeaders<Priority extends 1 | 5 | 10 = 1 | 5 | 10> {
 	priority?: Priority;
 }
 
-type PushType =
+export type PushType =
 	| "alert"
 	| "background"
 	| "controls"
