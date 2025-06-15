@@ -73,6 +73,6 @@ const notification = LocationNotification(APNS_TOPIC, {
 	expiration: 0,
 });
 
-const sendReply = await send(connector, notification, device, USE_SANDBOX);
+const sendReply = await send(connector, notification, device, { useSandbox: USE_SANDBOX });
 
 console.log(sendReply);

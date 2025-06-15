@@ -70,6 +70,6 @@ const notification = BackgroundNotification(APNS_TOPIC, {
 	},
 });
 
-const sendReply = await send(connector, notification, device, USE_SANDBOX);
+const sendReply = await send(connector, notification, device, { useSandbox: USE_SANDBOX });
 
 console.log(sendReply);

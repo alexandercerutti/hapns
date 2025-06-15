@@ -103,7 +103,7 @@ setTimeout(async () => {
 		priority: 5,
 	});
 
-	console.log(await send(connector, notification, devicePushToStart, USE_SANDBOX));
+	console.log(await send(connector, notification, devicePushToStart, { useSandbox: USE_SANDBOX }));
 }, 0);
 
 setTimeout(async () => {
@@ -123,7 +123,7 @@ setTimeout(async () => {
 		priority: 10,
 	});
 
-	console.log(await send(connector, notification, device, USE_SANDBOX));
+	console.log(await send(connector, notification, device, { useSandbox: USE_SANDBOX }));
 }, 1000);
 
 setTimeout(async () => {
@@ -143,7 +143,7 @@ setTimeout(async () => {
 		priority: 10,
 	});
 
-	console.log(await send(connector, notification, device, USE_SANDBOX));
+	console.log(await send(connector, notification, device, { useSandbox: USE_SANDBOX }));
 }, 3000);
 
 setTimeout(async () => {
@@ -166,5 +166,5 @@ setTimeout(async () => {
 		priority: 10,
 	});
 
-	console.log(await send(connector, notification, device, USE_SANDBOX));
+	console.log(await send(connector, notification, device, { useSandbox: USE_SANDBOX }));
 }, 5000);

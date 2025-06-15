@@ -85,6 +85,6 @@ const notification = AlertNotification(APNS_TOPIC, {
 	priority: 10,
 });
 
-const sendReply = await send(connector, notification, device, USE_SANDBOX);
+const sendReply = await send(connector, notification, device, { useSandbox: USE_SANDBOX });
 
 console.log(sendReply);

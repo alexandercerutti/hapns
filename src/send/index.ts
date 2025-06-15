@@ -40,7 +40,7 @@ export async function send(
 	connector: ConnectorProtocol,
 	notification: Notification<object>,
 	target: NotificationTarget,
-	settings: SendingOptions,
+	settings: SendingOptions = {},
 ): Promise<DeliveryResult> {
 	if (!connector || typeof connector.send !== "function") {
 		throw new CONNECTOR_INVALID_ERROR();
