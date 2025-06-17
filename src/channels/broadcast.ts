@@ -23,6 +23,21 @@ const CONNECTOR_INVALID_ERROR = createError(
 	"Cannot manage broadcast channel: Connector is missing or is not a valid connector.",
 );
 
+const BUNDLE_ID_MISSING_ERROR = createError(
+	"BUNDLE_ID_MISSING_ERROR",
+	"Cannot manage broadcast channel: bundleId is missing or is not a string.",
+);
+
+const INVALID_SETTINGS_OBJ_ERROR = createError(
+	"INVALID_SETTINGS_OBJ_ERROR",
+	"Cannot manage broadcast channel: settings are missing or are not a valid settings object.",
+);
+
+const INVALID_BROADCAST_CHANNEL_ERROR = createError(
+	"INVALID_BROADCAST_CHANNEL_ERROR",
+	"Cannot manage broadcast channel: BroadcastChannel is missing or is not a valid BroadcastChannel object.",
+);
+
 export async function createBroadcastChannel(
 	connector: ConnectorProtocol,
 	settings: WithSandbox<WithRequestId<BroadcastChannelSettings>>,
@@ -32,11 +47,11 @@ export async function createBroadcastChannel(
 	}
 
 	if (!settings || typeof settings !== "object") {
-		throw new Error("Settings are missing or are not a valid settings object.");
+		throw new INVALID_SETTINGS_OBJ_ERROR();
 	}
 
 	if (!settings.bundleId || typeof settings.bundleId !== "string") {
-		throw new Error("Settings bundleId is missing or is not a string.");
+		throw new BUNDLE_ID_MISSING_ERROR();
 	}
 
 	const { useSandbox = false, apnsRequestId, bundleId, messageStoragePolicy } = settings;
@@ -91,7 +106,7 @@ export async function readChannel(
 	}
 
 	if (!isBroadcastChannel(bChannel)) {
-		throw new Error("Channel is missing or is not a valid BroadcastChannel object.");
+		throw new INVALID_BROADCAST_CHANNEL_ERROR();
 	}
 
 	const { channelId, bundleId } = bChannel;
@@ -139,7 +154,7 @@ export async function deleteChannel(
 	}
 
 	if (!isBroadcastChannel(bChannel)) {
-		throw new Error("Channel is missing or is not a valid BroadcastChannel object.");
+		throw new INVALID_BROADCAST_CHANNEL_ERROR();
 	}
 
 	const { channelId, bundleId } = bChannel;
@@ -191,7 +206,7 @@ export async function readAllChannels(
 	}
 
 	if (!bundleId || typeof bundleId !== "string") {
-		throw new Error("Bundle ID is missing or is not a string.");
+		throw new BUNDLE_ID_MISSING_ERROR();
 	}
 
 	const { useSandbox = false, apnsRequestId } = settings ?? {};
