@@ -9,9 +9,9 @@ import Foundation
 @Observable
 /** We have to use class in order to use @Observable */
 class PrintingActivityViewModel {
-    let printDuration: TimeInterval = 60
-    var printName = "Benchy Boat"
+    var printDuration: TimeInterval = 60
     var progress: Double = 0
+    var printName = "Benchy Boat"
     var printActivity: Activity<PrintingAttributes>? = nil
     
     init(printName: String = "Benchy Boat", progress: Double = 0, printActivity: Activity<PrintingAttributes>? = nil) {
@@ -61,12 +61,15 @@ class PrintingActivityViewModel {
                 }
             }
         }
-
     }
     
     func startLiveActivity(_ pushType: PushType? = nil) {
-        progress = 0
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else {
+            print("Activities are not enabled.")
+            return
+        }
         
+        progress = 0
         print("Start Date:", Date.now)
         
         let attributes = PrintingAttributes(
@@ -89,30 +92,20 @@ class PrintingActivityViewModel {
                 ),
                 pushType: pushType
             )
-            
-            if (pushType == .token && printActivity != nil) {
-                Task {
-                    for await pushToken in printActivity!.pushTokenUpdates {
-                        let pushTokenString = pushToken.reduce("") {
-                              $0 + String(format: "%02x", $1)
-                        }
-                        
-                        print("New PUSH TOKEN for the current Live Activity:", pushTokenString)
-                    }
-                }
-            }
         } catch {
             print("Error starting live activity: \(error)")
         }
     }
     
-    func updateLiveActivity() {
+    func updateLiveActivity(progress: TimeInterval) {
         let statusMessage = switch (progress) {
             case 0 ..< 0.3: "Heating bed and extruder..."
             case 0.3 ..< 0.6: "Printing base layers..."
             case 0.6 ..< 0.9: "Printing details..."
             default: "Finishing print..."
         }
+        
+        self.progress = progress
         
         let updatedState = ActivityContent(
             state: PrintingAttributes.ContentState(

@@ -7,20 +7,22 @@
 
 import Foundation
 
+@Observable
 class PrintingActivityTimer: ObservableObject {
-  @Published var elapsedTime: TimeInterval = 0
+  var elapsedTime: TimeInterval = 0
   private var timer: Timer?
-    
-  func start(onTimeIncrease: (() -> Void)? = nil) {
-	elapsedTime = 0;
 
-	timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-	  self.elapsedTime += 1
-	  onTimeIncrease?()
+	func start(onTimeIncrease: ((_ nextTime: TimeInterval) -> Void)? = nil) {
+		elapsedTime = 0;
+
+		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+			self.elapsedTime += 1
+			onTimeIncrease?(self.elapsedTime)
+		}
 	}
-  }
   
-  func stop() {
-	timer?.invalidate()
-  }
+	func stop() {
+		timer?.invalidate()
+		timer = nil;
+	}
 }

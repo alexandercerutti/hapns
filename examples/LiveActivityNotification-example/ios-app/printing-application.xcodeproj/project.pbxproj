@@ -77,11 +77,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		113263452DECAEF800E35AFF /* la-example */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "la-example";
-			sourceTree = "<group>";
-		};
 		1132635B2DED04FB00E35AFF /* PrintingTimeActivity */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -125,7 +120,6 @@
 			isa = PBXGroup;
 			children = (
 				113263712DED056B00E35AFF /* Shared */,
-				113263452DECAEF800E35AFF /* la-example */,
 				1132635B2DED04FB00E35AFF /* PrintingTimeActivity */,
 				113264012DF21F5100E35AFF /* printing-application */,
 				113263562DED04FB00E35AFF /* Frameworks */,
@@ -179,9 +173,6 @@
 			);
 			dependencies = (
 				1132636A2DED04FD00E35AFF /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				113263452DECAEF800E35AFF /* la-example */,
 			);
 			name = "printing-application";
 			packageProductDependencies = (
