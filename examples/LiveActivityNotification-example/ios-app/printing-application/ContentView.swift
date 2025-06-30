@@ -8,20 +8,13 @@
 import SwiftUI
 import ActivityKit
 
-enum PrintActivity {
-    case local
-    case remote
-    case none
-}
-
 struct ContentView: View {
-    @State private var printActivity: PrintActivity = .none;
     @State var viewModel = PrintingActivityViewModel()
-    @ObservedObject var timer = PrintingActivityTimer()
+    @State private var isRemoteStartingPrintingEnabled = false
     
     var isLocalPrinting: Binding<Bool> {
         Binding<Bool>(
-            get: { printActivity == .local },
+            get: { viewModel.activityType == .local },
             set: { _ in
             }
         )
@@ -29,7 +22,7 @@ struct ContentView: View {
     
     var isRemotePrinting: Binding<Bool> {
         Binding<Bool>(
-            get: { printActivity == .remote },
+            get: { viewModel.activityType == .remoteStart || viewModel.activityType == .remoteUpdates },
             set: { _ in
             }
         )
@@ -39,21 +32,21 @@ struct ContentView: View {
         VStack(spacing: 20) {
             Image(systemName: "printer.fill.and.paper.fill")
                 .font(.system(size: 80))
-                .foregroundColor(printActivity != .none ? .blue : .gray)
+                .foregroundColor(viewModel.activityType != .none ? .blue : .gray)
             
-            Text(printActivity != .none ? "Printing in progress..." : "Ready to print")
+            Text(viewModel.activityType != .none ? "Printing in progress..." : "Ready to print")
                 .font(.title)
                 .fontWeight(.bold)
             
-            if printActivity != .none {
+            if viewModel.activityType != .none {
                 VStack(spacing: 15) {
                     Text("Printing: \(viewModel.printName)")
                         .font(.headline)
                     
                     HStack {
-                        Text(String(format: "%02d:%02d", Int(timer.elapsedTime) / 60, Int(timer.elapsedTime) % 60))
+                        Text(String(format: "%02d:%02d", Int(viewModel.elapsedTime) / 60, Int(viewModel.elapsedTime) % 60))
                         Text("/")
-                        Text(String(format: "%02d:%02d", Int(viewModel.printDuration) / 60, Int(viewModel.printDuration) % 60))
+                        Text(String(format: "%02d:%02d", Int(viewModel.estimatedPrintDuration) / 60, Int(viewModel.estimatedPrintDuration) % 60))
                     }
                     
                     Gauge(value: viewModel.progress) {
@@ -69,53 +62,63 @@ struct ContentView: View {
                 .shadow(radius: 3)
             }
 
-            PrintActionButton(title: printActivity == .local ? "Stop local printing" : "Start local printing", isActive: isLocalPrinting, backgroundColor: .yellow) {
-                if (printActivity == .local) {
+            PrintActionButton(title: viewModel.activityType == .local ? "Stop local printing" : "Start local printing", isActive: isLocalPrinting, backgroundColor: .yellow) {
+                if (viewModel.activityType == .local) {
                     stopPrint()
-                } else if (printActivity == .none) {
-                    startLocalPrint()
+                } else if (viewModel.activityType == .none) {
+                    viewModel.startActivity(type: .local)
                 }
             }
-            .disabled(printActivity == .remote)
+            .disabled(viewModel.activityType == .remoteStart || viewModel.activityType == .remoteUpdates)
             
-            PrintActionButton(title: printActivity == .remote ? "Stop remote printing" : "Start remote print", isActive: isRemotePrinting, backgroundColor: .blue) {
-                if (printActivity == .remote) {
+            Divider()
+            
+            PrintActionButton(title: viewModel.activityType == .remoteStart || viewModel.activityType == .remoteUpdates ? "Stop remote printing" : "Start remote print", isActive: isRemotePrinting, backgroundColor: .blue) {
+                if (viewModel.activityType == .remoteStart || viewModel.activityType == .remoteUpdates) {
                     stopPrint()
-                } else if (printActivity == .none) {
-                    startRemotePrint()
+                } else if (viewModel.activityType == .none) {
+                    if (isRemoteStartingPrintingEnabled) {
+                        startRemotelyActivatedPrint()
+                        return
+                    }
+
+                    viewModel.startActivity(type: .remoteUpdates)
                 }
             }
-            .disabled(printActivity == .local)
+            .disabled(viewModel.activityType == .local)
             
+            Toggle("Enable remote start", isOn: $isRemoteStartingPrintingEnabled)
+                .toggleStyle(.switch)
+                .disabled(viewModel.activityType != .none)
         }
         .padding()
     }
     
-    func startLocalPrint() {
-        printActivity = .local
-        viewModel.startLiveActivity(.none)
-
-        timer.start {
-            viewModel.updateLiveActivity(
-                progress: min($0 / viewModel.printDuration, 1.0)
-            )
-            
-            if $0 >= viewModel.printDuration {
-                stopPrint(success: true)
-            }
+    func stopPrint(success: Bool = false) {
+        Task {
+            print("View Model activity type is", viewModel.activityType)
+            await viewModel.endActivity(success: success)
+            print("View Model activity type is", viewModel.activityType)
         }
     }
     
-    func startRemotePrint() {
-        printActivity = .remote
-        viewModel.startLiveActivity(.token)
-        timer.start()
+    func startRemotelyActivatedPrint() -> Bool {
+        return viewModel.startActivity(type: .remoteStart)
     }
     
-    func stopPrint(success: Bool = false) {
-        printActivity = .none
-        timer.stop()
-        viewModel.endLiveActivity(success: success)
+    func sendRemoteRequest(url: URL) async throws {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        let (data, urlResponse) = try await URLSession.shared.data(for: request)
+        
+        print("Response from server:", urlResponse)
+        
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response from server: \(responseString)")
+        } else {
+            print("Failed to decode response")
+        }
     }
 }
 

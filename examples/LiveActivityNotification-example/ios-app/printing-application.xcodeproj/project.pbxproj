@@ -68,13 +68,28 @@
 			membershipExceptions = (
 				ContentView.swift,
 				PrintActionButton.swift,
+				PrintingActivityActor/LocalPrintingActivityActor.swift,
+				PrintingActivityActor/PrintingActivityActor.swift,
+				PrintingActivityActor/RemotePrintingActivityActor.swift,
+				PrintingActivityActor/RemoteUpdatesPrintingActivityActor.swift,
 				PrintingActivityModel.swift,
 				PrintingActivityTimer.swift,
 				PrintingApplication.swift,
+				RemotePrintService.swift,
 			);
 			target = 113263422DECAEF800E35AFF /* printing-application */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		11C4C3562E10A72C0042F991 /* Exceptions for "printing-application" folder in "Compile Sources" phase from "printing-application" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 1132633F2DECAEF800E35AFF /* Sources */;
+			membershipExceptions = (
+				PrintingActivityModel.swift.bck,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1132635B2DED04FB00E35AFF /* PrintingTimeActivity */ = {
@@ -90,6 +105,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				113264162DF2200900E35AFF /* Exceptions for "printing-application" folder in "printing-application" target */,
+				11C4C3562E10A72C0042F991 /* Exceptions for "printing-application" folder in "Compile Sources" phase from "printing-application" target */,
 			);
 			path = "printing-application";
 			sourceTree = "<group>";

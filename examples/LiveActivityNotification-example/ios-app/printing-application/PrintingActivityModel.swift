@@ -1,5 +1,5 @@
 /**
- * Example took, manually rewrote and updated from CreateWithSwift
+ * Example took from CreateWithSwift, and entirely manually rewrote
  * @see https://www.createwithswift.com/implementing-live-activities-in-a-swiftui-app/
  */
 
@@ -9,133 +9,69 @@ import Foundation
 @Observable
 /** We have to use class in order to use @Observable */
 class PrintingActivityViewModel {
-    var printDuration: TimeInterval = 60
-    var progress: Double = 0
-    var printName = "Benchy Boat"
-    var printActivity: Activity<PrintingAttributes>? = nil
+    private var printingActivityActor: PrintingActivityActor?
     
-    init(printName: String = "Benchy Boat", progress: Double = 0, printActivity: Activity<PrintingAttributes>? = nil) {
-        self.printName = printName
-        self.progress = progress
-        self.printActivity = printActivity
-        
-        var lastPushToStartTokenString: String = "";
-        
-        Task {
-            /**
-             * Push To Start (PTS) Tokens are required to allow starting Live Activities
-             * through Push Notifications (event: "start").
-             *
-             * This might take a few seconds to be generated after starting the application.
-             *
-             * For updating and ending, you'll need the `pushTokenUpdates`
-             * from the activity that has been started.
-             */
-            for await pushToken in Activity<PrintingAttributes>.pushToStartTokenUpdates {
-                let pushTokenString = pushToken.reduce("") {
-                    $0 + String(format: "%02x", $1)
-                }
-                
-                if (lastPushToStartTokenString != pushTokenString) {
-                    print("New Push To Start Token issued:", pushTokenString);
-                    lastPushToStartTokenString = pushTokenString
-                }
-            }
-        }
-        
-        Task {
-            for await activityData in Activity<PrintingAttributes>.activityUpdates {
-                print("New activity update", activityData);
-                
-                for await tokenData in activityData.pushTokenUpdates {
-                    let token = tokenData.map { String(format: "%02x", $0) }.joined()
-                    print("[UPDATE] PrintingAttributes [\(activityData)] : \(token)")
-                }
-
-                for await stateUpdate in activityData.activityStateUpdates {
-                    print("[STATE] PrintingAttributes [\(activityData)] : \(stateUpdate)")
-                }
-
-                for await newContent in activityData.contentUpdates {
-                    print("[CONTENT] PrintingAttributes [\(activityData)] : \(newContent)")
-                }
-            }
-        }
+    var activityType: PrintingActivityType {
+        printingActivityActor?.activityType ?? .none
     }
     
-    func startLiveActivity(_ pushType: PushType? = nil) {
+    var elapsedTime: TimeInterval {
+        printingActivityActor?.elapsedTime ?? 0
+    }
+    
+    var printName: String {
+        printingActivityActor?.printName ?? ""
+    }
+    
+    var estimatedPrintDuration: TimeInterval {
+        printingActivityActor?.estimatedPrintDuration ?? 0
+    }
+    
+    var progress: Double {
+        printingActivityActor?.progress ?? 0
+    }
+    
+    func startActivity(type: PrintingActivityType, onActivityCompletion: (() -> Void)? = nil) -> Bool {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
             print("Activities are not enabled.")
+            return false
+        }
+
+        if printingActivityActor != nil {
+            print("Printing activity already started")
+            return false
+        }
+        
+        switch type {
+            case .local:
+                printingActivityActor = LocalPrintingActivityActor()
+            case .remoteUpdates:
+                printingActivityActor = RemoteUpdatesPrintingActivityActor()
+            case .remoteStart:
+                printingActivityActor = RemotePrintingActivityActor()
+            case .none:
+                print("Cannot start activity of type none")
+                return false
+        }
+        
+        return printingActivityActor?.startActivity {
+            self.printingActivityActor = nil
+            onActivityCompletion?()
+        } ?? false
+    }
+    
+    func endActivity(success: Bool = false) async {
+        if printingActivityActor == nil {
+            print("No printing activity to end")
             return
         }
-        
-        progress = 0
-        print("Start Date:", Date.now)
-        
-        let attributes = PrintingAttributes(
-            printName: printName,
-            estimatedDuration: printDuration,
-            startTime: Date.now.timeIntervalSince1970
-        )
-        
-        let initialState = PrintingAttributes.ContentState(
-            progress: 0.0,
-            statusMessage: "Starting print..."
-        )
-        
-        do {
-            printActivity = try Activity.request(
-                attributes: attributes,
-                content: ActivityContent(
-                    state: initialState,
-                    staleDate: nil
-                ),
-                pushType: pushType
-            )
-        } catch {
-            print("Error starting live activity: \(error)")
-        }
-    }
-    
-    func updateLiveActivity(progress: TimeInterval) {
-        let statusMessage = switch (progress) {
-            case 0 ..< 0.3: "Heating bed and extruder..."
-            case 0.3 ..< 0.6: "Printing base layers..."
-            case 0.6 ..< 0.9: "Printing details..."
-            default: "Finishing print..."
+
+        if success {
+            await printingActivityActor?.endActivity()
+        } else {
+            await printingActivityActor?.cancelActivity()
         }
         
-        self.progress = progress
-        
-        let updatedState = ActivityContent(
-            state: PrintingAttributes.ContentState(
-                progress: progress,
-                statusMessage: statusMessage
-            ),
-            staleDate: nil
-        )
-        
-        Task {
-            await printActivity?.update(updatedState)
-        }
-    }
-    
-    func endLiveActivity(success: Bool = false) {
-        let finalMessage = success ? "Print completed successfuly!" : "Print canceled"
-        
-        let finalState = PrintingAttributes.ContentState(
-            progress: success ? 1.0 : progress,
-            statusMessage: finalMessage
-        )
-        
-        Task {
-            await printActivity?.end(
-                ActivityContent(
-                    state: finalState,
-                    staleDate: nil
-                ),
-                dismissalPolicy: .default
-            )
-        }
+        printingActivityActor = nil
     }
 }

@@ -20,5 +20,99 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "34191042-2894-48E1-9408-94FC333981D2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "printing-application/PrintingActivityTimer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "start(onTimeIncrease:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "35B333F3-B655-4F05-8C07-9F6CA18CE5B7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "printing-application/PrintingActivityActor/RemotePrintingActivityActor.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "startActivity(onActivityCompletion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7DB1B1C0-7471-4FE0-A886-FDD338614625"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "printing-application/PrintingActivityActor/RemotePrintingActivityActor.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "startPushTokenRetrieveTask()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DDE3D486-1405-49A2-91B9-FC6BE5C5DB08"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "printing-application/PrintingActivityActor/RemotePrintingActivityActor.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "startPushTokenRetrieveTask()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "DDE3D486-1405-49A2-91B9-FC6BE5C5DB08 - c72fe6f7775a2ce9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in closure #1 (inout Swift.TaskGroup&lt;()&gt;) async -&gt; Swift.TaskGroup&lt;()&gt; in printing_application.RemotePrintingActivityActor.startPushTokenRetrieveTask() async -&gt; Swift.TaskGroup&lt;()&gt;"
+                  moduleName = "printing-application.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexander/Developer/hapns/examples/LiveActivityNotification-example/ios-app/printing-application/PrintingActivityActor/RemotePrintingActivityActor.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53">
+               </Location>
+               <Location
+                  uuid = "DDE3D486-1405-49A2-91B9-FC6BE5C5DB08 - 43357a0cd160227f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.String, Swift.UInt8) -&gt; Swift.String in closure #1 () async -&gt; () in closure #1 (inout Swift.TaskGroup&lt;()&gt;) async -&gt; Swift.TaskGroup&lt;()&gt; in printing_application.RemotePrintingActivityActor.startPushTokenRetrieveTask() async -&gt; Swift.TaskGroup&lt;()&gt;"
+                  moduleName = "printing-application.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexander/Developer/hapns/examples/LiveActivityNotification-example/ios-app/printing-application/PrintingActivityActor/RemotePrintingActivityActor.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

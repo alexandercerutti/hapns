@@ -7,6 +7,7 @@
 	},
 	"license": "ISC",
 	"dependencies": {
+		"fastify": "^5.4.0",
 		"hapns": "workspace:*"
 	},
 	"packageManager": "pnpm@10.11.0"
