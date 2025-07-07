@@ -3,7 +3,8 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
-		"run:example": "node ./server.mjs"
+		"run:printer": "node ./printer-actor/index.mjs",
+		"run:server": "node ./server/index.mjs"
 	},
 	"license": "ISC",
 	"dependencies": {

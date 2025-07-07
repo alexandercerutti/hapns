@@ -7,12 +7,10 @@
 
 import Foundation
 import ActivityKit
+import UIKit
 
 class RemoteUpdatesPrintingActivityActor: PrintingActivityActor {
     private var timer = PrintingActivityTimer()
-    private var tokenRetrieveTask: Task<Void, Error>? = nil
-    private let baseURL: URL? = URL(string: "http://172.20.10.4:3000")
-    private let deviceTokenUpdateEndpoint: String = "/device-token-update"
 
     let activityType: PrintingActivityType = .remoteUpdates
     
@@ -28,19 +26,7 @@ class RemoteUpdatesPrintingActivityActor: PrintingActivityActor {
     func startActivity(onActivityCompletion: (() -> Void)?) -> Bool {
         progress = 0
         print("Start Date:", Date.now)
-        
-        if baseURL == nil {
-            print("RemotePrintService: Base URL is not set or is not a valid URL.")
-            return false
-        }
-        
-        guard let url = baseURL?.appendingPathComponent(deviceTokenUpdateEndpoint) else {
-            print("RemotePrintService: Invalid endpoint URL.")
-            return false
-        }
 
-        tokenRetrieveTask = startPushTokenRetrieveTask(url: url)
-        
         let attributes = PrintingAttributes(
             printName: printName,
             estimatedDuration: estimatedPrintDuration,
@@ -51,6 +37,29 @@ class RemoteUpdatesPrintingActivityActor: PrintingActivityActor {
             progress: 0.0,
             statusMessage: "Starting local print..."
         )
+        
+        Task {
+            let uuid = await UIDevice.current.identifierForVendor?.uuidString ?? ""
+            let url = "http://192.168.1.89:3000/print"
+            var request = URLRequest(url: URL(string: url)!)
+            
+            request.httpMethod = "POST"
+            request.setValue(
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
+            
+            let json: [String: Any] = [
+                "deviceId": uuid,
+            ]
+            
+            request.httpBody = try JSONSerialization.data(withJSONObject: json)
+            
+            do {
+                let (data, urlResponse) = try await URLSession.shared.data(for: request)
+                print("Response from server:", urlResponse)
+            } catch {}
+        }
         
         do {
             printActivity = try Activity.request(
@@ -70,53 +79,12 @@ class RemoteUpdatesPrintingActivityActor: PrintingActivityActor {
         return true
     }
     
-    private func startPushTokenRetrieveTask(url: URL) -> Task<Void, Error> {
-        return Task {
-            for await activityData in Activity<PrintingAttributes>.activityUpdates {
-                print("New activity update", activityData);
-
-                for await tokenData in activityData.pushTokenUpdates {
-                    let token = tokenData.map { String(format: "%02x", $0) }.joined()
-                    print("[UPDATE] PrintingAttributes [\(activityData)] : \(token)")
-                    
-                    var request = URLRequest(url: url)
-                    request.httpMethod = "POST"
-                    request.setValue(
-                        "application/json",
-                        forHTTPHeaderField: "Content-Type"
-                    )
-                    
-                    let json: [String: String] = [
-                        "token": token,
-                    ]
-                    let jsonData = try! JSONSerialization.data(withJSONObject: json)
-
-                    request.httpBody = jsonData;
-                    
-                    let (data, urlResponse) = try await URLSession.shared.data(for: request)
-                    
-                    print("Response from server:", urlResponse)
-                }
-
-                for await stateUpdate in activityData.activityStateUpdates {
-                    print("[STATE] PrintingAttributes [\(activityData)] : \(stateUpdate)")
-                }
-
-                for await newContent in activityData.contentUpdates {
-                    print("[CONTENT] PrintingAttributes [\(activityData)] : \(newContent)")
-                }
-            }
-        }
-    }
-    
     private func terminateActivty(
         terminationMessage: String,
         lastProgress: Double
     ) async {
         timer.stop()
-        tokenRetrieveTask?.cancel()
-        tokenRetrieveTask = nil
-        
+
         let finalState = PrintingAttributes.ContentState(
             progress: lastProgress,
             statusMessage: terminationMessage
