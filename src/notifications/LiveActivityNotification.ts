@@ -200,6 +200,23 @@ type LiveActivityNotificationBody = {
 			attributes: Record<string, unknown>;
 
 			/**
+			 * When provided, it will make your app to generate a new push token
+			 * for the Live Activity after starting the new live activity.
+			 *
+			 * @see https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications#Construct-the-payload-that-starts-a-Live-Activity
+			 */
+			inputPushToken?: 1;
+
+			/**
+			 * Provide a broadcast channel identifier to start the live activity
+			 * and listen for updates on that channel.
+			 *
+			 * @see https://developer.apple.com/documentation/usernotifications/sending-channel-management-requests-to-apns
+			 * @see https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications#Construct-the-payload-that-starts-a-Live-Activity
+			 */
+			inputPushChannel?: string;
+
+			/**
 			 * Alert will light up the device in case of critical notifications and play
 			 * a sound, if provided.
 			 *
@@ -265,7 +282,7 @@ export function LiveActivityNotification(
 		},
 		get body() {
 			if (event === "start") {
-				const { attributesType, attributes } = payload;
+				const { attributesType, attributes, inputPushToken, inputPushChannel } = payload;
 
 				return {
 					aps: {
@@ -275,6 +292,8 @@ export function LiveActivityNotification(
 						attributes,
 						"relevance-score": relevanceScore,
 						"content-state": contentState,
+						"input-push-token": inputPushToken,
+						"input-push-channel": inputPushChannel,
 						timestamp,
 						alert: {
 							title: payload.alert?.title,
