@@ -76,22 +76,17 @@ export async function send(
 		...(target.headers || {}),
 	} satisfies APNsHeaders;
 
-	const body = {
-		...notification.body,
-		...(target.body || {}),
-	};
-
 	/**
 	 * @developmentonly Will be removed when the code will reach v1.0.0
 	 */
-	console.log("APNS request body:", body);
+	console.log("APNS request body:", notification.body);
 
 	const response = await connector.send({
 		method: "POST",
 		baseUrl: target.getBaseUrl(useSandbox),
 		requestPath: target.requestPath,
 		headers,
-		body,
+		body: notification.body as Record<string, unknown>,
 	});
 
 	const {
