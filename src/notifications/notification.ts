@@ -32,7 +32,8 @@ export type PushType =
 	| "mdm"
 	| "complication"
 	| "voip"
-	| "pushtotalk";
+	| "pushtotalk"
+	| "widgets";
 
 export interface APSBody<BodyProperties extends object> {
 	readonly aps: ToDashed<BodyProperties> | Record<never, never>;
