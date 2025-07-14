@@ -6,11 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		11336D632E2057F80012D56D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 116EE9722DE27F0000EB1F7A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 116EE9792DE27F0000EB1F7A;
+			remoteInfo = "personalized-news-feed";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		11336D5D2E2057F80012D56D /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		116EE97A2DE27F0000EB1F7A /* personalized-news-feed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "personalized-news-feed.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		11336D5E2E2057F80012D56D /* UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UITests;
+			sourceTree = "<group>";
+		};
 		116EE97C2DE27F0000EB1F7A /* personalized-news-feed */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "personalized-news-feed";
@@ -19,6 +35,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		11336D5A2E2057F80012D56D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		116EE9772DE27F0000EB1F7A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				116EE97C2DE27F0000EB1F7A /* personalized-news-feed */,
+				11336D5E2E2057F80012D56D /* UITests */,
 				116EE97B2DE27F0000EB1F7A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				116EE97A2DE27F0000EB1F7A /* personalized-news-feed.app */,
+				11336D5D2E2057F80012D56D /* UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		11336D5C2E2057F80012D56D /* UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11336D672E2057F80012D56D /* Build configuration list for PBXNativeTarget "UITests" */;
+			buildPhases = (
+				11336D592E2057F80012D56D /* Sources */,
+				11336D5A2E2057F80012D56D /* Frameworks */,
+				11336D5B2E2057F80012D56D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				11336D642E2057F80012D56D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				11336D5E2E2057F80012D56D /* UITests */,
+			);
+			name = UITests;
+			packageProductDependencies = (
+			);
+			productName = UITests;
+			productReference = 11336D5D2E2057F80012D56D /* UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		116EE9792DE27F0000EB1F7A /* personalized-news-feed */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 116EE9852DE27F0300EB1F7A /* Build configuration list for PBXNativeTarget "personalized-news-feed" */;
@@ -76,10 +124,14 @@
 		116EE9722DE27F0000EB1F7A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					11336D5C2E2057F80012D56D = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 116EE9792DE27F0000EB1F7A;
+					};
 					116EE9792DE27F0000EB1F7A = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -100,11 +152,19 @@
 			projectRoot = "";
 			targets = (
 				116EE9792DE27F0000EB1F7A /* personalized-news-feed */,
+				11336D5C2E2057F80012D56D /* UITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		11336D5B2E2057F80012D56D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		116EE9782DE27F0000EB1F7A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +175,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		11336D592E2057F80012D56D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		116EE9762DE27F0000EB1F7A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +191,55 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		11336D642E2057F80012D56D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 116EE9792DE27F0000EB1F7A /* personalized-news-feed */;
+			targetProxy = 11336D632E2057F80012D56D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		11336D652E2057F80012D56D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = UITests/UITests.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandercerutti.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "personalized-news-feed";
+			};
+			name = Debug;
+		};
+		11336D662E2057F80012D56D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = UITests/UITests.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F53WB8AE67;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandercerutti.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "personalized-news-feed";
+			};
+			name = Release;
+		};
 		116EE9832DE27F0300EB1F7A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -307,6 +422,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		11336D672E2057F80012D56D /* Build configuration list for PBXNativeTarget "UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11336D652E2057F80012D56D /* Debug */,
+				11336D662E2057F80012D56D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		116EE9752DE27F0000EB1F7A /* Build configuration list for PBXProject "personalized-news-feed" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -314,7 +438,7 @@
 				116EE9842DE27F0300EB1F7A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		116EE9852DE27F0300EB1F7A /* Build configuration list for PBXNativeTarget "personalized-news-feed" */ = {
 			isa = XCConfigurationList;
@@ -323,7 +447,7 @@
 				116EE9872DE27F0300EB1F7A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

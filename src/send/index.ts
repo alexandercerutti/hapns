@@ -76,17 +76,33 @@ export async function send(
 		...(target.headers || {}),
 	} satisfies APNsHeaders;
 
+	const body: (typeof notification)["body"] & { "Simulator Target Bundle": string | undefined } = {
+		...notification.body,
+		"Simulator Target Bundle": undefined,
+	};
+
+	/**
+	 * @support Simulator support to remote push notifications without
+	 * using .apns file starts with XCode 16. It supports only
+	 * the sandbox environment.
+	 *
+	 * Only remote "alert" type notifications are supported.
+	 */
+	if (useSandbox && notification.pushType === "alert") {
+		body["Simulator Target Bundle"] = notification.topic;
+	}
+
 	/**
 	 * @developmentonly Will be removed when the code will reach v1.0.0
 	 */
-	console.log("APNS request body:", notification.body);
+	console.log("APNS request body:", body);
 
 	const response = await connector.send({
 		method: "POST",
 		baseUrl: target.getBaseUrl(useSandbox),
 		requestPath: target.requestPath,
 		headers,
-		body: notification.body as Record<string, unknown>,
+		body,
 	});
 
 	const {

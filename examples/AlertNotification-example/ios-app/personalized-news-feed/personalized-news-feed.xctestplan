@@ -1,0 +1,43 @@
+{
+  "configurations" : [
+    {
+      "id" : "F8E4B265-20DC-42C3-B266-E731688B2D5E",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+
+    ],
+    "environmentVariableEntries" : [
+
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:personalized-news-feed.xcodeproj",
+      "identifier" : "11336D5C2E2057F80012D56D",
+      "name" : "UITests"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:personalized-news-feed.xcodeproj",
+        "identifier" : "11336D5C2E2057F80012D56D",
+        "name" : "UITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:personalized-news-feed.xcodeproj",
+        "identifier" : "11336D6B2E20835C0012D56D",
+        "name" : "UITests-1"
+      }
+    }
+  ],
+  "version" : 1
+}
