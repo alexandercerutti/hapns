@@ -14,7 +14,7 @@ The main components are:
   - They use Node.js's built-in test runner (`node:test`).
   - Each test file is responsible for orchestrating a specific test scenario from start to finish.
 
-- **Test Server (`specs/ci-test-server/server.mjs`)**:
+- **Test Server (`specs/server/server.mjs`)**:
 
   - A session-based Fastify server that acts as a communication bridge between the test runner and the iOS app running in the simulator.
   - It manages test sessions, receives the device token from the app, and signals the app when the test is complete.
@@ -78,7 +78,7 @@ You can run the entire test suite on your local machine. This is useful for debu
     In a separate terminal window, start the test server:
 
     ```bash
-    node specs/ci-test-server/server.mjs
+    node specs/server/server.mjs
     ```
 
 4.  **Run the Test Script**:
