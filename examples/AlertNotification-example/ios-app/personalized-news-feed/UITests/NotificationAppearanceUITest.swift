@@ -20,7 +20,7 @@ class NotificationAppearanceUITest: XCTestCase {
 
         // When "default-test-id" is used, it is because this is being run through Xcode
         // When has different settings - you can set it through the schemas
-        self.testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "0b3c7383-9088-45f0-9d78-c5751e18c094"
+        self.testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id"
 
         registerSimulatorToServer(testId: self.testId, udid: udid)
         
