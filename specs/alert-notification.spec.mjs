@@ -1,5 +1,5 @@
 import { test } from "node:test";
-import assert, { deepStrictEqual } from "node:assert";
+import assert from "node:assert";
 import path from "node:path";
 import fs from "node:fs";
 import * as simulator from "./utils/ios-simulator.mjs";
