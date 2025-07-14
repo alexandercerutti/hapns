@@ -4,6 +4,13 @@ import { promisify } from "node:util";
 const execAsync = promisify(exec);
 
 /**
+ * @typedef {Object} Simulator
+ * @property {string} name - The name of the simulator (e.g., "Test-iPhone").
+ * @property {string} udid - The unique device identifier (UDID) of the simulator.
+ * @property {string} deviceType - The device type identifier (e.g., "com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro").
+ */
+
+/**
  * Checks if `xcrun` is installed and the environment is macOS.
  * @returns {Promise<boolean>} `true` if `xcrun` is found and OS is darwin, otherwise `false`.
  */
@@ -24,7 +31,7 @@ export async function canRun() {
  * Creates a new iOS simulator.
  * @param {string} name The name for the new simulator (e.g., "Test-iPhone").
  * @param {string} deviceType The device type identifier (e.g., "com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro").
- * @returns {Promise<{name: string, udid: string, deviceType: string}>} A simulator object with its name, UDID, and device type.
+ * @returns {Promise<Simulator>} A simulator object with its name, UDID, and device type.
  */
 export async function create(name, deviceType) {
 	console.log(`Creating simulator: ${name}`);
@@ -44,7 +51,7 @@ export async function create(name, deviceType) {
 
 /**
  * Boots a specific iOS simulator.
- * @param {{ name: string; udid: string }} simulator The simulator object to boot.
+ * @param {Simulator} simulator The simulator object to boot.
  * @returns {Promise<void>}
  */
 export async function boot(simulator) {
@@ -55,7 +62,7 @@ export async function boot(simulator) {
 
 /**
  * Installs an application on a simulator.
- * @param {{ name: string; udid: string }} simulator The simulator object.
+ * @param {Simulator} simulator The simulator object.
  * @param {string} appPath The file path to the application bundle (.app).
  * @returns {Promise<void>}
  */
@@ -67,7 +74,7 @@ export async function install(simulator, appPath) {
 
 /**
  * Sets the language and locale for a simulator.
- * @param {{ udid: string }} simulator The simulator object.
+ * @param {Simulator} simulator The simulator object.
  * @param {string} language The language identifier (e.g., "en").
  * @param {string} locale The locale identifier (e.g., "en_US").
  * @returns {Promise<void>}
@@ -132,7 +139,7 @@ export async function setLanguage(simulator, language, locale) {
 
 /**
  * Runs the UI tests for a given scheme on a simulator.
- * @param {{ name: string; udid: string }} simulator The simulator object.
+ * @param {Simulator} simulator The simulator object.
  * @param {object} options The run options.
  * @param {string} options.scheme The Xcode scheme to run.
  * @param {string} [options.project] The path to the .xcodeproj directory.
@@ -174,7 +181,7 @@ export function run(simulator, { scheme, project, testId }) {
 
 /**
  * Builds the iOS app for a given scheme on a simulator.
- * @param {{ name: string; udid: string }} simulator The simulator object.
+ * @param {Simulator} simulator The simulator object.
  * @param {object} options The build options.
  * @param {string} options.scheme The Xcode scheme to build.
  * @param {string} [options.workspace] The path to the .xcworkspace directory.
