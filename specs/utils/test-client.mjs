@@ -27,8 +27,11 @@ export async function checkServer() {
  */
 export async function waitForDeviceRegistration(testId) {
 	console.log("Waiting for device registration...");
-	// Poll for 400 seconds (200 attempts * 2s interval)
-	for (let i = 0; i < 200; i++) {
+	/**
+	 * Poll for 300 seconds (150 attempts * 2s interval)
+	 * This amount is less or equal to the test timeout threshold
+	 */
+	for (let i = 0; i < 150; i++) {
 		const response = await fetch(`${SERVER_URL}/tests/${testId}/device-token`);
 		if (response.ok) {
 			const data = await response.json();
