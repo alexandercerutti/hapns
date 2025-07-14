@@ -114,6 +114,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         
         // Tell iOS to show the notification as a banner and play a sound.
         // Without this, the notification will be silent when the app is open.
-        completionHandler([.banner, .list, .sound, .banner])
+        completionHandler([.banner, .list, .sound])
     }
 }
