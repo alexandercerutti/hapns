@@ -76,18 +76,19 @@ export async function send(
 		...(target.headers || {}),
 	} satisfies APNsHeaders;
 
-	/**
-	 * @support Simulator support to remote push notifications without
-	 * using .apns file starts with XCode 16. It supports only
-	 * the sandbox environment.
-	 */
-
 	const body: (typeof notification)["body"] & { "Simulator Target Bundle": string | undefined } = {
 		...notification.body,
 		"Simulator Target Bundle": undefined,
 	};
 
-	if (useSandbox) {
+	/**
+	 * @support Simulator support to remote push notifications without
+	 * using .apns file starts with XCode 16. It supports only
+	 * the sandbox environment.
+	 *
+	 * Only remote "alert" type notifications are supported.
+	 */
+	if (useSandbox && notification.pushType === "alert") {
 		body["Simulator Target Bundle"] = notification.topic;
 	}
 
