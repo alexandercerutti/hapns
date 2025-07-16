@@ -129,26 +129,38 @@ class NotificationAppearanceUITest: XCTestCase {
         print("Waiting for notification to appear on the home screen...")
 
         // Wait for the notification to appear on the SpringBoard.
-        // We query for the notification by its title.
         let notification = springboard.otherElements.descendants(matching: .any)["NotificationShortLookView"]
-        let notificationTitle = notification.staticTexts["Hello from hapns test"]
+        XCTAssertTrue(notification.waitForExistence(timeout: 30), "Notification did not appear on the screen.")
+
+        // Get the notification's content by position.
+        let notificationTitle = notification.staticTexts.element(boundBy: 0)
+        let notificationBody = notification.staticTexts.element(boundBy: 1)
         
         // Wait up to 30 seconds for the notification to appear. If it doesn't, the test fails.
-        XCTAssertTrue(notificationTitle.waitForExistence(timeout: 30), "Notification did not appear on the screen.")
+        XCTAssertTrue(notificationTitle.exists, "Notification title is incorrect or not found.")
+        XCTAssertTrue(notificationBody.exists, "Notification body is incorrect or not found.")
 
         print("SUCCESS: Notification found on screen.")
 
-        signalVerificationToServer()
+        signalVerificationToServer(notificationTitle: notificationTitle.label, notificationBody: notificationBody.label)
         
         removeUIInterruptionMonitor(interruptionMonitor)
     }
 
-    func signalVerificationToServer() {
+    func signalVerificationToServer(notificationTitle: String, notificationBody: String) {
         let expectation = self.expectation(description: "Signal verification to server")
         
-        let url = URL(string: "\(serverBaseURL)/tests/\(self.testId!)/verify-notification")!
+        let url = URL(string: "\(serverBaseURL)/tests/\(self.testId!)/assert-notification")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = [
+            "notificationTitle": notificationTitle,
+            "notificationBody": notificationBody
+        ]
+
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {

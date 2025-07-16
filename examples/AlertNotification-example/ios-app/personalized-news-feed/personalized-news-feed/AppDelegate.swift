@@ -58,7 +58,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         
         self.sendTokenToTestServer(testId, token: deviceTokenString, apnsTopic: apnsTopic)
     }
-    
+
     func sendTokenToTestServer(_ testId: String, token: String, apnsTopic: String) {
         let url = URL(string: "http://localhost:8571/tests/\(testId)/device-advertising")!
         var request = URLRequest(url: url)

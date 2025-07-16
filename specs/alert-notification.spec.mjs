@@ -102,8 +102,6 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 
 		console.log("Sending notification...");
 
-		debugger;
-
 		console.log(
 			await send(connector, notification, device, {
 				useSandbox: USE_SANDBOX === "true",
@@ -112,7 +110,11 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 
 		console.log("Notification sent successfully.");
 
-		await client.waitForNotificationVerification(testId);
-		assert.ok(true);
+		const assertionData = await client.waitForNotificationVerification(testId);
+
+		const { notificationTitle: title, notificationBody: body } = assertionData;
+
+		assert.strictEqual(title, "Hello from hapns test");
+		assert.strictEqual(body, "This is a test notification from the E2E test suite.");
 	});
 });

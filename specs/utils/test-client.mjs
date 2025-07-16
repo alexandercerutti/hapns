@@ -48,20 +48,21 @@ export async function waitForDeviceRegistration(testId) {
 /**
  * Polls the server until the UI test signals that it has verified the notification.
  * @param {string} testId The ID of the test session.
- * @returns {Promise<void>}
+ * @returns {Promise<object>} The assertion data from the UI test.
  */
 export async function waitForNotificationVerification(testId) {
 	console.log("Waiting for notification verification from UI test...");
-	// Poll for 45 seconds (45 attempts * 1s interval)
+
 	for (let i = 0; i < 45; i++) {
 		const response = await fetch(`${SERVER_URL}/tests/${testId}/verification-status`);
 
 		if (response.ok) {
 			const data = await response.json();
 
-			if (data.notificationVerified) {
+			if (data.uiTestCompleted) {
 				console.log("Notification verification received.");
-				return;
+				console.log("Assertion Data:", data.assertionData);
+				return data.assertionData;
 			}
 		}
 

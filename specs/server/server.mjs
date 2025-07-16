@@ -25,7 +25,7 @@ app.post("/tests", async (request, reply) => {
 		deviceToken: null,
 		apnsTopic: null,
 		completed: false,
-		notificationVerified: false,
+		uiTestCompleted: false,
 		lastPing: new Date(),
 	});
 
@@ -42,16 +42,12 @@ app.post("/tests/:testId/device-advertising", {
 		const { testId } = request.params;
 		const { deviceToken, apnsTopic } = request.body;
 
-		if (!tests.has(testId)) {
-			return reply.status(404).send({ error: "Test not found" });
-		}
+		console.log("ℹ️ Device advertised with token:", deviceToken, "and topic:", apnsTopic);
 
 		const test = tests.get(testId);
 		test.deviceToken = deviceToken;
 		test.apnsTopic = apnsTopic;
 		test.lastPing = new Date();
-
-		console.log("Device advertised with token:", deviceToken, "and topic:", apnsTopic);
 
 		reply.status(204).send();
 	},
@@ -103,34 +99,39 @@ app.post("/tests/:testId/ping", {
 
 /**
  * Step 5: Application should receive a notification and will
- * confirm to the server.
+ * confirm to the server with generic data for assertions.
  */
-app.post("/tests/:testId/verify-notification", {
+app.post("/tests/:testId/assert-notification", {
 	preHandler: checkIfTestExistsPlugin,
 	handler: async (request, reply) => {
 		const { testId } = request.params;
-
 		const test = tests.get(testId);
-		test.notificationVerified = true;
-		test.lastPing = new Date();
 
-		reply.status(204).send();
+		test.uiTestCompleted = true;
+		test.assertionData = request.body || {};
+
+		reply.send({
+			success: true,
+		});
 	},
 });
 
-/**
- * Step 6: UI Test polls the server to see if the notification
- * has been received on the UI.
- */
 app.get("/tests/:testId/verification-status", {
 	preHandler: checkIfTestExistsPlugin,
 	handler: async (request, reply) => {
 		const { testId } = request.params;
 		const test = tests.get(testId);
 
-		reply.send({
-			notificationVerified: test.notificationVerified,
-		});
+		if (test.uiTestCompleted) {
+			reply.send({
+				uiTestCompleted: test.uiTestCompleted,
+				assertionData: test.assertionData || {},
+			});
+		} else {
+			reply.send({
+				uiTestCompleted: false,
+			});
+		}
 	},
 });
 
@@ -159,7 +160,7 @@ app.post("/tests/:testId/register-simulator", {
 		const test = tests.get(testId);
 
 		test.simulatorUdid = udid;
-		console.log(`[server] Simulator UDID for test ${testId} is ${udid}`);
+		console.log(`ℹ️ [server] Simulator UDID for test ${testId} is ${udid}`);
 
 		reply.status(200).send({
 			ok: true,
@@ -196,12 +197,15 @@ app.get("/tests/:testId/simulator-udid", {
 });
 
 // Health check for CI
-app.get("/health", async (request, reply) => {
+app.get("/health", async (_request, reply) => {
 	reply.send({ status: "ok" });
 });
 
 try {
-	await app.listen({ port: 8571, host: "0.0.0.0" });
+	await app.listen({
+		port: 8571,
+		host: "0.0.0.0",
+	});
 } catch (err) {
 	app.log.error(err);
 	process.exit(1);

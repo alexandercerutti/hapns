@@ -134,7 +134,7 @@ export async function setLanguage(simulator, language, locale) {
 
 	await execAsync(`xcrun simctl spawn ${SpringboardRestartCommandArgsString}`);
 
-	console.log("Simulator language set.");
+	console.log("✅ Simulator language set.");
 }
 
 /**
@@ -209,7 +209,7 @@ export async function build(simulator, options) {
 
 	const command = `xcodebuild clean build-for-testing ${commandArgsString}`;
 
-	console.log(`Building scheme ${scheme} for ${simulator.name}`);
+	console.log(`🛠️ Building scheme '${scheme}' for simulator '${simulator.name}'...`);
 
 	try {
 		const { stdout, stderr } = await execAsync(command);
@@ -220,22 +220,27 @@ export async function build(simulator, options) {
 			console.error(stderr);
 		}
 
-		console.log("Build completed successfully.");
+		console.log("🎉 Build completed successfully.");
 	} catch (error) {
-		console.error(`[xcodebuild build stderr]: ${error.stderr}`);
+		console.error(`❌ [xcodebuild build stderr]: ${error.stderr}`);
 		throw new Error(`xcodebuild failed for scheme ${scheme}. Full output in logs.`);
 	}
 }
 
-export function streamLogs(udid) {
-	console.log(`[ios-simulator] Attaching log stream for device ${udid}...`);
+/**
+ * Attaches a log stream to the simulator.
+ * @param {Simulator} simulator The simulator object.
+ * @returns {import('node:child_process').ChildProcess} The log process.
+ */
+export function streamLogs(simulator) {
+	console.log(`[ios-simulator] Attaching log stream for device ${simulator.udid}...`);
 
 	// This command streams logs from the simulator, filtering for messages from our app,
 	// the test runner, and the home screen (SpringBoard) to see notifications.
 	const logProcess = spawn("xcrun", [
 		"simctl",
 		"spawn",
-		udid,
+		simulator.udid,
 		"log",
 		"stream",
 		"--level=debug",
