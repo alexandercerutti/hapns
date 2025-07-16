@@ -180,6 +180,17 @@ export function run(simulator, { scheme, project, testId }) {
 }
 
 /**
+ * Deletes a specific iOS simulator.
+ * @param {Simulator} simulator The simulator object to delete.
+ * @returns {Promise<void>}
+ */
+export async function deleteSimulator(simulator) {
+	console.log(`🛠️ Deleting simulator: ${simulator.name} (${simulator.udid})`);
+	await execAsync(`xcrun simctl delete "${simulator.udid}"`);
+	console.log("✅ Simulator deleted.");
+}
+
+/**
  * Builds the iOS app for a given scheme on a simulator.
  * @param {Simulator} simulator The simulator object.
  * @param {object} options The build options.

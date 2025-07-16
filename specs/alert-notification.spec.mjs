@@ -53,6 +53,8 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 		if (testId) {
 			await client.completeTestSession(testId);
 		}
+
+		await simulator.deleteSimulator(sim);
 	});
 
 	await t.test("should receive a push notification on the simulator", async () => {
