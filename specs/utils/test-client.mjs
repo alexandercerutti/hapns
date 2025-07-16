@@ -5,12 +5,13 @@ const SERVER_URL = "http://localhost:8571";
  * @returns {Promise<void>}
  */
 export async function checkServer() {
-	console.log("Checking for test server...");
+	console.log("🛠️ Checking for test server...");
+
 	while (true) {
 		try {
 			const response = await fetch(`${SERVER_URL}/health`);
 			if (response.ok) {
-				console.log("Test server is running.");
+				console.log("ℹ️ Test server is running.");
 				return;
 			}
 		} catch (e) {
@@ -26,7 +27,7 @@ export async function checkServer() {
  * @returns {Promise<{deviceToken: string, apnsTopic: string}>}
  */
 export async function waitForDeviceRegistration(testId) {
-	console.log("Waiting for device registration...");
+	console.log("🛠️ Waiting for device registration...");
 	/**
 	 * Poll for 300 seconds (150 attempts * 2s interval)
 	 * This amount is less or equal to the test timeout threshold
@@ -35,8 +36,9 @@ export async function waitForDeviceRegistration(testId) {
 		const response = await fetch(`${SERVER_URL}/tests/${testId}/device-token`);
 		if (response.ok) {
 			const data = await response.json();
+
 			if (data.deviceToken) {
-				console.log("Device token received.");
+				console.log("✅ Device token received.");
 				return data;
 			}
 		}
@@ -51,7 +53,7 @@ export async function waitForDeviceRegistration(testId) {
  * @returns {Promise<object>} The assertion data from the UI test.
  */
 export async function waitForNotificationVerification(testId) {
-	console.log("Waiting for notification verification from UI test...");
+	console.log("🛠️ Waiting for notification verification from UI test...");
 
 	for (let i = 0; i < 45; i++) {
 		const response = await fetch(`${SERVER_URL}/tests/${testId}/verification-status`);
@@ -60,8 +62,8 @@ export async function waitForNotificationVerification(testId) {
 			const data = await response.json();
 
 			if (data.uiTestCompleted) {
-				console.log("Notification verification received.");
-				console.log("Assertion Data:", data.assertionData);
+				console.log("✅ Notification verification received.");
+				console.log("ℹ️ Assertion Data:", data.assertionData);
 				return data.assertionData;
 			}
 		}
@@ -87,7 +89,7 @@ export async function createTestSession() {
  */
 export async function completeTestSession(testId) {
 	await fetch(`${SERVER_URL}/tests/${testId}/complete`, { method: "POST" });
-	console.log("Test session marked as complete.");
+	console.log("🎉 Test session marked as complete.");
 }
 
 /**
@@ -105,7 +107,7 @@ export async function completeTestSession(testId) {
  * @returns {Promise<{simulatorUdid: string}>}
  */
 export async function waitForSimulatorRegistration(testId) {
-	console.log(`[client] Waiting for simulator to register for test: ${testId}`);
+	console.log(`🛠️ [client] Waiting for simulator to register for test: ${testId}`);
 
 	while (true) {
 		try {
@@ -115,7 +117,7 @@ export async function waitForSimulatorRegistration(testId) {
 				const data = await response.json();
 
 				if (data.simulatorUdid) {
-					console.log(`[client] Simulator registered with UDID: ${data.simulatorUdid}`);
+					console.log(`✅ [client] Simulator registered with UDID: ${data.simulatorUdid}`);
 					return { simulatorUdid: data.simulatorUdid };
 				}
 			}
@@ -128,14 +130,15 @@ export async function waitForSimulatorRegistration(testId) {
 }
 
 export async function waitForNotification(testId) {
-	console.log(`[client] Waiting for notification for test: ${testId}`);
+	console.log(`🛠️ [client] Waiting for notification for test: ${testId}`);
+
 	while (true) {
 		try {
 			const response = await fetch(`${SERVER_URL}/tests/${testId}/notification`);
 			if (response.status === 200) {
 				const data = await response.json();
 				if (data.notification) {
-					console.log(`[client] Notification received: ${data.notification}`);
+					console.log(`✅ [client] Notification received: ${data.notification}`);
 					return { notification: data.notification };
 				}
 			}

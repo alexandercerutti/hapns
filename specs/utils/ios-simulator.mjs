@@ -34,13 +34,13 @@ export async function canRun() {
  * @returns {Promise<Simulator>} A simulator object with its name, UDID, and device type.
  */
 export async function create(name, deviceType) {
-	console.log(`Creating simulator: ${name}`);
+	console.log(`🛠️ Creating simulator: ${name}`);
 
 	const { stdout } = await execAsync(`xcrun simctl create "${name}" "${deviceType}"`);
 
 	const udid = stdout.trim();
 
-	console.log(`Simulator created with UDID: ${udid}`);
+	console.log(`✅ Simulator created (uuid: '${udid}')`);
 
 	return {
 		name,
@@ -55,9 +55,9 @@ export async function create(name, deviceType) {
  * @returns {Promise<void>}
  */
 export async function boot(simulator) {
-	console.log(`Booting simulator: ${simulator.name} (${simulator.udid})`);
+	console.log(`🛠️ Booting simulator: ${simulator.name} (${simulator.udid})`);
 	await execAsync(`xcrun simctl boot "${simulator.udid}"`);
-	console.log("Simulator booted.");
+	console.log("✅ Simulator booted.");
 }
 
 /**
@@ -67,9 +67,9 @@ export async function boot(simulator) {
  * @returns {Promise<void>}
  */
 export async function install(simulator, appPath) {
-	console.log(`Installing app at ${appPath} on ${simulator.name}`);
+	console.log(`🛠️ Installing app at ${appPath} on ${simulator.name}`);
 	await execAsync(`xcrun simctl install "${simulator.udid}" "${appPath}"`);
-	console.log("App installed.");
+	console.log("✅ App installed.");
 }
 
 /**
@@ -80,7 +80,7 @@ export async function install(simulator, appPath) {
  * @returns {Promise<void>}
  */
 export async function setLanguage(simulator, language, locale) {
-	console.log(`Setting simulator language to '${language}' and locale to '${locale}'...`);
+	console.log(`🛠️ Setting simulator language to '${language}' and locale to '${locale}'...`);
 
 	const AppleLanguagesCommandArgs = [
 		`"${simulator.udid}"`,
@@ -185,9 +185,13 @@ export function run(simulator, { scheme, project, testId }) {
  * @returns {Promise<void>}
  */
 export async function deleteSimulator(simulator) {
-	console.log(`🛠️ Deleting simulator: ${simulator.name} (${simulator.udid})`);
-	await execAsync(`xcrun simctl delete "${simulator.udid}"`);
-	console.log("✅ Simulator deleted.");
+	try {
+		console.log(`🛠️ Deleting simulator: ${simulator.name} (${simulator.udid})`);
+		await execAsync(`xcrun simctl delete "${simulator.udid}"`);
+		console.log("✅ Simulator deleted.");
+	} catch (error) {
+		console.error(`❌ Failed to delete simulator ${simulator.name} (${simulator.udid}):`, error);
+	}
 }
 
 /**

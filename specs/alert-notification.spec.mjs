@@ -40,7 +40,7 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 
 		const session = await client.createTestSession();
 		testId = session.testId;
-		console.log(`Test session started with ID: ${testId}`);
+		console.log(`ℹ️ Test session started with ID: ${testId}`);
 
 		sim = await simulator.create(TEST_CONFIG.simulatorName, TEST_CONFIG.deviceType);
 		await simulator.boot(sim);
@@ -66,7 +66,7 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 			testId,
 		});
 
-		console.log("Starting UI tests for test id:", testId);
+		console.log("🛠️ Starting UI tests for test id:", testId);
 		testRunnerProcess = await simulator.run(sim, {
 			project: TEST_CONFIG.project,
 			scheme: TEST_CONFIG.scheme,
@@ -102,15 +102,31 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 
 		const device = Device(deviceToken);
 
-		console.log("Sending notification...");
+		let attempts = 5;
 
-		console.log(
-			await send(connector, notification, device, {
-				useSandbox: USE_SANDBOX === "true",
-			}),
-		);
+		while (attempts > 0) {
+			console.log("🛠️ Sending notification...");
 
-		console.log("Notification sent successfully.");
+			try {
+				console.log(
+					await send(connector, notification, device, {
+						useSandbox: USE_SANDBOX === "true",
+					}),
+				);
+
+				console.log("✅ Notification sent successfully.");
+				break;
+			} catch (error) {
+				console.error("❌ Error sending notification:", error);
+				await new Promise((resolve) => setTimeout(resolve, 2000));
+				attempts -= 1;
+				continue;
+			}
+		}
+
+		if (!attempts) {
+			assert.fail("Failed to send notification after multiple attempts.");
+		}
 
 		const assertionData = await client.waitForNotificationVerification(testId);
 
