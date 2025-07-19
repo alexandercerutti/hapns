@@ -6,15 +6,19 @@
  * This example requires setting up, first, an application that registers
  * for push notifications. You can use one provided in the examples folder.
  *
- * Such application must provide a DEVICE_TOKEN. In case of example app,
- * it will be printed in the console.
+ * Both APNS Topic and Device Token will be provided to this server upon
+ * app device registration.
  *
- * You'll need to set the APNS_TOPIC to the application's bundle identifier.
+ * Device registration will happen on the start of the example application.
+ * The address of the server is set as an environment variable in the Swift
+ * application, in order for the app to use the same protocol as tests.
  *
- * You'll also need to set the path to the token key you generated from
- * Apple Developer portal, not provided with the examples (ofc). Right now,
- * it is set to an actual path (in author's machine), relative to the project
- * and current file.
+ * You'll also need to set, in the configuration area below, the path to
+ * the token key you generated from Apple Developer portal, not provided
+ * with the examples (ofc).
+ *
+ * Right now, it is set to an actual path (in author's machine), relative to
+ * the project and current file.
  *
  * The key ID and team ID are also required. Key ID will be provided with token
  * generation.
@@ -22,7 +26,6 @@
  * Finally, if you are running an application through Xcode, you'll likely
  * be forced using the sandbox environment (development). For this reason,
  * the flag USE_SANDBOX is set to true by default.
- *
  */
 
 import { AlertNotification } from "hapns/notifications/AlertNotification";
@@ -30,16 +33,19 @@ import { Device } from "hapns/targets/device";
 import { TokenConnector } from "hapns/connectors/token";
 import { send } from "hapns/send";
 import fs from "node:fs";
+import Fastify from "fastify";
+import { EventSource } from "eventsource";
 
-/**
- * @TODO Obtain the device token from the registration of the pass.
- */
-const DEVICE_TOKEN = "";
+import {
+	DeviceRegistrationPlugin,
+	DEVICE_REGISTRATION_ENDPOINT,
+	HOST,
+	PORT,
+} from "@hapns-internal/utils/device-registration";
 
-/**
- * @TODO This topic is the identifier of the app.
- */
-const APNS_TOPIC = "";
+// ************************** //
+// *** CONFIGURATION AREA *** //
+// ************************** //
 
 const TOKEN_KEY_PATH = "../../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8";
 
@@ -48,9 +54,23 @@ const TEAM_ID = "F53WB8AE67";
 
 const USE_SANDBOX = true;
 
-/******/
+// ****************************** //
+// *** END CONFIGURATION AREA *** //
+// ****************************** //
 
-const device = Device(DEVICE_TOKEN);
+const fastify = Fastify({
+	logger: true,
+});
+
+await fastify.register(DeviceRegistrationPlugin);
+
+try {
+	await fastify.listen({ host: "0.0.0.0", port: PORT });
+	console.log(`Device registration server is running at http://${HOST}:${PORT}`);
+} catch (err) {
+	console.error(err);
+	process.exit(1);
+}
 
 const connector = TokenConnector({
 	/**
@@ -64,27 +84,36 @@ const connector = TokenConnector({
 	teamIdentifier: TEAM_ID,
 });
 
-const notification = AlertNotification(APNS_TOPIC, {
-	payload: {
-		alert: {
-			title: "Hello World",
-			body: "This is a test notification",
+const eventSource = new EventSource(`http://${HOST}:${PORT}${DEVICE_REGISTRATION_ENDPOINT}/events`);
+
+eventSource.addEventListener("device-registration", async (event) => {
+	const data = JSON.parse(event.data);
+	console.log(`Device registered: ${data.deviceId} with token ${data.deviceToken}`);
+
+	const device = Device(data.deviceToken);
+
+	const notification = AlertNotification(data.apnsTopic, {
+		payload: {
+			alert: {
+				title: "Hello World",
+				body: "This is a test notification",
+			},
+			sound: "default",
+			badge: 0,
 		},
-		sound: "default",
-		badge: 0,
-	},
-	appData: {
-		/**
-		 * Autocompletetion here works because we have typechecking
-		 * on JS files active AND the typescript example, which defines
-		 * an extension to appData. So, we have it here just to
-		 * avoid showing the type error.
-		 */
-		myCustomData: "Hello World",
-	},
-	priority: 10,
+		appData: {
+			/**
+			 * Autocompletetion here works because we have typechecking
+			 * on JS files active AND the typescript example, which defines
+			 * an extension to appData. So, we have it here just to
+			 * avoid showing the type error.
+			 */
+			myCustomData: "Hello World",
+		},
+		priority: 10,
+	});
+
+	const sendReply = await send(connector, notification, device, { useSandbox: USE_SANDBOX });
+
+	console.log(sendReply);
 });
-
-const sendReply = await send(connector, notification, device, { useSandbox: USE_SANDBOX });
-
-console.log(sendReply);

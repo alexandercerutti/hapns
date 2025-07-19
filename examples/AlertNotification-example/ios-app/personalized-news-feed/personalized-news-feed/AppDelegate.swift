@@ -41,52 +41,29 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined();
         print("DEVICE TOKEN IS: \(deviceTokenString)");
-
-        // The TEST_ID is passed as a launch argument from the UI test.
-        // If available, we want to register the device to the test server.
-        guard let testId = ProcessInfo.processInfo.environment["TEST_ID"] else {
-            print("Test ID not set. Cannot send token to server.")
-            return
+        
+        /**
+         * Address is provided through the environment variable.
+         * Should setting it before running the app, because if we run it on a device,
+         * it cannot be, ofc, 'localhost'.
+         *
+         * Go to 'Product' -> 'Scheme' -> 'Edit Scheme...' -> 'Run' -> 'Arguments' -> 'Environment Variables'
+         */
+        guard let deviceRegistrationAddress = ProcessInfo.processInfo.environment["DEVICE_REGISTRATION_ADDRESS"] else {
+            print("Device Registration Address not found in the environment. Provide one in order to send a request containing the token.");
+            return;
         }
-        
-        self.testId = testId
-        
+
         guard let apnsTopic = Bundle.main.bundleIdentifier else {
             print("Could not get bundle identifier")
             return
         }
         
-        self.sendTokenToTestServer(testId, token: deviceTokenString, apnsTopic: apnsTopic)
-    }
-
-    func sendTokenToTestServer(_ testId: String, token: String, apnsTopic: String) {
-        let url = URL(string: "http://localhost:8571/tests/\(testId)/device-advertising")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let body: [String: String] = ["deviceToken": token, "apnsTopic": apnsTopic]
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        } catch {
-            print("Error creating JSON body: \(error)")
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error sending token to server: \(error)")
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                print("Server returned non-200 status code")
-                return
-            }
-            print("Successfully registered token with test server.")
-        }
-        
-        task.resume()
+        registerDeviceWithServer(
+            address: URL(string: deviceRegistrationAddress)!,
+            token: deviceTokenString,
+            apnsTopic: apnsTopic
+        )
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
