@@ -43,6 +43,9 @@ import {
 	PORT,
 } from "@hapns-internal/utils/device-registration";
 
+import { eventBusDecorator, EventBusPlugin } from "@hapns-internal/utils/event-bus";
+import fastifyPlugin from "fastify-plugin";
+
 // ************************** //
 // *** CONFIGURATION AREA *** //
 // ************************** //
@@ -62,6 +65,12 @@ const fastify = Fastify({
 	logger: true,
 });
 
+/**
+ * We need fastifyPlugin in order to break the encapsulation
+ * and expose the event bus to the rest of the application.
+ */
+await fastify.register(fastifyPlugin(eventBusDecorator));
+await fastify.register(EventBusPlugin);
 await fastify.register(DeviceRegistrationPlugin);
 
 try {
@@ -84,11 +93,15 @@ const connector = TokenConnector({
 	teamIdentifier: TEAM_ID,
 });
 
-const eventSource = new EventSource(`http://${HOST}:${PORT}${DEVICE_REGISTRATION_ENDPOINT}/events`);
+const eventSource = new EventSource(`http://${HOST}:${PORT}/events`);
+
+eventSource.onmessage = (event) => {
+	console.log("Received event:", event.data);
+};
 
 eventSource.addEventListener("device-registration", async (event) => {
 	const data = JSON.parse(event.data);
-	console.log(`Device registered: ${data.deviceId} with token ${data.deviceToken}`);
+	console.log(`Device registered: ${data.deviceId} with token ${data.deviceToken}`, event);
 
 	const device = Device(data.deviceToken);
 

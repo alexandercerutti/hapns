@@ -8,15 +8,18 @@
 	"license": "ISC",
 	"packageManager": "pnpm@10.11.0",
 	"peerDependencies": {
-		"eventsource": "^4.0.0",
 		"fastify": "^5.4.0"
 	},
 	"dependencies": {
+		"eventsource": "^4.0.0",
 		"fastify-sse-v2": "^4.2.1"
 	},
 	"exports": {
 		"./device-registration": {
-			"import": "./device-registration-server.mjs"
+			"import": "./device-registration-plugin.mjs"
+		},
+		"./event-bus": {
+			"import": "./event-bus-plugin.mjs"
 		}
 	}
 }

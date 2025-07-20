@@ -1,6 +1,3 @@
-import { FastifySSEPlugin } from "fastify-sse-v2";
-import { EventEmitter } from "node:events";
-
 /**
  * Hello. If you are maintaining this file, I'm pleased to
  * let you know this file conforms to a protocol that is
@@ -14,46 +11,22 @@ export const HOST = "0.0.0.0";
 export const PORT = 3000;
 export const DEVICE_REGISTRATION_ENDPOINT = "/registration";
 
-const deviceEvents = new EventEmitter();
-
-/**
- * @typedef {string} DeviceId
- * @type {Map<DeviceId, { deviceToken: string, apnsTopic: string }>}
- */
-const registeredDevices = new Map();
-
-deviceEvents.on("device-registration", (eventData) => {
-	registeredDevices.set(eventData.deviceId, {
-		deviceToken: eventData.deviceToken,
-		apnsTopic: eventData.apnsTopic,
-	});
-});
-
 export function DeviceRegistrationPlugin(fastifyInstance) {
-	fastifyInstance.register(FastifySSEPlugin);
+	/**
+	 * @typedef {string} DeviceId
+	 * @type {Map<DeviceId, { deviceToken: string, apnsTopic: string }>}
+	 */
+	const registeredDevices = new Map();
+
+	if (!fastifyInstance.hasDecorator("emitEvent")) {
+		throw new Error("DeviceRegistrationPlugin requires the EventBusPlugin to be registered first.");
+	}
+
+	const emitEvent = fastifyInstance.getDecorator("emitEvent");
 
 	fastifyInstance.addHook("onClose", (_request, _reply, done) => {
-		deviceEvents.removeAllListeners("device-registration");
+		registeredDevices.clear();
 		done();
-	});
-
-	/**
-	 * This function cannot be `async` because it
-	 * is used to handle Server-Sent Events (SSE).
-	 *
-	 * If it were `async`, it would return a Promise,
-	 * which is not compatible with the SSE protocol,
-	 * as `fastify` expects for a reply to be sent.
-	 */
-	fastifyInstance.get(`${DEVICE_REGISTRATION_ENDPOINT}/events`, (request, reply) => {
-		function listener(eventData) {
-			reply.sse({
-				event: "device-registration",
-				data: JSON.stringify(eventData),
-			});
-		}
-
-		deviceEvents.on("device-registration", listener);
 	});
 
 	fastifyInstance.post(DEVICE_REGISTRATION_ENDPOINT, async (request, reply) => {
@@ -63,8 +36,14 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 			return reply.status(400).send({ error: "Missing deviceId, deviceToken or apnsTopic" });
 		}
 
-		deviceEvents.emit("device-registration", {
+		emitEvent("event", {
+			type: "device-registration",
 			deviceId,
+			deviceToken,
+			apnsTopic,
+		});
+
+		registeredDevices.set(deviceId, {
 			deviceToken,
 			apnsTopic,
 		});
