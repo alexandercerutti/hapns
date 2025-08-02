@@ -44,7 +44,7 @@ jobs:
         run: xcodebuild -version
 
       - name: Download iOS Simulator
-        run: xcodebuild -downloadPlatform iOS -architectureVariant arm64
+        run: xcodebuild -downloadPlatform iOS -arch arm64
 
       - name: Start test server
         run: |
