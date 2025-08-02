@@ -21,13 +21,19 @@ class NotificationAppearanceUITest: XCTestCase {
         // When "default-test-id" is used, it is because this is being run through Xcode
         // When has different settings - you can set it through the schemas
         self.testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id"
-
-        registerSimulatorToServer(testId: self.testId, udid: udid)
+        
+        guard let deviceRegistrationAddress = ProcessInfo.processInfo.environment["DEVICE_REGISTRATION_ADDRESS"] else {
+            XCTFail("DEVICE_REGISTRATION_ADDRESS not found in environment variables")
+            return;
+        }
         
         app = XCUIApplication()
         app.launchEnvironment = [
             "TEST_ID": self.testId,
+            "DEVICE_REGISTRATION_ADDRESS": deviceRegistrationAddress
         ]
+        
+        registerSimulatorToServer(testId: self.testId, udid: udid)
 
         app.launch()
 
