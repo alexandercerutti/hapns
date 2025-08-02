@@ -36,12 +36,17 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 			return reply.status(400).send({ error: "Missing deviceId, deviceToken or apnsTopic" });
 		}
 
-		emitEvent("event", {
-			type: "device-registration",
+		const additionalEventData = fastifyInstance.hasRequestDecorator("additionalEventData")
+			? request.additionalEventData
+			: {};
+
+		const payload = {
 			deviceId,
-			deviceToken,
-			apnsTopic,
-		});
+			...deviceData,
+			...additionalEventData,
+		};
+
+		emitEvent("device-registration", payload);
 
 		registeredDevices.set(deviceId, {
 			deviceToken,
