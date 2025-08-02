@@ -36,8 +36,9 @@ jobs:
       - name: Check Version of Xcodebuild
         run: xcodebuild -version
 
-      - name: Install Xcode Command Line Tools
-        run: sudo xcode-select --install
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
 
       - name: Check Version of Xcodebuild
         run: xcodebuild -version
