@@ -22,6 +22,9 @@ const TEST_CONFIG = {
 	locale: "en_US",
 };
 
+console.log("Test configuration:", TEST_CONFIG);
+console.log(import.meta.dirname);
+
 if (!fs.existsSync(TEST_CONFIG.project)) {
 	throw new Error(`Project path not found: ${TEST_CONFIG.project}`);
 }
