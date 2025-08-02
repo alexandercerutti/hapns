@@ -10,7 +10,7 @@ on:
 
 jobs:
   ios-simulator-tests:
-    runs-on: macos-latest-xlarge
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
@@ -42,6 +42,9 @@ jobs:
 
       - name: Check Version of Xcodebuild
         run: xcodebuild -version
+
+      - name: Download iOS Simulator
+        run: xcodebuild -downloadPlatform iOS -architectureVariant arm64
 
       - name: Start test server
         run: |
