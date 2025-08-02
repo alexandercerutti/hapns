@@ -43,8 +43,7 @@ import {
 	PORT,
 } from "@hapns-internal/utils/device-registration";
 
-import { eventBusDecorator, EventBusPlugin } from "@hapns-internal/utils/event-bus";
-import fastifyPlugin from "fastify-plugin";
+import { EventBusPlugin } from "@hapns-internal/utils/event-bus";
 
 // ************************** //
 // *** CONFIGURATION AREA *** //
@@ -65,11 +64,6 @@ const fastify = Fastify({
 	logger: true,
 });
 
-/**
- * We need fastifyPlugin in order to break the encapsulation
- * and expose the event bus to the rest of the application.
- */
-await fastify.register(fastifyPlugin(eventBusDecorator));
 await fastify.register(EventBusPlugin);
 await fastify.register(DeviceRegistrationPlugin);
 

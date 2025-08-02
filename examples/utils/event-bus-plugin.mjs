@@ -1,3 +1,6 @@
+// @ts-check
+
+import fastifyPlugin from "fastify-plugin";
 import { FastifySSEPlugin } from "fastify-sse-v2";
 import { EventEmitter } from "node:events";
 
@@ -7,16 +10,21 @@ import { EventEmitter } from "node:events";
  * several event emitters in the application.
  */
 
-export function EventBusPlugin(fastifyInstance) {
-	if (!fastifyInstance.hasDecorator("eventBus")) {
-		throw new Error(
-			"DeviceRegistrationPlugin requires the EventBusDecorator to be registered first.",
-		);
-	}
+/**
+ * Done like this to break the encapsulation
+ * and expose the event bus to the rest of the application.
+ *
+ * @param {import("fastify").FastifyInstance} fastifyInstance
+ * @returns
+ */
+export const EventBusPlugin = fastifyPlugin((fastifyInstance, _opts, done) => {
+	const eventBus = new EventEmitter();
 
-	debugger;
+	fastifyInstance.decorate("emitEvent", (eventName, data) => {
+		eventBus.emit(eventName, data);
+	});
 
-	const eventBus = fastifyInstance.getDecorator("eventBus");
+	fastifyInstance.decorate("eventBus", eventBus);
 
 	fastifyInstance.register(FastifySSEPlugin);
 
@@ -43,15 +51,5 @@ export function EventBusPlugin(fastifyInstance) {
 		eventBus.on("event", listener);
 	});
 
-	return fastifyInstance;
-}
-
-export function eventBusDecorator(fastifyInstance) {
-	const eventBus = new EventEmitter();
-
-	fastifyInstance.decorate("emitEvent", (eventName, data) => {
-		eventBus.emit(eventName, data);
-	});
-
-	fastifyInstance.decorate("eventBus", eventBus);
-}
+	done();
+});
