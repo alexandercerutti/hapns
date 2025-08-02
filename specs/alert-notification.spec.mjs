@@ -14,16 +14,13 @@ const TEST_CONFIG = {
 	deviceType: "com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro",
 	project: path.resolve(
 		import.meta.dirname,
-		"examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj",
+		"../examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj",
 	),
 	appBundleIdentifier: "com.alexandercerutti.personalized-news-feed",
 	scheme: "personalized-news-feed",
 	language: "en",
 	locale: "en_US",
 };
-
-console.log("Test configuration:", TEST_CONFIG);
-console.log(import.meta.dirname);
 
 if (!fs.existsSync(TEST_CONFIG.project)) {
 	throw new Error(`Project path not found: ${TEST_CONFIG.project}`);
