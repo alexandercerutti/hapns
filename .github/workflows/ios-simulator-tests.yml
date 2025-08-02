@@ -10,7 +10,7 @@ on:
 
 jobs:
   ios-simulator-tests:
-    runs-on: macos-latest
+    runs-on: macos-latest-xlarge
 
     steps:
       - name: Checkout repository
