@@ -13,7 +13,8 @@ const TEST_CONFIG = {
 	simulatorName: "hapns-test-iphone",
 	deviceType: "com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro",
 	project: path.resolve(
-		"../examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj",
+		import.meta.dirname,
+		"examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj",
 	),
 	appBundleIdentifier: "com.alexandercerutti.personalized-news-feed",
 	scheme: "personalized-news-feed",

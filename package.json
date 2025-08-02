@@ -5,7 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"build": "pnpm tsc",
-		"prepublishOnly": "pnpm build"
+		"prepublishOnly": "pnpm build",
+		"test": "node --test specs/**/*.spec.mjs"
 	},
 	"keywords": [],
 	"author": "Alexander P. Cerutti <cerutti.alexander@gmail.com>",

@@ -33,7 +33,7 @@ jobs:
       - name: Run End-to-End iOS Simulator Tests
         env:
           APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
-        run: node --test
+        run: pnpm run test
 
       - name: Cleanup
         if: always()
