@@ -151,7 +151,7 @@ export function run(simulator, { scheme, project, testId }) {
 		["-project", project],
 		["-scheme", scheme],
 		["-sdk", "iphonesimulator"],
-		["-destination", `platform=\"iOS Simulator,id=${simulator.udid},arch=arm64\"`],
+		["-destination", `platform=\"iOS Simulator,id=${simulator.udid}\"`],
 		["-configuration", "Debug"],
 	]);
 
@@ -215,7 +215,7 @@ export async function build(simulator, options) {
 		["-project", project],
 		["-scheme", scheme],
 		["-sdk", "iphonesimulator"],
-		["-destination", `platform=\"iOS Simulator,id=${simulator.udid},arch=arm64\"`],
+		["-destination", `platform=\"iOS Simulator,id=${simulator.udid}\"`],
 		["-configuration", "Debug"],
 	]);
 
