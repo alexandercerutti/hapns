@@ -33,6 +33,15 @@ jobs:
       - name: Build the project
         run: pnpm run build
 
+      - name: Check Version of Xcodebuild
+        run: xcodebuild -version
+
+      - name: Install Xcode Command Line Tools
+        run: sudo xcode-select --install
+
+      - name: Check Version of Xcodebuild
+        run: xcodebuild -version
+
       - name: Start test server
         run: |
           echo "Starting test server..."
