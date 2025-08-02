@@ -10,6 +10,8 @@ on:
 
 jobs:
   ios-simulator-tests:
+    # This supports up to iOS 18.5 Simulator + iOS 26.0
+    # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
     runs-on: macos-15
 
     steps:
@@ -46,8 +48,8 @@ jobs:
       - name: List available simulator runtimes
         run: xcrun simctl list runtimes
 
-      - name: Download iOS Simulator
-        run: xcodebuild -downloadPlatform iOS -arch arm64
+      # - name: Download iOS Simulator
+      #   run: xcodebuild -downloadPlatform iOS -arch arm64
 
       - name: Start test server
         run: |
