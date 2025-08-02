@@ -34,15 +34,7 @@ import { TokenConnector } from "hapns/connectors/token";
 import { send } from "hapns/send";
 import fs from "node:fs";
 import Fastify from "fastify";
-import { EventSource } from "eventsource";
-
-import {
-	DeviceRegistrationPlugin,
-	DEVICE_REGISTRATION_ENDPOINT,
-	HOST,
-	PORT,
-} from "@hapns-internal/utils/device-registration";
-
+import { DeviceRegistrationPlugin } from "@hapns-internal/utils/device-registration";
 import { EventBusPlugin } from "@hapns-internal/utils/event-bus";
 
 // ************************** //
@@ -68,8 +60,8 @@ await fastify.register(EventBusPlugin);
 await fastify.register(DeviceRegistrationPlugin);
 
 try {
-	await fastify.listen({ host: "0.0.0.0", port: PORT });
-	console.log(`Device registration server is running at http://${HOST}:${PORT}`);
+	await fastify.listen({ host: "0.0.0.0", port: 8571 });
+	console.log(`Device registration server is running at http://0.0.0.0:8571`);
 } catch (err) {
 	console.error(err);
 	process.exit(1);
@@ -87,14 +79,9 @@ const connector = TokenConnector({
 	teamIdentifier: TEAM_ID,
 });
 
-const eventSource = new EventSource(`http://${HOST}:${PORT}/events`);
+const eventBus = fastify.getDecorator("eventBus");
 
-eventSource.onmessage = (event) => {
-	console.log("Received event:", event.data);
-};
-
-eventSource.addEventListener("device-registration", async (event) => {
-	const data = JSON.parse(event.data);
+eventBus.on("device-registration", async (data) => {
 	console.log(`Device registered: ${data.deviceId} with token ${data.deviceToken}`, event);
 
 	const device = Device(data.deviceToken);

@@ -1,7 +1,6 @@
 // @ts-check
 
 import fastifyPlugin from "fastify-plugin";
-import { FastifySSEPlugin } from "fastify-sse-v2";
 import { EventEmitter } from "node:events";
 
 /**
@@ -26,29 +25,9 @@ export const EventBusPlugin = fastifyPlugin((fastifyInstance, _opts, done) => {
 
 	fastifyInstance.decorate("eventBus", eventBus);
 
-	fastifyInstance.register(FastifySSEPlugin);
-
 	fastifyInstance.addHook("onClose", (_request, _reply, done) => {
 		eventBus.removeAllListeners();
 		done();
-	});
-
-	/**
-	 * This function cannot be `async` because it
-	 * is used to handle Server-Sent Events (SSE).
-	 * If it were `async`, it would return a Promise,
-	 * which is not compatible with the SSE protocol,
-	 * as `fastify` expects for a reply to be sent.
-	 */
-	fastifyInstance.get("/events", (_request, reply) => {
-		function listener({ type, ...eventData }) {
-			reply.sse({
-				event: type,
-				data: JSON.stringify(eventData),
-			});
-		}
-
-		eventBus.on("event", listener);
 	});
 
 	done();

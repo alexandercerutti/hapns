@@ -170,6 +170,7 @@ export function run(simulator, { scheme, project, testId }) {
 			 * the Swift code.
 			 */
 			TEST_RUNNER_TEST_ID: testId,
+			TEST_RUNNER_DEVICE_REGISTRATION_ADDRESS: `http://localhost:8571/tests/${testId}/devices/registration`,
 		},
 	});
 

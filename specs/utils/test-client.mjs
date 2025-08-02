@@ -33,7 +33,8 @@ export async function waitForDeviceRegistration(testId) {
 	 * This amount is less or equal to the test timeout threshold
 	 */
 	for (let i = 0; i < 150; i++) {
-		const response = await fetch(`${SERVER_URL}/tests/${testId}/device-token`);
+		const response = await fetch(`${SERVER_URL}/tests/${testId}/registered-devices`);
+
 		if (response.ok) {
 			const data = await response.json();
 

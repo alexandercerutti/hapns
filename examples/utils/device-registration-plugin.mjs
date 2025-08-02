@@ -7,17 +7,9 @@
  * reuse the example applications to perform end-to-end tests.
  */
 
-export const HOST = "0.0.0.0";
-export const PORT = 3000;
 export const DEVICE_REGISTRATION_ENDPOINT = "/registration";
 
 export function DeviceRegistrationPlugin(fastifyInstance) {
-	/**
-	 * @typedef {string} DeviceId
-	 * @type {Map<DeviceId, { deviceToken: string, apnsTopic: string }>}
-	 */
-	const registeredDevices = new Map();
-
 	if (!fastifyInstance.hasDecorator("emitEvent")) {
 		throw new Error("DeviceRegistrationPlugin requires the EventBusPlugin to be registered first.");
 	}
@@ -30,9 +22,9 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 	});
 
 	fastifyInstance.post(DEVICE_REGISTRATION_ENDPOINT, async (request, reply) => {
-		const { deviceId, deviceToken, apnsTopic } = request.body;
+		const { deviceId, ...deviceData } = request.body;
 
-		if (!deviceId || !deviceToken || !apnsTopic) {
+		if (!deviceId) {
 			return reply.status(400).send({ error: "Missing deviceId, deviceToken or apnsTopic" });
 		}
 
@@ -48,11 +40,6 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 
 		emitEvent("device-registration", payload);
 
-		registeredDevices.set(deviceId, {
-			deviceToken,
-			apnsTopic,
-		});
-
 		return reply.status(201).send({ success: true });
 	});
 
@@ -63,11 +50,8 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 			return reply.status(400).send({ error: "Missing deviceId" });
 		}
 
-		if (!registeredDevices.has(deviceId)) {
-			return reply.status(404).send({ error: "Device not found" });
-		}
+		emitEvent("device-unregistration", { deviceId });
 
-		registeredDevices.delete(deviceId);
 		return reply.status(204).send();
 	});
 
