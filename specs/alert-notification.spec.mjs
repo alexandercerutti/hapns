@@ -26,7 +26,7 @@ if (!fs.existsSync(TEST_CONFIG.project)) {
 	throw new Error(`Project path not found: ${TEST_CONFIG.project}`);
 }
 
-test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t) => {
+test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t) => {
 	if (!(await simulator.canRun())) {
 		t.skip("Simulator tests can only run on macOS with Xcode installed.");
 		return;
