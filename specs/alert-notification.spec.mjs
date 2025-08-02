@@ -82,11 +82,12 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 		const {
 			APNS_KEY_ID = "6WB99KX6YJ",
 			APNS_TEAM_ID = "F53WB8AE67",
+			APNS_TOKEN_KEY = fs.readFileSync("../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8"),
 			USE_SANDBOX = "true",
 		} = process.env;
 
 		const connector = TokenConnector({
-			key: new Uint8Array(fs.readFileSync("../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8")),
+			key: new Uint8Array(APNS_TOKEN_KEY),
 			keyId: APNS_KEY_ID,
 			teamIdentifier: APNS_TEAM_ID,
 		});

@@ -1,0 +1,46 @@
+name: iOS Simulator Tests
+
+on:
+  push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - master
+
+jobs:
+  ios-simulator-tests:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Start test server
+        run: |
+          echo "Starting test server..."
+          node specs/server/server.mjs &
+          echo $! > server.pid
+
+      - name: Run End-to-End iOS Simulator Tests
+        env:
+          APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
+        run: node --test
+
+      - name: Cleanup
+        if: always()
+        run: |
+          echo "Cleaning up..."
+          if [ -f server.pid ]; then
+            echo "Stopping test server..."
+            kill $(cat server.pid) || true
+            rm server.pid
+          fi
