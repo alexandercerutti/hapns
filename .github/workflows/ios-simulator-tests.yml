@@ -79,7 +79,7 @@ jobs:
           XC_RESULT_PATH=$(find $DERIVED_DATA_PATH/Logs/Test -name "*.xcresult" -type d -print -quit)
           if [ -n "$XC_RESULT_PATH" ]; then
             echo "Found test result bundle at: $XC_RESULT_PATH"
-            xcrun xcresulttool get --path "$XC_RESULT_PATH" --format json | jq .
+            xcrun xcresulttool get object --path "$XC_RESULT_PATH" --format json | jq .
           else
             echo "Could not find .xcresult bundle."
           fi
