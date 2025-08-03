@@ -33,10 +33,14 @@ export async function canRun() {
  * @param {string} deviceType The device type identifier (e.g., "com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro").
  * @returns {Promise<Simulator>} A simulator object with its name, UDID, and device type.
  */
-export async function create(name, deviceType) {
+export async function create(
+	name,
+	deviceType,
+	runtime = "com.apple.CoreSimulator.SimRuntime.iOS-18-5",
+) {
 	console.log(`🛠️ Creating simulator: ${name}`);
 
-	const { stdout } = await execAsync(`xcrun simctl create "${name}" "${deviceType}"`);
+	const { stdout } = await execAsync(`xcrun simctl create "${name}" "${deviceType}" "${runtime}"`);
 
 	const udid = stdout.trim();
 
