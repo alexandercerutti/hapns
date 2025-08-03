@@ -71,6 +71,19 @@ jobs:
           APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
         run: pnpm run test
 
+      - name: Retrieve and Print Test Logs on Failure
+        if: failure()
+        run: |
+          echo "Test failed. Retrieving logs..."
+          DERIVED_DATA_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "personalized-news-feed-*" -type d -maxdepth 1)
+          XC_RESULT_PATH=$(find $DERIVED_DATA_PATH/Logs/Test -name "*.xcresult" -type d -print -quit)
+          if [ -n "$XC_RESULT_PATH" ]; then
+            echo "Found test result bundle at: $XC_RESULT_PATH"
+            xcrun xcresulttool get --path "$XC_RESULT_PATH" --format json | jq .
+          else
+            echo "Could not find .xcresult bundle."
+          fi
+
       - name: Cleanup
         if: always()
         run: |
