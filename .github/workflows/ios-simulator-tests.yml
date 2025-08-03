@@ -41,12 +41,12 @@ jobs:
       - name: Check Version of Xcodebuild
         run: xcodebuild -version
 
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest
+      # - uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: latest
 
-      - name: Check Version of Xcodebuild
-        run: xcodebuild -version
+      # - name: Check Version of Xcodebuild
+      #   run: xcodebuild -version
 
       - name: List available simulator runtimes (2/2)
         run: xcrun simctl list runtimes
