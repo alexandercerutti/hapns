@@ -51,6 +51,12 @@ jobs:
       - name: List available simulator runtimes (2/2)
         run: xcrun simctl list runtimes
 
+      - name: Check Xcode project settings
+        run: |
+          cd examples/AlertNotification-example/ios-app/personalized-news-feed
+          xcodebuild -project personalized-news-feed.xcodeproj -list
+          xcodebuild -project personalized-news-feed.xcodeproj -showBuildSettings -scheme personalized-news-feed | grep IPHONEOS_DEPLOYMENT_TARGET
+
       # - name: Download iOS Simulator
       #   run: xcodebuild -downloadPlatform iOS -arch arm64
 
