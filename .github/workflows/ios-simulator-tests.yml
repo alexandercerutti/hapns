@@ -12,6 +12,7 @@ jobs:
   ios-simulator-tests:
     # This supports up to iOS 18.5 Simulator + iOS 26.0
     # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
+    # https://github.com/actions/runner-images/issues/3239
     runs-on: macos-15
 
     steps:
