@@ -264,10 +264,6 @@ export function streamLogs(simulator) {
 		"log",
 		"stream",
 		"--level=debug",
-		"--style=compact",
-		// Filter logs to only show relevant entries from our app and the test runner
-		"--predicate",
-		'process IN {"personalized-news-feed", "UITests-Runner"}',
 	]);
 
 	// Pipe the simulator's log output to our main process's output
