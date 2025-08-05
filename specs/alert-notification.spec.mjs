@@ -76,7 +76,7 @@ test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t
 
 		const { simulatorUdid } = await client.waitForSimulatorRegistration(testId);
 
-		simulator.streamLogs({ udid: simulatorUdid });
+		simulator.streamLogs(sim);
 
 		const { deviceToken, apnsTopic } = await client.waitForDeviceRegistration(testId);
 
