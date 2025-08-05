@@ -1,6 +1,8 @@
 import XCTest
+import os.log
 
 class NotificationAppearanceUITest: XCTestCase {
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppDelegate")
     var app: XCUIApplication!
     var springboard: XCUIApplication!
     var testId: String!
@@ -103,6 +105,7 @@ class NotificationAppearanceUITest: XCTestCase {
             }
 
             print("Successfully registered simulator with the server.")
+            self.logger.log("Simulator successfully registered with server at \(url.absoluteString)")
             expectation.fulfill()
         }
         
@@ -117,15 +120,18 @@ class NotificationAppearanceUITest: XCTestCase {
 
     func testReceiveNotificationAndVerify() {
         print("Waiting for permission to appear");
+        logger.log("Waiting for permissiong to appear...")
 
         let interruptionMonitor = addUIInterruptionMonitor(withDescription: "Notification Permission Alert") { (alert) -> Bool in
             let allowButton = alert.buttons["Allow"]
             if allowButton.exists {
                 print("Permission alert appeared. Tapping 'Allow'.")
+                self.logger.log("Permission alert appeared. Tapping 'Allow'.")
                 allowButton.tap()
                 return true
             }
             print("Permission alert did not have an 'Allow' button.")
+            self.logger.log("Permission alert did not have an 'Allow' button.")
             return false
         }
 
@@ -133,6 +139,7 @@ class NotificationAppearanceUITest: XCTestCase {
         app.tap()
 
         print("Waiting for notification to appear on the home screen...")
+        logger.log("Waiting for notification to appear on the homescreen...")
 
         // Wait for the notification to appear on the SpringBoard.
         let notification = springboard.otherElements.descendants(matching: .any)["NotificationShortLookView"]
@@ -146,6 +153,7 @@ class NotificationAppearanceUITest: XCTestCase {
         XCTAssertTrue(notificationTitle.exists, "Notification title is incorrect or not found.")
         XCTAssertTrue(notificationBody.exists, "Notification body is incorrect or not found.")
 
+        print("SUCCESS: Notification found on screen.")
         print("SUCCESS: Notification found on screen.")
 
         signalVerificationToServer(notificationTitle: notificationTitle.label, notificationBody: notificationBody.label)

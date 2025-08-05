@@ -7,10 +7,11 @@
 
 import UIKit
 import UserNotifications
+import os.log
 
 @MainActor
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    var testId: String?
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppDelegate")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = self
@@ -41,6 +42,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined();
         print("DEVICE TOKEN IS: \(deviceTokenString)");
+        logger.info("Device token registered: \(deviceTokenString)");
         
         /**
          * Address is provided through the environment variable.
@@ -51,11 +53,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
          */
         guard let deviceRegistrationAddress = ProcessInfo.processInfo.environment["DEVICE_REGISTRATION_ADDRESS"] else {
             print("Device Registration Address not found in the environment. Provide one in order to send a request containing the token.");
+            logger.error("Device registration address not found in the environment. Provide one in order to send a request containing the token.");
             return;
         }
 
         guard let apnsTopic = Bundle.main.bundleIdentifier else {
             print("Could not get bundle identifier")
+            logger.error("Could not get bundle identifier");
             return
         }
         
@@ -68,14 +72,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for remote notifications: \(error)")
+        logger.error("Failed to register for remote notifications: \(error.localizedDescription)");
     }
     
     /**
-     * This will apply when app is open and receives a notification.
-     * Apparently there is no way of receiving a notification when app is in background.
+     * This will apply when app is open and receives a notification..
      */
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
         print("Received a notification", userInfo);
+        logger.error("Received a notification");
         return UIBackgroundFetchResult.noData;
     }
     
