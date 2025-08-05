@@ -142,6 +142,16 @@ export async function setLanguage(simulator, language, locale) {
 }
 
 /**
+ * Sets the log level to verbose for a simulator.
+ * @param {Simulator} simulator
+ */
+export async function setLogVerbose(simulator) {
+	console.log(`🛠️ Setting log level to verbose for simulator: ${simulator.udid}`);
+	await execAsync(`xcrun simctl logverbose ${simulator.udid} enable`);
+	console.log("✅ Simulator log level set to logverbose:enable.");
+}
+
+/**
  * Runs the UI tests for a given scheme on a simulator.
  * @param {Simulator} simulator The simulator object.
  * @param {object} options The run options.
@@ -258,6 +268,7 @@ export function streamLogs(simulator) {
 	// This command streams logs from the simulator, filtering for messages from our app,
 	// the test runner, and the home screen (SpringBoard) to see notifications.
 	const logProcess = spawn("xcrun", [
+		"--log",
 		"simctl",
 		"spawn",
 		simulator.udid,
