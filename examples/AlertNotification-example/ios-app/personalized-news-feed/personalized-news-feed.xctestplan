@@ -9,9 +9,11 @@
     }
   ],
   "defaultOptions" : {
+    "codeCoverage" : false,
     "commandLineArgumentEntries" : [
 
     ],
+    "diagnosticCollectionPolicy" : "Always",
     "environmentVariableEntries" : [
 
     ],
@@ -19,7 +21,9 @@
       "containerPath" : "container:personalized-news-feed.xcodeproj",
       "identifier" : "11336D5C2E2057F80012D56D",
       "name" : "UITests"
-    }
+    },
+    "testRepetitionMode" : "retryOnFailure",
+    "uiTestingScreenshotsLifetime" : "keepAlways"
   },
   "testTargets" : [
     {
@@ -28,14 +32,6 @@
         "containerPath" : "container:personalized-news-feed.xcodeproj",
         "identifier" : "11336D5C2E2057F80012D56D",
         "name" : "UITests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:personalized-news-feed.xcodeproj",
-        "identifier" : "11336D6B2E20835C0012D56D",
-        "name" : "UITests-1"
       }
     }
   ],

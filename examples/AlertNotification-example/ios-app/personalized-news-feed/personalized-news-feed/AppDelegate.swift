@@ -18,6 +18,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         let notificationCenter = UNUserNotificationCenter.current()
         
         Task {
+            let testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id";
+
+            reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)", stepName: "didFinishLaunchingWithOptions", metadata: ["launchOptions": "\(String(describing: launchOptions))"]);
+            
             if try await notificationCenter.requestAuthorization(options: [.alert]) {
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
@@ -40,10 +44,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
      */
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let deviceTokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined();
-        print("DEVICE TOKEN IS: \(deviceTokenString)");
-        logger.info("Device token registered: \(deviceTokenString)");
+        let testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id";
         
+        reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)", stepName: "didRegisterForRemoteNotificationsWithDeviceToken")
+
         /**
          * Address is provided through the environment variable.
          * Should setting it before running the app, because if we run it on a device,
@@ -52,16 +56,27 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
          * Go to 'Product' -> 'Scheme' -> 'Edit Scheme...' -> 'Run' -> 'Arguments' -> 'Environment Variables'
          */
         guard let deviceRegistrationAddress = ProcessInfo.processInfo.environment["DEVICE_REGISTRATION_ADDRESS"] else {
+            
             print("Device Registration Address not found in the environment. Provide one in order to send a request containing the token.");
-            logger.error("Device registration address not found in the environment. Provide one in order to send a request containing the token.");
             return;
         }
+
+        reportProgressToStepsGuard(deviceRegistrationAddress: deviceRegistrationAddress, stepName: "device_registration");
+
+        let deviceTokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined();
+        print("DEVICE TOKEN IS: \(deviceTokenString)");
+        logger.info("Device token registered: \(deviceTokenString)");
+            logger.error("Device registration address not found in the environment. Provide one in order to send a request containing the token.");
+        
+        reportProgressToStepsGuard(deviceRegistrationAddress: deviceRegistrationAddress, stepName: "pre-apns-topic");
 
         guard let apnsTopic = Bundle.main.bundleIdentifier else {
             print("Could not get bundle identifier")
             logger.error("Could not get bundle identifier");
             return
         }
+        
+        reportProgressToStepsGuard(deviceRegistrationAddress: deviceRegistrationAddress, stepName: "post-apns-topic");
         
         registerDeviceWithServer(
             address: URL(string: deviceRegistrationAddress)!,
@@ -73,6 +88,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for remote notifications: \(error)")
         logger.error("Failed to register for remote notifications: \(error.localizedDescription)");
+        
+        let testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id";
+
+        reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)", stepName: "registration-failure", metadata: ["error": error.localizedDescription]);
     }
     
     /**

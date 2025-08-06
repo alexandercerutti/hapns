@@ -82,7 +82,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "DEVICE_REGISTRATION_ADDRESS"
-            value = "http://192.168.1.89:3000/registration"
+            value = "http://localhost:8571/registration"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

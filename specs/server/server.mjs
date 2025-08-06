@@ -232,6 +232,11 @@ fastify.get("/health", async (_request, reply) => {
 	reply.send({ status: "ok" });
 });
 
+fastify.post("/tests/:testId/devices/steps-guard/progress", async (request, reply) => {
+	console.log(`[steps-guard/progress] ${JSON.stringify(request.body)}`);
+	reply.status(200).send({ ok: true });
+});
+
 try {
 	await fastify.listen({
 		port: 8571,

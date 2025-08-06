@@ -64,13 +64,19 @@ jobs:
       - name: Start test server
         run: |
           echo "Starting test server..."
-          node specs/server/server.mjs &
+          node specs/server/server.mjs > server.log 2>&1 &
           echo $! > server.pid
 
       - name: Run End-to-End iOS Simulator Tests
         env:
           APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
         run: pnpm run test
+
+      - name: Print server logs on failure
+        if: failure()
+        run: |
+          echo "Dumping server logs..."
+          cat server.log
 
       - name: Retrieve and Print Test Logs on Failure (1/2)
         if: failure()

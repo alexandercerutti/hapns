@@ -32,7 +32,7 @@ export async function waitForDeviceRegistration(testId) {
 	 * Poll for 10000 seconds (5000 attempts * 2s interval)
 	 * This amount is less or equal to the test timeout threshold
 	 */
-	for (let i = 0; i < 5000; i++) {
+	for (let i = 0; i < 800; i++) {
 		const response = await fetch(`${SERVER_URL}/tests/${testId}/registered-devices`);
 
 		if (response.ok) {
