@@ -72,7 +72,13 @@ jobs:
           APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
         run: pnpm run test
 
-      - name: Retrieve and Print Test Logs on Failure
+      - name: Retrieve and Print Test Logs on Failure (1/2)
+        if: failure()
+        run: |
+          echo "Test failed. Retrieving logs..."
+          xcrun xcresulttool get test-results tests --path /Users/runner/work/hapns/hapns/TestSlowness.xcresult --format json | jq .
+
+      - name: Retrieve and Print Test Logs on Failure (2/2)
         if: failure()
         run: |
           echo "Test failed. Retrieving logs..."
