@@ -167,6 +167,8 @@ export function run(simulator, { scheme, project, testId }) {
 		["-sdk", "iphonesimulator"],
 		["-destination", `platform=\"iOS Simulator,id=${simulator.udid}\"`],
 		["-configuration", "Debug"],
+		["-verbose", ""],
+		["-resultBundlePath", "TestSlowness.xcresult"],
 	]);
 
 	const commandArgsString = Array.from(commandArgs.entries())
@@ -231,6 +233,7 @@ export async function build(simulator, options) {
 		["-sdk", "iphonesimulator"],
 		["-destination", `platform=\"iOS Simulator,id=${simulator.udid}\"`],
 		["-configuration", "Debug"],
+		["-verbose", ""],
 	]);
 
 	const commandArgsString = Array.from(commandArgs.entries())

@@ -143,7 +143,7 @@ class NotificationAppearanceUITest: XCTestCase {
 
         // Wait for the notification to appear on the SpringBoard.
         let notification = springboard.otherElements.descendants(matching: .any)["NotificationShortLookView"]
-        XCTAssertTrue(notification.waitForExistence(timeout: 10000), "Notification did not appear on the screen.")
+        XCTAssertTrue(notification.waitForExistence(timeout: 600), "Notification did not appear on the screen.")
 
         // Get the notification's content by position.
         let notificationTitle = notification.staticTexts.element(boundBy: 0)

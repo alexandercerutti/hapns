@@ -60,6 +60,7 @@ test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t
 
 	await t.test("should receive a push notification on the simulator", async () => {
 		await simulator.setLanguage(sim, TEST_CONFIG.language, TEST_CONFIG.locale);
+		// await simulator.setLogVerbose(sim);
 
 		await simulator.build(sim, {
 			project: TEST_CONFIG.project,
@@ -76,7 +77,7 @@ test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t
 
 		const { simulatorUdid } = await client.waitForSimulatorRegistration(testId);
 
-		simulator.streamLogs(sim);
+		// simulator.streamLogs({ udid: simulatorUdid });
 
 		const { deviceToken, apnsTopic } = await client.waitForDeviceRegistration(testId);
 
