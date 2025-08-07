@@ -14,6 +14,7 @@ jobs:
     runs-on: macos-15
     outputs:
       simulator-udid: ${{ steps.create-simulator.outputs.udid }}
+      simulator-name: ${{ steps.create-simulator.outputs.simulator-name }}
     steps:
       - name: Create iOS Simulator
         id: create-simulator
@@ -26,11 +27,15 @@ jobs:
           UDID=$(xcrun simctl create "$SIMULATOR_NAME" "$DEVICE_TYPE" "$RUNTIME")
           echo "✅ Simulator created (uuid: '$UDID')"
           echo "udid=$UDID" >> $GITHUB_OUTPUT
+          echo "simulator-name=$SIMULATOR_NAME" >> $GITHUB_OUTPUT
 
   boot-simulator:
     name: Boot iOS Simulator
     runs-on: macos-15
     needs: create-simulator
+    env:
+      SIMULATOR_NAME: ${{ needs.create-simulator.outputs.simulator-name }}
+      UDID: ${{ needs.create-simulator.outputs.simulator-udid }}
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
