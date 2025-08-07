@@ -23,9 +23,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)/devices", stepName: "didFinishLaunchingWithOptions", metadata: ["launchOptions": "\(String(describing: launchOptions))"]);
             
             if try await notificationCenter.requestAuthorization(options: [.alert]) {
+                reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)/devices", stepName: "authorization-requested-completed");
+
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
+            } else {
+                reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)/devices", stepName: "authorization-requested-denied");
             }
             
         }

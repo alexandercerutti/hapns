@@ -121,12 +121,17 @@ class NotificationAppearanceUITest: XCTestCase {
     func testReceiveNotificationAndVerify() {
         print("Waiting for permission to appear");
         logger.log("Waiting for permissiong to appear...")
+        
+        reportProgressToStepsGuard(deviceRegistrationAddress: "\(self.serverBaseURL)/tests/\(self.testId ?? "default-test-id")/devices", stepName: "test-started")
 
         let interruptionMonitor = addUIInterruptionMonitor(withDescription: "Notification Permission Alert") { (alert) -> Bool in
             let allowButton = alert.buttons["Allow"]
             if allowButton.exists {
                 print("Permission alert appeared. Tapping 'Allow'.")
                 self.logger.log("Permission alert appeared. Tapping 'Allow'.")
+                
+                reportProgressToStepsGuard(deviceRegistrationAddress: "\(self.serverBaseURL)/tests/\(self.testId ?? "default-test-id")/devices", stepName: "notification-permission-granted-tapped")
+                
                 allowButton.tap()
                 return true
             }
@@ -137,6 +142,8 @@ class NotificationAppearanceUITest: XCTestCase {
 
         // The app needs to be interacted with to trigger the interruption monitor.
         app.tap()
+        
+        reportProgressToStepsGuard(deviceRegistrationAddress: "\(serverBaseURL)/tests/\(self.testId ?? "default-test-id")/devices", stepName: "waiting-for-notification-permission")
 
         print("Waiting for notification to appear on the home screen...")
         logger.log("Waiting for notification to appear on the homescreen...")
