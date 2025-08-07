@@ -92,6 +92,7 @@ test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t
 		console.log(process.env.APNS_TEAM_ID);
 		console.log(process.env.APNS_TOKEN_KEY);
 		console.log(process.env.USE_SANDBOX);
+		console.log(import.meta.dirname, import.meta.url);
 
 		const connector = TokenConnector({
 			key: new Uint8Array(Buffer.from(APNS_TOKEN_KEY, "utf8").buffer),
