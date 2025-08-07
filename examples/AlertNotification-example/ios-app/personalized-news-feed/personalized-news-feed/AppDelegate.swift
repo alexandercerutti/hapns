@@ -20,7 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         Task {
             let testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id";
 
-            reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)", stepName: "didFinishLaunchingWithOptions", metadata: ["launchOptions": "\(String(describing: launchOptions))"]);
+            reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)/devices", stepName: "didFinishLaunchingWithOptions", metadata: ["launchOptions": "\(String(describing: launchOptions))"]);
             
             if try await notificationCenter.requestAuthorization(options: [.alert]) {
                 DispatchQueue.main.async {
@@ -46,7 +46,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id";
         
-        reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)", stepName: "didRegisterForRemoteNotificationsWithDeviceToken")
+        reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)/devices", stepName: "didRegisterForRemoteNotificationsWithDeviceToken")
 
         /**
          * Address is provided through the environment variable.
@@ -91,7 +91,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         
         let testId = ProcessInfo.processInfo.environment["TEST_ID"] ?? "default-test-id";
 
-        reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)", stepName: "registration-failure", metadata: ["error": error.localizedDescription]);
+        reportProgressToStepsGuard(deviceRegistrationAddress: "http://localhost:8571/tests/\(testId)/devices", stepName: "registration-failure", metadata: ["error": error.localizedDescription]);
     }
     
     /**
