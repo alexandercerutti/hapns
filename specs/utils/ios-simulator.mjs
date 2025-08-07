@@ -44,7 +44,7 @@ export async function create(
 
 	// const udid = stdout.trim();
 
-	console.log(`✅ Simulator created (uuid: '${udid}')`);
+	console.log(`✅ Simulator created (uuid: '${/**udid */ ""}')`);
 
 	return {
 		name,
