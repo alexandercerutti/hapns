@@ -101,7 +101,7 @@ jobs:
             -project "$PROJECT_PATH" \
             -scheme "$SCHEME" \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -destination platform="iOS Simulator,id=$SIMULATOR_UDID" \
             -configuration Debug \
             -verbose
 
