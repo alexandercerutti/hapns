@@ -27,6 +27,23 @@ jobs:
           echo "✅ Simulator created (uuid: '$UDID')"
           echo "udid=$UDID" >> $GITHUB_OUTPUT
 
+  boot-simulator:
+    name: Boot iOS Simulator
+    runs-on: macos-15
+    needs: create-simulator
+    steps:
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
+
+      # - name: List available simulator runtimes
+      #   run: xcrun simctl list runtimes
+
+      - name: Boot iOS Simulator
+        run: |
+          echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
+          xcrun simctl boot "$UDID"
+          echo "✅ Simulator booted."
+
       - name: Set Simulator Language and Locale
         run: |
           echo
@@ -46,23 +63,6 @@ jobs:
           xcrun simctl spawn "$UDID" launchctl stop com.apple.SpringBoard
 
           echo "✅ Simulator language set."
-
-  boot-simulator:
-    name: Boot iOS Simulator
-    runs-on: macos-15
-    needs: create-simulator
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # - name: List available simulator runtimes
-      #   run: xcrun simctl list runtimes
-
-      - name: Boot iOS Simulator
-        run: |
-          echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
-          xcrun simctl boot "$UDID"
-          echo "✅ Simulator booted."
 
   build-and-setup-server:
     name: Build App and Setup Server
