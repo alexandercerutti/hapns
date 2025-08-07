@@ -43,12 +43,13 @@ export async function create(
 	// const { stdout } = await execAsync(`xcrun simctl create "${name}" "${deviceType}" "${runtime}"`);
 
 	// const udid = stdout.trim();
+	const udid = await getBootedSimulatorUUID();
 
-	console.log(`✅ Simulator created (uuid: '${/**udid */ ""}')`);
+	console.log(`✅ Simulator created (uuid: '${udid}')`);
 
 	return {
 		name,
-		udid: undefined,
+		udid,
 		deviceType,
 	};
 }
@@ -62,6 +63,22 @@ export async function boot(simulator) {
 	console.log(`🛠️ Booting simulator: ${simulator.name} (${simulator.udid})`);
 	// await execAsync(`xcrun simctl boot "${simulator.udid}"`);
 	console.log("✅ Simulator booted.");
+}
+
+/**
+ * Gets the UUID of the currently booted simulator, if any.
+ * @returns {Promise<string|null>} The UUID of the booted simulator, or null if none is booted.
+ */
+export async function getBootedSimulatorUUID() {
+	try {
+		const { stdout } = await execAsync(
+			'xcrun simctl list devices | grep "(Booted)" | grep -o "[A-F0-9-]\\{36\\}"',
+		);
+		const uuid = stdout.trim();
+		return uuid || null;
+	} catch {
+		return null;
+	}
 }
 
 /**
