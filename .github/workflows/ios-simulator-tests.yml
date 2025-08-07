@@ -59,7 +59,7 @@ jobs:
   build-and-setup-server:
     name: Build App and Setup Server
     runs-on: macos-15
-    needs: setup-simulator
+    # needs: setup-simulator
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
