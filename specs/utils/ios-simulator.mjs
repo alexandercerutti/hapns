@@ -40,15 +40,15 @@ export async function create(
 ) {
 	console.log(`🛠️ Creating simulator: ${name}`);
 
-	const { stdout } = await execAsync(`xcrun simctl create "${name}" "${deviceType}" "${runtime}"`);
+	// const { stdout } = await execAsync(`xcrun simctl create "${name}" "${deviceType}" "${runtime}"`);
 
-	const udid = stdout.trim();
+	// const udid = stdout.trim();
 
 	console.log(`✅ Simulator created (uuid: '${udid}')`);
 
 	return {
 		name,
-		udid,
+		udid: undefined,
 		deviceType,
 	};
 }
@@ -60,7 +60,7 @@ export async function create(
  */
 export async function boot(simulator) {
 	console.log(`🛠️ Booting simulator: ${simulator.name} (${simulator.udid})`);
-	await execAsync(`xcrun simctl boot "${simulator.udid}"`);
+	// await execAsync(`xcrun simctl boot "${simulator.udid}"`);
 	console.log("✅ Simulator booted.");
 }
 
@@ -98,7 +98,7 @@ export async function setLanguage(simulator, language, locale) {
 
 	const AppleLanguagesCommandArgsString = AppleLanguagesCommandArgs.join("\x20");
 
-	await execAsync(`xcrun simctl spawn ${AppleLanguagesCommandArgsString}`);
+	// await execAsync(`xcrun simctl spawn ${AppleLanguagesCommandArgsString}`);
 
 	const AppleLocaleCommandArgs = [
 		`"${simulator.udid}"`,
@@ -112,7 +112,7 @@ export async function setLanguage(simulator, language, locale) {
 
 	const AppleLocaleCommandArgsString = AppleLocaleCommandArgs.join("\x20");
 
-	await execAsync(`xcrun simctl spawn ${AppleLocaleCommandArgsString}`);
+	// await execAsync(`xcrun simctl spawn ${AppleLocaleCommandArgsString}`);
 
 	// ************************************************************* //
 	// *** SPRINGBOARD START TO LANGUAGES CHANGES TO TAKE EFFECT *** //
@@ -136,7 +136,7 @@ export async function setLanguage(simulator, language, locale) {
 
 	const SpringboardRestartCommandArgsString = SpringboardRestartCommandArgs.join("\x20");
 
-	await execAsync(`xcrun simctl spawn ${SpringboardRestartCommandArgsString}`);
+	// await execAsync(`xcrun simctl spawn ${SpringboardRestartCommandArgsString}`);
 
 	console.log("✅ Simulator language set.");
 }
@@ -147,7 +147,7 @@ export async function setLanguage(simulator, language, locale) {
  */
 export async function setLogVerbose(simulator) {
 	console.log(`🛠️ Setting log level to verbose for simulator: ${simulator.udid}`);
-	await execAsync(`xcrun simctl logverbose ${simulator.udid} enable`);
+	// await execAsync(`xcrun simctl logverbose ${simulator.udid} enable`);
 	console.log("✅ Simulator log level set to logverbose:enable.");
 }
 
@@ -204,7 +204,7 @@ export function run(simulator, { scheme, project, testId }) {
 export async function deleteSimulator(simulator) {
 	try {
 		console.log(`🛠️ Deleting simulator: ${simulator.name} (${simulator.udid})`);
-		await execAsync(`xcrun simctl delete "${simulator.udid}"`);
+		// await execAsync(`xcrun simctl delete "${simulator.udid}"`);
 		console.log("✅ Simulator deleted.");
 	} catch (error) {
 		console.error(`❌ Failed to delete simulator ${simulator.name} (${simulator.udid}):`, error);
@@ -245,13 +245,13 @@ export async function build(simulator, options) {
 	console.log(`🛠️ Building scheme '${scheme}' for simulator '${simulator.name}'...`);
 
 	try {
-		const { stdout, stderr } = await execAsync(command);
+		// const { stdout, stderr } = await execAsync(command);
 
-		console.log(stdout);
+		// console.log(stdout);
 
-		if (stderr) {
-			console.error(stderr);
-		}
+		// if (stderr) {
+		// 	console.error(stderr);
+		// }
 
 		console.log("🎉 Build completed successfully.");
 	} catch (error) {

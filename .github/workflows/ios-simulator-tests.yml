@@ -9,12 +9,117 @@ on:
   #     - master
 
 jobs:
-  ios-simulator-tests:
-    # This supports up to iOS 18.5 Simulator + iOS 26.0
-    # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
-    # https://github.com/actions/runner-images/issues/3239
+  setup-simulator:
+    name: Setup iOS Simulator
     runs-on: macos-15
+    outputs:
+      simulator-udid: ${{ steps.create-simulator.outputs.udid }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
+      # - name: List available simulator runtimes
+      #   run: xcrun simctl list runtimes
+
+      - name: Create iOS Simulator
+        id: create-simulator
+        run: |
+          SIMULATOR_NAME="hapns-test-iphone"
+          DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro"
+          RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-18-5"
+
+          echo "🛠️ Creating simulator: $SIMULATOR_NAME"
+          UDID=$(xcrun simctl create "$SIMULATOR_NAME" "$DEVICE_TYPE" "$RUNTIME")
+          echo "✅ Simulator created (uuid: '$UDID')"
+          echo "udid=$UDID" >> $GITHUB_OUTPUT
+
+          echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
+          xcrun simctl boot "$UDID"
+          echo "✅ Simulator booted."
+
+      - name: Set Simulator Language and Locale
+        run: |
+          UDID="${{ steps.create-simulator.outputs.udid }}"
+          LANGUAGE="en"
+          LOCALE="en_US"
+
+          echo "🛠️ Setting simulator language to '$LANGUAGE' and locale to '$LOCALE'..."
+
+          # Set language
+          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array "$LANGUAGE"
+
+          # Set locale
+          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string "$LOCALE"
+
+          # Restart SpringBoard to apply changes
+          xcrun simctl spawn "$UDID" launchctl stop com.apple.SpringBoard
+
+          echo "✅ Simulator language set."
+
+  build-and-setup-server:
+    name: Build App and Setup Server
+    runs-on: macos-15
+    needs: setup-simulator
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # - name: Setup pnpm
+      #   uses: pnpm/action-setup@v2
+      #   with:
+      #     version: latest
+
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "22"
+      #     cache: "pnpm"
+
+      # - name: Install dependencies
+      #   run: pnpm install
+
+      # - name: Build the project
+      #   run: pnpm run build
+
+      - name: Check Version of Xcodebuild
+        run: xcodebuild -version
+
+      # - name: Check Xcode project settings
+      #   run: |
+      #     cd examples/AlertNotification-example/ios-app/personalized-news-feed
+      #     xcodebuild -project personalized-news-feed.xcodeproj -list
+      #     xcodebuild -project personalized-news-feed.xcodeproj -showBuildSettings -scheme personalized-news-feed | grep IPHONEOS_DEPLOYMENT_TARGET
+
+      - name: Build iOS App
+        run: |
+          SIMULATOR_UDID="${{ needs.setup-simulator.outputs.simulator-udid }}"
+          PROJECT_PATH="examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj"
+          SCHEME="personalized-news-feed"
+
+          echo "🛠️ Building scheme '$SCHEME' for simulator..."
+          xcodebuild clean build-for-testing \
+            -project "$PROJECT_PATH" \
+            -scheme "$SCHEME" \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -configuration Debug \
+            -verbose
+
+          echo "🎉 Build completed successfully."
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-build-artifacts
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.app
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.xctestrun
+          retention-days: 1
+
+  run-tests:
+    name: Run iOS Simulator Tests
+    runs-on: macos-15
+    needs: [setup-simulator, build-and-setup-server]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,30 +141,11 @@ jobs:
       - name: Build the project
         run: pnpm run build
 
-      - name: List available simulator runtimes (1/2)
-        run: xcrun simctl list runtimes
-
-      - name: Check Version of Xcodebuild
-        run: xcodebuild -version
-
-      # - uses: maxim-lobanov/setup-xcode@v1
-      #   with:
-      #     xcode-version: latest
-
-      # - name: Check Version of Xcodebuild
-      #   run: xcodebuild -version
-
-      - name: List available simulator runtimes (2/2)
-        run: xcrun simctl list runtimes
-
-      - name: Check Xcode project settings
-        run: |
-          cd examples/AlertNotification-example/ios-app/personalized-news-feed
-          xcodebuild -project personalized-news-feed.xcodeproj -list
-          xcodebuild -project personalized-news-feed.xcodeproj -showBuildSettings -scheme personalized-news-feed | grep IPHONEOS_DEPLOYMENT_TARGET
-
-      # - name: Download iOS Simulator
-      #   run: xcodebuild -downloadPlatform iOS -arch arm64
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ios-build-artifacts
+          path: ~/build-artifacts
 
       - name: Start test server
         run: |
@@ -70,6 +156,8 @@ jobs:
       - name: Run End-to-End iOS Simulator Tests
         env:
           APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
+          CI_SIMULATOR_UDID: ${{ needs.setup-simulator.outputs.simulator-udid }}
+          CI_SKIP_SIMULATOR_SETUP: "true"
         run: pnpm run test
 
       - name: Print server logs on failure
@@ -78,39 +166,39 @@ jobs:
           echo "Dumping server logs..."
           cat server.log
 
-      - name: Retrieve and Print Test Logs on Failure (1/2)
-        if: failure()
-        run: |
-          echo "Test failed. Retrieving logs..."
-          xcrun xcresulttool get test-results tests --path /Users/runner/work/hapns/hapns/TestSlowness.xcresult --format json | jq .
+      # - name: Retrieve and Print Test Logs on Failure (1/2)
+      #   if: failure()
+      #   run: |
+      #     echo "Test failed. Retrieving logs..."
+      #     xcrun xcresulttool get test-results tests --path /Users/runner/work/hapns/hapns/TestSlowness.xcresult --format json | jq .
 
-      - name: Retrieve and Print Test Logs on Failure (2/2)
-        if: failure()
-        run: |
-          echo "Test failed. Retrieving logs..."
-          DERIVED_DATA_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "personalized-news-feed-*" -type d -maxdepth 1)
-          XC_RESULT_PATH=$(find $DERIVED_DATA_PATH/Logs/Test -name "*.xcresult" -type d -print -quit)
-          if [ -n "$XC_RESULT_PATH" ]; then
-            echo "Found test result bundle at: $XC_RESULT_PATH"
-            xcrun xcresulttool get test-results summary --path "$XC_RESULT_PATH" --format json | jq .
-          else
-            echo "Could not find .xcresult bundle."
-          fi
+      # - name: Retrieve and Print Test Logs on Failure (2/2)
+      #   if: failure()
+      #   run: |
+      #     echo "Test failed. Retrieving logs..."
+      #     DERIVED_DATA_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "personalized-news-feed-*" -type d -maxdepth 1)
+      #     XC_RESULT_PATH=$(find $DERIVED_DATA_PATH/Logs/Test -name "*.xcresult" -type d -print -quit)
+      #     if [ -n "$XC_RESULT_PATH" ]; then
+      #       echo "Found test result bundle at: $XC_RESULT_PATH"
+      #       xcrun xcresulttool get test-results summary --path "$XC_RESULT_PATH" --format json | jq .
+      #     else
+      #       echo "Could not find .xcresult bundle."
+      #     fi
 
-      - name: Verify app entitlements
-        if: failure()
-        env:
-          APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
-        run: |
-          echo "Verifying app entitlements before test run..."
-          DERIVED_DATA_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "personalized-news-feed-*" -type d -maxdepth 1)
-          APP_PATH=$(find $DERIVED_DATA_PATH/Build/Products -name "*.app" -type d -print -quit)
-          if [ -n "$APP_PATH" ]; then
-            echo "Found app bundle at: $APP_PATH"
-            codesign -d --entitlements :- "$APP_PATH"
-          else
-            echo "Could not find .app bundle to verify entitlements."
-          fi
+      # - name: Verify app entitlements
+      #   if: failure()
+      #   env:
+      #     APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
+      #   run: |
+      #     echo "Verifying app entitlements before test run..."
+      #     DERIVED_DATA_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "personalized-news-feed-*" -type d -maxdepth 1)
+      #     APP_PATH=$(find $DERIVED_DATA_PATH/Build/Products -name "*.app" -type d -print -quit)
+      #     if [ -n "$APP_PATH" ]; then
+      #       echo "Found app bundle at: $APP_PATH"
+      #       codesign -d --entitlements :- "$APP_PATH"
+      #     else
+      #       echo "Could not find .app bundle to verify entitlements."
+      #     fi
 
       - name: Cleanup
         if: always()
@@ -120,4 +208,12 @@ jobs:
             echo "Stopping test server..."
             kill $(cat server.pid) || true
             rm server.pid
+          fi
+
+          # Clean up simulator if we created it
+          SIMULATOR_UDID="${{ needs.setup-simulator.outputs.simulator-udid }}"
+          if [ -n "$SIMULATOR_UDID" ]; then
+            echo "🛠️ Deleting simulator: $SIMULATOR_UDID"
+            xcrun simctl delete "$SIMULATOR_UDID" || true
+            echo "✅ Simulator deleted."
           fi
