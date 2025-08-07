@@ -92,7 +92,7 @@ jobs:
 
       - name: Build iOS App
         run: |
-          SIMULATOR_UDID="${{ needs.setup-simulator.outputs.simulator-udid }}"
+          SIMULATOR_NAME="hapns-test-iphone"
           PROJECT_PATH="examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj"
           SCHEME="personalized-news-feed"
 
@@ -101,7 +101,7 @@ jobs:
             -project "$PROJECT_PATH" \
             -scheme "$SCHEME" \
             -sdk iphonesimulator \
-            -destination platform="iOS Simulator,id=$SIMULATOR_UDID" \
+            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
             -configuration Debug \
             -verbose
 
