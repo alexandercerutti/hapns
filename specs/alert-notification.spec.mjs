@@ -95,7 +95,7 @@ test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t
 		console.log(import.meta.dirname, import.meta.url);
 
 		const connector = TokenConnector({
-			key: new Uint8Array(Buffer.from(APNS_TOKEN_KEY, "utf8").buffer),
+			key: new TextEncoder().encode(APNS_TOKEN_KEY),
 			keyId: APNS_KEY_ID,
 			teamIdentifier: APNS_TEAM_ID,
 		});
