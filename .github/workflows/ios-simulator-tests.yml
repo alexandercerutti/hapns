@@ -115,8 +115,8 @@ jobs:
           echo $! > server.pid
 
       - name: Run End-to-End iOS Simulator Tests
-        env:
-          APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
+        # env:
+        #   APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
         run: pnpm run test
 
       - name: Print server logs on failure
