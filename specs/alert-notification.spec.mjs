@@ -88,6 +88,11 @@ test("Alert Notification End-to-End Test", { timeout: 30 * 60 * 1000 }, async (t
 			USE_SANDBOX = "true",
 		} = process.env;
 
+		console.log(process.env.APNS_KEY_ID);
+		console.log(process.env.APNS_TEAM_ID);
+		console.log(process.env.APNS_TOKEN_KEY);
+		console.log(process.env.USE_SANDBOX);
+
 		const connector = TokenConnector({
 			key: new Uint8Array(APNS_TOKEN_KEY),
 			keyId: APNS_KEY_ID,
