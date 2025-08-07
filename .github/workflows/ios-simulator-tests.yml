@@ -9,18 +9,12 @@ on:
   #     - master
 
 jobs:
-  setup-simulator:
-    name: Setup iOS Simulator
+  create-simulator:
+    name: Create iOS Simulator
     runs-on: macos-15
     outputs:
       simulator-udid: ${{ steps.create-simulator.outputs.udid }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # - name: List available simulator runtimes
-      #   run: xcrun simctl list runtimes
-
       - name: Create iOS Simulator
         id: create-simulator
         run: |
@@ -33,12 +27,9 @@ jobs:
           echo "✅ Simulator created (uuid: '$UDID')"
           echo "udid=$UDID" >> $GITHUB_OUTPUT
 
-          echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
-          xcrun simctl boot "$UDID"
-          echo "✅ Simulator booted."
-
       - name: Set Simulator Language and Locale
         run: |
+          echo
           UDID="${{ steps.create-simulator.outputs.udid }}"
           LANGUAGE="en"
           LOCALE="en_US"
@@ -56,30 +47,30 @@ jobs:
 
           echo "✅ Simulator language set."
 
-  build-and-setup-server:
-    name: Build App and Setup Server
+  boot-simulator:
+    name: Boot iOS Simulator
     runs-on: macos-15
-    # needs: setup-simulator
+    needs: create-simulator
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # - name: Setup pnpm
-      #   uses: pnpm/action-setup@v2
-      #   with:
-      #     version: latest
+      # - name: List available simulator runtimes
+      #   run: xcrun simctl list runtimes
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: "22"
-      #     cache: "pnpm"
+      - name: Boot iOS Simulator
+        run: |
+          echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
+          xcrun simctl boot "$UDID"
+          echo "✅ Simulator booted."
 
-      # - name: Install dependencies
-      #   run: pnpm install
-
-      # - name: Build the project
-      #   run: pnpm run build
+  build-and-setup-server:
+    name: Build App and Setup Server
+    runs-on: macos-15
+    needs: create-simulator
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Check Version of Xcodebuild
         run: xcodebuild -version
@@ -119,7 +110,7 @@ jobs:
   run-tests:
     name: Run iOS Simulator Tests
     runs-on: macos-15
-    needs: [setup-simulator, build-and-setup-server]
+    needs: [boot-simulator, build-and-setup-server]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -156,7 +147,7 @@ jobs:
       - name: Run End-to-End iOS Simulator Tests
         env:
           APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
-          CI_SIMULATOR_UDID: ${{ needs.setup-simulator.outputs.simulator-udid }}
+          # CI_SIMULATOR_UDID: ${{ needs.boot-simulator.outputs.simulator-udid }}
           CI_SKIP_SIMULATOR_SETUP: "true"
         run: pnpm run test
 
@@ -171,7 +162,6 @@ jobs:
       #   run: |
       #     echo "Test failed. Retrieving logs..."
       #     xcrun xcresulttool get test-results tests --path /Users/runner/work/hapns/hapns/TestSlowness.xcresult --format json | jq .
-
       # - name: Retrieve and Print Test Logs on Failure (2/2)
       #   if: failure()
       #   run: |
@@ -184,7 +174,6 @@ jobs:
       #     else
       #       echo "Could not find .xcresult bundle."
       #     fi
-
       # - name: Verify app entitlements
       #   if: failure()
       #   env:
@@ -199,7 +188,6 @@ jobs:
       #     else
       #       echo "Could not find .app bundle to verify entitlements."
       #     fi
-
       - name: Cleanup
         if: always()
         run: |
@@ -210,10 +198,10 @@ jobs:
             rm server.pid
           fi
 
-          # Clean up simulator if we created it
-          SIMULATOR_UDID="${{ needs.setup-simulator.outputs.simulator-udid }}"
-          if [ -n "$SIMULATOR_UDID" ]; then
-            echo "🛠️ Deleting simulator: $SIMULATOR_UDID"
-            xcrun simctl delete "$SIMULATOR_UDID" || true
-            echo "✅ Simulator deleted."
-          fi
+        # # Clean up simulator if we created it
+        # SIMULATOR_UDID="${{ needs.setup-simulator.outputs.simulator-udid }}"
+        # if [ -n "$SIMULATOR_UDID" ]; then
+        #   echo "🛠️ Deleting simulator: $SIMULATOR_UDID"
+        #   xcrun simctl delete "$SIMULATOR_UDID" || true
+        #   echo "✅ Simulator deleted."
+        # fi
