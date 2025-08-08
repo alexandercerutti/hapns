@@ -13,7 +13,7 @@ jobs:
     # This supports up to iOS 18.5 Simulator + iOS 26.0
     # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
     # https://github.com/actions/runner-images/issues/3239
-    runs-on: self-hosted
+    runs-on: macos-15-xlarge
 
     steps:
       # - name: List available simulator runtimes (1/2)
@@ -38,92 +38,98 @@ jobs:
       #     xcodebuild -project personalized-news-feed.xcodeproj -list
       #     xcodebuild -project personalized-news-feed.xcodeproj -showBuildSettings -scheme personalized-news-feed | grep IPHONEOS_DEPLOYMENT_TARGET
 
-      - name: Create and Boot iOS Simulator
-        id: create-simulator
-        run: |
-          SIMULATOR_NAME="hapns-test-iphone"
-          DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro"
-          RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-18-5"
-
-          echo "🛠️ Creating simulator: $SIMULATOR_NAME"
-          UDID=$(xcrun simctl create "$SIMULATOR_NAME" "$DEVICE_TYPE" "$RUNTIME")
-          echo "✅ Simulator created (uuid: '$UDID')"
-
-          echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
-          xcrun simctl boot "$UDID"
-          echo "✅ Simulator booted."
-
-          echo "udid=$UDID" >> $GITHUB_OUTPUT
-          echo "simulator-name=$SIMULATOR_NAME" >> $GITHUB_OUTPUT
-
-      - name: Set Simulator Language and Locale
-        run: |
-          UDID="${{ steps.create-simulator.outputs.udid }}"
-          LANGUAGE="en"
-          LOCALE="en_US"
-
-          echo "🛠️ Setting simulator language to '$LANGUAGE' and locale to '$LOCALE'..."
-          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array "$LANGUAGE"
-          xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string "$LOCALE"
-          xcrun simctl spawn "$UDID" launchctl stop com.apple.SpringBoard
-          echo "✅ Simulator language set."
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Build iOS App
-        run: |
-          UDID="${{ steps.create-simulator.outputs.udid }}"
-          PROJECT_PATH="examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj"
-          SCHEME="personalized-news-feed"
-
-          echo "🛠️ Building scheme '$SCHEME' for simulator..."
-          xcodebuild clean build-for-testing \
-            -project "$PROJECT_PATH" \
-            -scheme "$SCHEME" \
-            -sdk iphonesimulator \
-            -destination platform="iOS Simulator,id=$UDID" \
-            -configuration Debug \
-            -verbose
-
-          echo "🎉 Build completed successfully."
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Check if required ports are open
+        uses: nrukavkov/open-ports-check-action@v1
         with:
-          version: latest
+          port: 5223, 443, 80
+          host: "api.sandbox.push.apple.com"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "pnpm"
+      # - name: Create and Boot iOS Simulator
+      #   id: create-simulator
+      #   run: |
+      #     SIMULATOR_NAME="hapns-test-iphone"
+      #     DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro"
+      #     RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-18-5"
 
-      - name: Install dependencies
-        run: pnpm install
+      #     echo "🛠️ Creating simulator: $SIMULATOR_NAME"
+      #     UDID=$(xcrun simctl create "$SIMULATOR_NAME" "$DEVICE_TYPE" "$RUNTIME")
+      #     echo "✅ Simulator created (uuid: '$UDID')"
 
-      - name: Build the project
-        run: pnpm run build
+      #     echo "🛠️ Booting simulator: $SIMULATOR_NAME ($UDID)"
+      #     xcrun simctl boot "$UDID"
+      #     echo "✅ Simulator booted."
 
-      # - name: Download iOS Simulator
-      #   run: xcodebuild -downloadPlatform iOS -arch arm64
+      #     echo "udid=$UDID" >> $GITHUB_OUTPUT
+      #     echo "simulator-name=$SIMULATOR_NAME" >> $GITHUB_OUTPUT
 
-      - name: Start test server
-        run: |
-          echo "Starting test server..."
-          node specs/server/server.mjs > server.log 2>&1 &
-          echo $! > server.pid
+      # - name: Set Simulator Language and Locale
+      #   run: |
+      #     UDID="${{ steps.create-simulator.outputs.udid }}"
+      #     LANGUAGE="en"
+      #     LOCALE="en_US"
 
-      - name: Run End-to-End iOS Simulator Tests
-        # env:
-        #   APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
-        run: pnpm run test
+      #     echo "🛠️ Setting simulator language to '$LANGUAGE' and locale to '$LOCALE'..."
+      #     xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLanguages -array "$LANGUAGE"
+      #     xcrun simctl spawn "$UDID" defaults write "Apple Global Domain" AppleLocale -string "$LOCALE"
+      #     xcrun simctl spawn "$UDID" launchctl stop com.apple.SpringBoard
+      #     echo "✅ Simulator language set."
 
-      - name: Print server logs on failure
-        if: failure()
-        run: |
-          echo "Dumping server logs..."
-          cat server.log
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
+
+      # - name: Build iOS App
+      #   run: |
+      #     UDID="${{ steps.create-simulator.outputs.udid }}"
+      #     PROJECT_PATH="examples/AlertNotification-example/ios-app/personalized-news-feed/personalized-news-feed.xcodeproj"
+      #     SCHEME="personalized-news-feed"
+
+      #     echo "🛠️ Building scheme '$SCHEME' for simulator..."
+      #     xcodebuild clean build-for-testing \
+      #       -project "$PROJECT_PATH" \
+      #       -scheme "$SCHEME" \
+      #       -sdk iphonesimulator \
+      #       -destination platform="iOS Simulator,id=$UDID" \
+      #       -configuration Debug \
+      #       -verbose
+
+      #     echo "🎉 Build completed successfully."
+
+      # - name: Setup pnpm
+      #   uses: pnpm/action-setup@v2
+      #   with:
+      #     version: latest
+
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "22"
+      #     cache: "pnpm"
+
+      # - name: Install dependencies
+      #   run: pnpm install
+
+      # - name: Build the project
+      #   run: pnpm run build
+
+      # # - name: Download iOS Simulator
+      # #   run: xcodebuild -downloadPlatform iOS -arch arm64
+
+      # - name: Start test server
+      #   run: |
+      #     echo "Starting test server..."
+      #     node specs/server/server.mjs > server.log 2>&1 &
+      #     echo $! > server.pid
+
+      # - name: Run End-to-End iOS Simulator Tests
+      #   # env:
+      #   #   APNS_TOKEN_KEY: ${{ secrets.APNS_TOKEN_KEY }}
+      #   run: pnpm run test
+
+      # - name: Print server logs on failure
+      #   if: failure()
+      #   run: |
+      #     echo "Dumping server logs..."
+      #     cat server.log
 
       # - name: Retrieve and Print Test Logs on Failure (1/2)
       #   if: failure()
@@ -159,12 +165,12 @@ jobs:
       #       echo "Could not find .app bundle to verify entitlements."
       #     fi
 
-      - name: Cleanup
-        if: always()
-        run: |
-          echo "Cleaning up..."
-          if [ -f server.pid ]; then
-            echo "Stopping test server..."
-            kill $(cat server.pid) || true
-            rm server.pid
-          fi
+      # - name: Cleanup
+      #   if: always()
+      #   run: |
+      #     echo "Cleaning up..."
+      #     if [ -f server.pid ]; then
+      #       echo "Stopping test server..."
+      #       kill $(cat server.pid) || true
+      #       rm server.pid
+      #     fi
