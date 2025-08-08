@@ -41,7 +41,7 @@ jobs:
       - name: Check if required ports are open
         uses: nrukavkov/open-ports-check-action@v1
         with:
-          port: 5223, 443, 80
+          port: 5223
           host: "api.sandbox.push.apple.com"
 
       # - name: Create and Boot iOS Simulator
