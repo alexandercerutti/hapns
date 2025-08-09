@@ -9,6 +9,18 @@ import { AlertNotification } from "hapns/notifications/AlertNotification";
 import { Device } from "hapns/targets/device";
 import { TokenConnector } from "hapns/connectors/token";
 
+// ************************** //
+// *** CONFIGURATION AREA *** //
+// ************************** //
+
+const CERTIFICATE_PATH = "../../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8";
+const APNS_KEY_ID = "6WB99KX6YJ";
+const APNS_TEAM_ID = "F53WB8AE67";
+
+// ****************************** //
+// *** END CONFIGURATION AREA *** //
+// ****************************** //
+
 const TEST_CONFIG = {
 	simulatorName: "hapns-test-iphone",
 	deviceType: "com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro",
@@ -73,20 +85,20 @@ test("Alert Notification End-to-End Test", { timeout: 5 * 60 * 1000 }, async (t)
 			testId,
 		});
 
-		const { simulatorUdid } = await client.waitForSimulatorRegistration(testId);
+		await client.waitForSimulatorRegistration(testId);
+
+		// This is an attempt of streaming logs of the cloned simulator
+		// It doesn't allow logs to be streamed.
+		// simulatorUdid comes as result of above line.
 
 		// simulator.streamLogs(simulatorUdid);
 
 		const { deviceToken, apnsTopic } = await client.waitForDeviceRegistration(testId);
 
-		const {
-			APNS_KEY_ID = "6WB99KX6YJ",
-			APNS_TEAM_ID = "F53WB8AE67",
-			USE_SANDBOX = "true",
-		} = process.env;
+		const USE_SANDBOX = "true";
 
 		const connector = TokenConnector({
-			key: new Uint8Array(fs.readFileSync("../certificates/token/APNS_AuthKey_6WB99KX6YJ.p8")),
+			key: new Uint8Array(fs.readFileSync(CERTIFICATE_PATH)),
 			keyId: APNS_KEY_ID,
 			teamIdentifier: APNS_TEAM_ID,
 		});
