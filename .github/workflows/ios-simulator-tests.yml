@@ -44,6 +44,12 @@ jobs:
           port: 5223
           host: "api.sandbox.push.apple.com"
 
+      - name: Traceroute apns sandbox
+        run: |
+          echo "Running traceroute to api.sandbox.push.apple.com..."
+          sudo traceroute -n api.sandbox.push.apple.com
+          echo "Traceroute completed."
+
       # - name: Create and Boot iOS Simulator
       #   id: create-simulator
       #   run: |
