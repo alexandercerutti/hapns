@@ -4,7 +4,7 @@
 	"description": "Handle APNs notifications delivery without hussle",
 	"type": "module",
 	"scripts": {
-		"build": "pnpm tsc",
+		"build": "rm -rf lib && pnpm tsc",
 		"prepublishOnly": "pnpm build",
 		"test": "node --test specs/*.spec.mjs"
 	},
