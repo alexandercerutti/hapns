@@ -3,24 +3,24 @@ import type { Dispatcher } from "undici";
 import { Connector } from "./connector.js";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
-import { createError } from "../errors/create.js";
+import { defineError } from "../errors/define.js";
 
-const INVALID_CERT_ERROR = createError(
+const INVALID_CERT_ERROR = defineError(
 	"INVALID_CERT_ERROR",
 	"Cannot setup Certificate connector: field 'cert' is missing or is not an Uint8Array.",
 );
 
-const INVALID_KEY_ERROR = createError(
+const INVALID_KEY_ERROR = defineError(
 	"INVALID_KEY_ERROR",
 	"Cannot setup Certificate connector: field 'key' is missing or is not an Uint8Array.",
 );
 
-const INVALID_HEADERS_ERROR = createError(
+const INVALID_HEADERS_ERROR = defineError(
 	"INVALID_HEADERS_ERROR",
 	"Cannot send request: payload headers are missing or are not an object.",
 );
 
-const INVALID_BODY_ERROR = createError(
+const INVALID_BODY_ERROR = defineError(
 	"INVALID_BODY_ERROR",
 	"Cannot send request: payload body is missing or is not an object.",
 );

@@ -1,5 +1,5 @@
 import type { ConnectorProtocol } from "../connectors/connector.js";
-import { createError } from "../errors/create.js";
+import { defineError } from "../errors/define.js";
 import { BroadcastChannel } from "../targets/broadcastchannel.js";
 
 type WithRequestId<T extends object> = T & {
@@ -18,22 +18,22 @@ interface BroadcastChannelSettings {
 const BROADCAST_SANDBOX_BASE_URL = "https://api-manage-broadcast.sandbox.push.apple.com:2195";
 const BROADCAST_PRODUCTION_BASE_URL = "https://api-manage-broadcast.push.apple.com:2196";
 
-const CONNECTOR_INVALID_ERROR = createError(
+const CONNECTOR_INVALID_ERROR = defineError(
 	"CONNECTOR_INVALID_ERROR",
 	"Cannot manage broadcast channel: Connector is missing or is not a valid connector.",
 );
 
-const BUNDLE_ID_MISSING_ERROR = createError(
+const BUNDLE_ID_MISSING_ERROR = defineError(
 	"BUNDLE_ID_MISSING_ERROR",
 	"Cannot manage broadcast channel: bundleId is missing or is not a string.",
 );
 
-const INVALID_SETTINGS_OBJ_ERROR = createError(
+const INVALID_SETTINGS_OBJ_ERROR = defineError(
 	"INVALID_SETTINGS_OBJ_ERROR",
 	"Cannot manage broadcast channel: settings are missing or are not a valid settings object.",
 );
 
-const INVALID_BROADCAST_CHANNEL_ERROR = createError(
+const INVALID_BROADCAST_CHANNEL_ERROR = defineError(
 	"INVALID_BROADCAST_CHANNEL_ERROR",
 	"Cannot manage broadcast channel: BroadcastChannel is missing or is not a valid BroadcastChannel object.",
 );

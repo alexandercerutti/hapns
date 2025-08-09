@@ -1,6 +1,6 @@
 import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import { createError } from "../errors/create.js";
+import { defineError } from "../errors/define.js";
 import type {
 	APSBody,
 	Notification,
@@ -18,12 +18,12 @@ export interface NotificationCustomAppData {}
 type NotificationData = NotificationHeaders & NotificationBody<never, NotificationCustomAppData>;
 type NotificationObject = Notification<APSBody<Record<string, string>>>;
 
-const EXPIRATION_TOO_BIG_ERROR = createError(
+const EXPIRATION_TOO_BIG_ERROR = defineError(
 	"EXPIRATION_TOO_BIG",
 	"Cannot create notification: expiration time for VoIP notifications must be included between 0 and 5 seconds. This artificial limit reflects a requirement from Apple. Received: %s",
 );
 
-const EXPIRATION_NAN_ERROR = createError(
+const EXPIRATION_NAN_ERROR = defineError(
 	"EXPIRATION_NAN",
 	"Cannot create notification: expiration time for VoIP notifications must be a number. Received: %s",
 );

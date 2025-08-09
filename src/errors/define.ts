@@ -10,7 +10,7 @@ type HapnsErrorConstructor<Message extends string> =
 		? new (...args: NonEmptyArray<unknown>) => Error
 		: new () => Error;
 
-export function createError<Message extends string>(
+export function defineError<Message extends string>(
 	name: string,
 	message: Message,
 ): HapnsErrorConstructor<Message> {

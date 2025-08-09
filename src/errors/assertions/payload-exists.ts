@@ -1,6 +1,6 @@
-import { createError } from "../create.js";
+import { defineError } from "../define.js";
 
-const INVALID_PAYLOAD_ERROR = createError(
+const INVALID_PAYLOAD_ERROR = defineError(
 	"INVALID_PAYLOAD_ERROR",
 	"Cannot create notification: payload is invalid (missing or not an object).",
 );
