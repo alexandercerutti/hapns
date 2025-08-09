@@ -185,7 +185,7 @@ export function run(simulator, { scheme, project, testId }) {
 		["-destination", `platform=\"iOS Simulator,id=${simulator.udid}\"`],
 		["-configuration", "Debug"],
 		["-verbose", ""],
-		["-resultBundlePath", "TestSlowness.xcresult"],
+		// ["-resultBundlePath", "TestSlowness.xcresult"],
 	]);
 
 	const commandArgsString = Array.from(commandArgs.entries())
