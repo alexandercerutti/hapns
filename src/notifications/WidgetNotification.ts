@@ -46,14 +46,12 @@ export function WidgetNotification(
 
 	assertValidAppData(appData);
 
-	const body = Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+	const body: NotificationObject["body"] = {
+		...(appData || {}),
 		aps: {
-			enumerable: true,
-			value: {
-				"content-changed": true,
-			},
+			"content-changed": 1,
 		},
-	});
+	};
 
 	return {
 		pushType: "widgets",

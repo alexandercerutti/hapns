@@ -25,20 +25,19 @@ export function MDMNotification(mdmUid: string, data: NotificationData): Notific
 	assertTopicProvided(mdmUid);
 	assertValidPayload(data.payload);
 
-	const { expiration = 0, collapseID, priority = 10 } = data;
+	const { expiration = 0, collapseID, priority = 10, payload } = data;
 
 	assertExpirationValid(expiration);
+
+	const body: NotificationObject["body"] = {
+		mdm: payload.mdm,
+	};
 
 	return {
 		pushType: "mdm",
 		supportedConnectors: Connector.Certificate,
 		topic: mdmUid,
-		body: Object.create(null, {
-			mdm: {
-				enumerable: true,
-				value: data.payload.mdm,
-			},
-		}),
+		body,
 		expiration,
 		collapseID,
 		priority,

@@ -39,14 +39,12 @@ export function BackgroundNotification(
 	assertValidAppData(appData);
 	assertExpirationValid(expiration);
 
-	const body = Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+	const body: NotificationObject["body"] = {
+		...(appData || {}),
 		aps: {
-			enumerable: true,
-			value: {
-				"content-available": 1,
-			},
+			"content-available": 1,
 		},
-	});
+	};
 
 	return {
 		pushType: "background",

@@ -1,5 +1,3 @@
-/// <reference path="./object-constructor.d.ts" />
-
 type ToDashedKey<T extends string> = T extends `${infer FirstLetter}${infer Rest}`
 	? Rest extends `${Uppercase<string>}${string}`
 		? `${Lowercase<FirstLetter>}-${Lowercase<ToDashedKey<Rest>>}`

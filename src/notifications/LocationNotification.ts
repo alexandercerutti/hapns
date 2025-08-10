@@ -32,6 +32,10 @@ export function LocationNotification(
 
 	assertExpirationValid(expiration);
 
+	const body: NotificationObject["body"] = {
+		aps: {},
+	};
+
 	return {
 		pushType: "location",
 		supportedConnectors: Connector.Token,
@@ -42,12 +46,7 @@ export function LocationNotification(
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: Object.create(null, {
-			aps: {
-				enumerable: true,
-				value: {},
-			},
-		}),
+		body,
 		expiration,
 		collapseID,
 		priority,

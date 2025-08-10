@@ -38,6 +38,10 @@ export function ComplicationNotification(
 
 	assertExpirationValid(expiration);
 
+	const body: NotificationObject["body"] = {
+		aps: {},
+	};
+
 	return {
 		pushType: "complication",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -48,12 +52,7 @@ export function ComplicationNotification(
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: Object.create(null, {
-			aps: {
-				enumerable: true,
-				value: {},
-			},
-		}),
+		body,
 		expiration,
 		collapseID,
 		priority,

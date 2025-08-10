@@ -307,59 +307,50 @@ export function LiveActivityNotification(
 			if (event === "start") {
 				const { attributesType, attributes, inputPushToken, inputPushChannel } = payload;
 
-				return Object.create<null, NotificationObject["body"]>(null, {
+				return {
 					aps: {
-						enumerable: true,
-						value: {
-							event,
-							"stale-date": staleDate,
-							"attributes-type": attributesType,
-							attributes,
-							"relevance-score": relevanceScore,
-							"content-state": contentState,
-							"input-push-token": inputPushToken,
-							"input-push-channel": inputPushChannel,
-							timestamp,
-							alert: createNotificationAlertBody(mandatoryAlert(alert)),
-						},
-					},
-				});
+						event,
+						"stale-date": staleDate,
+						"attributes-type": attributesType,
+						attributes,
+						"relevance-score": relevanceScore,
+						"content-state": contentState,
+						"input-push-token": inputPushToken,
+						"input-push-channel": inputPushChannel,
+						timestamp,
+						alert: createNotificationAlertBody(mandatoryAlert(alert)),
+					} satisfies NotificationObject["body"]["aps"],
+				};
 			}
 
 			if (event === "end") {
 				const { dismissalDate } = payload;
 
-				const notificationBody = Object.create<null, NotificationObject["body"]>(null, {
+				const notificationBody = {
 					aps: {
-						enumerable: true,
-						value: {
-							event,
-							"stale-date": staleDate,
-							"content-state": contentState,
-							timestamp,
-							"relevance-score": relevanceScore,
-							"dismissal-date": dismissalDate,
-							alert: createNotificationAlertBody(alert),
-						},
-					},
-				});
+						event,
+						"stale-date": staleDate,
+						"content-state": contentState,
+						timestamp,
+						"relevance-score": relevanceScore,
+						"dismissal-date": dismissalDate,
+						alert: createNotificationAlertBody(alert),
+					} satisfies NotificationObject["body"]["aps"],
+				};
 
 				return notificationBody;
 			}
 
-			const notificationBody = Object.create<null, NotificationObject["body"]>(null, {
+			const notificationBody = {
 				aps: {
-					enumerable: true,
-					value: {
-						event,
-						"stale-date": staleDate,
-						"content-state": contentState,
-						"relevance-score": relevanceScore,
-						timestamp,
-						alert: createNotificationAlertBody(alert),
-					},
-				},
-			});
+					event,
+					"stale-date": staleDate,
+					"content-state": contentState,
+					"relevance-score": relevanceScore,
+					timestamp,
+					alert: createNotificationAlertBody(alert),
+				} satisfies NotificationObject["body"]["aps"],
+			};
 
 			return notificationBody;
 		},

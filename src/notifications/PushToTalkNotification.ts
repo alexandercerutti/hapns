@@ -40,6 +40,10 @@ export function PushToTalkNotification(
 
 	const { collapseID } = data;
 
+	const body: NotificationObject["body"] = {
+		aps: {},
+	};
+
 	return {
 		pushType: "pushtotalk",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -50,12 +54,7 @@ export function PushToTalkNotification(
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: Object.create(null, {
-			aps: {
-				enumerable: true,
-				value: {},
-			},
-		}),
+		body,
 		collapseID,
 		expiration: 0,
 		priority: 10,
