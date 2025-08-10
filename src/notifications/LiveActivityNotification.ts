@@ -284,54 +284,63 @@ export function LiveActivityNotification(
 			if (event === "start") {
 				const { attributesType, attributes, inputPushToken, inputPushChannel } = payload;
 
-				return {
+				return Object.create<null, NotificationObject["body"]>(null, {
 					aps: {
-						event,
-						"stale-date": staleDate,
-						"attributes-type": attributesType,
-						attributes,
-						"relevance-score": relevanceScore,
-						"content-state": contentState,
-						"input-push-token": inputPushToken,
-						"input-push-channel": inputPushChannel,
-						timestamp,
-						alert: {
-							title: payload.alert?.title,
-							body: payload.alert?.body,
-							sound: payload.alert?.sound || "default",
+						enumerable: true,
+						value: {
+							event,
+							"stale-date": staleDate,
+							"attributes-type": attributesType,
+							attributes,
+							"relevance-score": relevanceScore,
+							"content-state": contentState,
+							"input-push-token": inputPushToken,
+							"input-push-channel": inputPushChannel,
+							timestamp,
+							alert: {
+								title: payload.alert?.title,
+								body: payload.alert?.body,
+								sound: payload.alert?.sound || "default",
+							},
 						},
-					} satisfies NotificationObject["body"]["aps"],
-				};
+					},
+				});
 			}
 
 			if (event === "end") {
 				const { dismissalDate } = payload;
 
-				const notificationBody = {
+				const notificationBody = Object.create<null, NotificationObject["body"]>(null, {
 					aps: {
-						event,
-						"stale-date": staleDate,
-						"content-state": contentState,
-						timestamp,
-						"relevance-score": relevanceScore,
-						"dismissal-date": dismissalDate,
-						alert: createNotificationAlertBody(alert),
-					} satisfies NotificationObject["body"]["aps"],
-				};
+						enumerable: true,
+						value: {
+							event,
+							"stale-date": staleDate,
+							"content-state": contentState,
+							timestamp,
+							"relevance-score": relevanceScore,
+							"dismissal-date": dismissalDate,
+							alert: createNotificationAlertBody(alert),
+						},
+					},
+				});
 
 				return notificationBody;
 			}
 
-			const notificationBody = {
+			const notificationBody = Object.create<null, NotificationObject["body"]>(null, {
 				aps: {
-					event,
-					"stale-date": staleDate,
-					"content-state": contentState,
-					"relevance-score": relevanceScore,
-					timestamp,
-					alert: createNotificationAlertBody(alert),
-				} satisfies NotificationObject["body"]["aps"],
-			};
+					enumerable: true,
+					value: {
+						event,
+						"stale-date": staleDate,
+						"content-state": contentState,
+						"relevance-score": relevanceScore,
+						timestamp,
+						alert: createNotificationAlertBody(alert),
+					},
+				},
+			});
 
 			return notificationBody;
 		},

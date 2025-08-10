@@ -63,9 +63,12 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: {
-			aps: {},
-		},
+		body: Object.create(null, {
+			aps: {
+				enumerable: true,
+				value: {},
+			},
+		}),
 		expiration,
 		collapseID,
 		priority,

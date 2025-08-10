@@ -312,6 +312,8 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 
 	assertValidAppData(appData);
 
+	const body = buildAlertNotificationBody(payload, appData);
+
 	return {
 		pushType: "alert",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -319,63 +321,73 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		expiration: expiration ?? 0,
 		collapseID: collapseID ?? undefined,
 		priority: priority ?? 10,
-		get body() {
-			const { payload, appData } = data;
+		body,
+	};
+}
 
-			if (!payload) {
-				return {
-					...appData,
-					aps: {},
-				};
-			}
+function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
+	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
+}
 
-			const {
-				threadId,
-				category,
-				mutableContent,
-				filterCriteria,
-				interruptionLevel,
-				relevanceScore,
-				targetContentId,
-			} = payload;
+function buildAlertNotificationBody(
+	payload: AlertNotificationBody | undefined,
+	appData: Record<string, string> | undefined,
+): NotificationObject["body"] {
+	if (!payload) {
+		return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+			aps: {
+				enumerable: true,
+				value: {},
+			},
+		});
+	}
 
-			if (!payload.alert || isEmptyAlert(payload.alert)) {
-				return {
-					...appData,
-					aps: {
-						alert: {},
-						category: category,
-						"thread-id": threadId,
-						"mutable-content": mutableContent,
-						"target-content-id": targetContentId,
-						"interruption-level": interruptionLevel,
-						"relevance-score": relevanceScore,
-						"filter-criteria": filterCriteria,
-					} satisfies NotificationObject["body"]["aps"],
-				};
-			}
+	const {
+		alert,
+		badge,
+		sound,
+		threadId,
+		category,
+		mutableContent,
+		filterCriteria,
+		interruptionLevel,
+		relevanceScore,
+		targetContentId,
+	} = payload;
 
-			const { alert, badge, sound } = payload;
-
-			return {
-				...appData,
-				aps: {
-					alert,
-					badge: badge ? Math.max(0, badge) : undefined,
-					sound,
-					category,
+	if (!alert || isEmptyAlert(alert)) {
+		return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+			aps: {
+				enumerable: true,
+				value: {
+					alert: {},
+					category: category,
 					"thread-id": threadId,
 					"mutable-content": mutableContent,
 					"target-content-id": targetContentId,
 					"interruption-level": interruptionLevel,
 					"relevance-score": relevanceScore,
 					"filter-criteria": filterCriteria,
-				} satisfies NotificationObject["body"]["aps"],
-			};
-		},
-	} satisfies NotificationObject;
-}
+				},
+			},
+		});
+	}
 
-function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
-	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
+	return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+		aps: {
+			enumerable: true,
+			value: {
+				alert,
+				badge: badge ? Math.max(0, badge) : undefined,
+				sound,
+				category,
+				"thread-id": threadId,
+				"mutable-content": mutableContent,
+				"target-content-id": targetContentId,
+				"interruption-level": interruptionLevel,
+				"relevance-score": relevanceScore,
+				"filter-criteria": filterCriteria,
+			},
+		},
+	});
 }

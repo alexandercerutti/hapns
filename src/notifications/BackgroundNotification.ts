@@ -37,6 +37,15 @@ export function BackgroundNotification(
 
 	assertValidAppData(appData);
 
+	const body = Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+		aps: {
+			enumerable: true,
+			value: {
+				"content-available": 1,
+			},
+		},
+	});
+
 	return {
 		pushType: "background",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -44,13 +53,6 @@ export function BackgroundNotification(
 		expiration,
 		collapseID,
 		priority: 5,
-		get body() {
-			return {
-				...(appData || {}),
-				aps: {
-					"content-available": 1,
-				} satisfies NotificationObject["body"]["aps"],
-			};
-		},
+		body,
 	};
 }

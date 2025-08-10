@@ -37,11 +37,12 @@ export function ControlsNotification(
 		pushType: "controls",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
-		get body() {
-			return {
-				aps: {},
-			};
-		},
+		body: Object.create(null, {
+			aps: {
+				enumerable: true,
+				value: {},
+			},
+		}),
 		expiration,
 		collapseID,
 		priority,
