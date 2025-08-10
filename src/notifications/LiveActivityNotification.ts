@@ -11,23 +11,23 @@ import type {
 	NotificationHeaders,
 } from "./notification.js";
 
-const ALERT_PROPERTY_REQUIRED = defineError(
-	"ALERT_PROPERTY_REQUIRED",
+const ALERT_PROPERTY_REQUIRED_ERROR = defineError(
+	"ALERT_PROPERTY_REQUIRED_ERROR",
 	"Alert property is required in order to send a 'start' event.",
 );
 
-const ALERT_FIELD_INVALID = defineError(
-	"ALERT_FIELD_INVALID",
+const ALERT_FIELD_INVALID_ERROR = defineError(
+	"ALERT_FIELD_INVALID_ERROR",
 	"Invalid alert field: must be a string or an object with 'loc-key' property.",
 );
 
-const ALERT_OBJECT_INVALID = defineError(
-	"ALERT_TITLE_BODY_MISSING",
+const ALERT_OBJECT_INVALID_ERROR = defineError(
+	"ALERT_OBJECT_INVALID_ERROR",
 	"Alert must be an object with 'title' and 'body' properties. Cannot create live notification.",
 );
 
-const ALERT_TITLE_BODY_INVALID = defineError(
-	"ALERT_TITLE_BODY_INVALID",
+const ALERT_TITLE_BODY_INVALID_ERROR = defineError(
+	"ALERT_TITLE_BODY_INVALID_ERROR",
 	"Alert object specified but either 'title' or 'body' are invalid strings or objects. Cannot create live notification.",
 );
 
@@ -379,7 +379,7 @@ function validateAlertField(content: AlertField): AlertField | undefined {
 	}
 
 	if (typeof content !== "object" || !content["loc-key"]) {
-		throw new ALERT_FIELD_INVALID();
+		throw new ALERT_FIELD_INVALID_ERROR();
 	}
 
 	const nextBody: AlertField = {
@@ -402,7 +402,7 @@ function mandatoryAlert(
 	alert: LiveActivityNotificationBody["alert"] | undefined,
 ): LiveActivityNotificationBody["alert"] {
 	if (!alert) {
-		throw new ALERT_PROPERTY_REQUIRED();
+		throw new ALERT_PROPERTY_REQUIRED_ERROR();
 	}
 
 	return alert;
@@ -416,14 +416,14 @@ function createNotificationAlertBody(
 	}
 
 	if (typeof alert !== "object") {
-		throw new ALERT_OBJECT_INVALID();
+		throw new ALERT_OBJECT_INVALID_ERROR();
 	}
 
 	const title = validateAlertField(alert.title);
 	const body = validateAlertField(alert.body);
 
 	if (!title || !body) {
-		throw new ALERT_TITLE_BODY_INVALID();
+		throw new ALERT_TITLE_BODY_INVALID_ERROR();
 	}
 
 	return {
