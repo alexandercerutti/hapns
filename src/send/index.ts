@@ -7,9 +7,15 @@ type WithSandbox<T extends object> = T & {
 	useSandbox?: boolean;
 };
 
-type SendingOptions = WithSandbox<{
-	apnsId?: string;
-}>;
+type WithDebug<T extends object> = T & {
+	debug?: boolean;
+};
+
+type SendingOptions = WithDebug<
+	WithSandbox<{
+		apnsId?: string;
+	}>
+>;
 
 const CONNECTOR_INVALID_ERROR = defineError(
 	"CONNECTOR_INVALID_ERROR",
@@ -62,7 +68,7 @@ export async function send(
 		throw new UNSUPPORTED_CONNECTOR_ERROR();
 	}
 
-	const { useSandbox = false, apnsId } = settings;
+	const { useSandbox = false, apnsId, debug = false } = settings;
 
 	const headers = {
 		"apns-expiration": String(notification.expiration || 0),
@@ -76,18 +82,24 @@ export async function send(
 		...(target.headers || {}),
 	} satisfies APNsHeaders;
 
-	/**
-	 * @developmentonly Will be removed when the code will reach v1.0.0
-	 */
-	console.log("APNS request body:", notification.body);
+	const apnsBaseUrl = target.getBaseUrl(useSandbox);
+
+	if (debug) {
+		console.info("APNS request body:\n\n", notification.body, "\n\n");
+		console.info(`Sending APNS request to '${apnsBaseUrl}'...`);
+	}
 
 	const response = await connector.send({
 		method: "POST",
-		baseUrl: target.getBaseUrl(useSandbox),
+		baseUrl: apnsBaseUrl,
 		requestPath: target.requestPath,
 		headers,
 		body: notification.body as Record<string, unknown>,
 	});
+
+	if (debug) {
+		console.info("APNS response:\n\n", response, "\n\n");
+	}
 
 	const {
 		"apns-id": apnsResponseId,
