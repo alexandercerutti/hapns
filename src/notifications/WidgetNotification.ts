@@ -46,6 +46,13 @@ export function WidgetNotification(
 
 	assertValidAppData(appData);
 
+	const body: NotificationObject["body"] = {
+		...(appData || {}),
+		aps: {
+			"content-changed": 1,
+		},
+	};
+
 	return {
 		pushType: "widgets",
 		supportedConnectors: Connector.Token,
@@ -59,13 +66,6 @@ export function WidgetNotification(
 		expiration,
 		collapseID,
 		priority: 5,
-		get body() {
-			return {
-				...(appData || {}),
-				aps: {
-					"content-changed": 1,
-				} satisfies NotificationObject["body"]["aps"],
-			};
-		},
+		body,
 	};
 }

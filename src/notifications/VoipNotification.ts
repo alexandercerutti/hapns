@@ -49,6 +49,10 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 
 	assertExpirationVoipValid(expiration);
 
+	const body: NotificationObject["body"] = {
+		aps: {},
+	};
+
 	return {
 		pushType: "voip",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -59,9 +63,7 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: {
-			aps: {},
-		},
+		body,
 		expiration,
 		collapseID,
 		priority,

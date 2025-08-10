@@ -38,6 +38,10 @@ export function FileProviderNotification(
 
 	assertExpirationValid(expiration);
 
+	const body: NotificationObject["body"] = {
+		aps: {},
+	};
+
 	return {
 		pushType: "fileprovider",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -48,11 +52,7 @@ export function FileProviderNotification(
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		get body() {
-			return {
-				aps: {},
-			};
-		},
+		body,
 		expiration,
 		collapseID,
 		priority,

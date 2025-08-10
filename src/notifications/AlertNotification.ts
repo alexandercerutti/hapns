@@ -314,6 +314,10 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 	assertExpirationValid(expiration);
 	assertValidAppData(appData);
 
+	const body =
+		buildEmptyAlertNotificationBody(payload, appData) ||
+		buildAlertNotificationBody(payload, appData);
+
 	return {
 		pushType: "alert",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -321,63 +325,97 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		expiration,
 		collapseID,
 		priority: priority ?? 10,
-		get body() {
-			const { payload, appData } = data;
-
-			if (!payload) {
-				return {
-					...appData,
-					aps: {},
-				};
-			}
-
-			const {
-				threadId,
-				category,
-				mutableContent,
-				filterCriteria,
-				interruptionLevel,
-				relevanceScore,
-				targetContentId,
-			} = payload;
-
-			if (!payload.alert || isEmptyAlert(payload.alert)) {
-				return {
-					...appData,
-					aps: {
-						alert: {},
-						category: category,
-						"thread-id": threadId,
-						"mutable-content": mutableContent,
-						"target-content-id": targetContentId,
-						"interruption-level": interruptionLevel,
-						"relevance-score": relevanceScore,
-						"filter-criteria": filterCriteria,
-					} satisfies NotificationObject["body"]["aps"],
-				};
-			}
-
-			const { alert, badge, sound } = payload;
-
-			return {
-				...appData,
-				aps: {
-					alert,
-					badge: badge ? Math.max(0, badge) : undefined,
-					sound,
-					category,
-					"thread-id": threadId,
-					"mutable-content": mutableContent,
-					"target-content-id": targetContentId,
-					"interruption-level": interruptionLevel,
-					"relevance-score": relevanceScore,
-					"filter-criteria": filterCriteria,
-				} satisfies NotificationObject["body"]["aps"],
-			};
-		},
+		body,
 	} satisfies NotificationObject;
 }
 
 function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
 	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
+}
+
+function buildVoidAlertNotificationBody(
+	payload: AlertNotificationBody | undefined,
+	appData: NotificationCustomAppData | undefined,
+): NotificationObject["body"] {
+	return {
+		...appData,
+		aps: {
+			alert: {},
+		},
+	};
+}
+
+function buildEmptyAlertNotificationBody(
+	payload: AlertNotificationBody | undefined,
+	appData: NotificationCustomAppData | undefined,
+): NotificationObject["body"] | undefined {
+	if (!payload) {
+		return buildVoidAlertNotificationBody(payload, appData);
+	}
+
+	if (payload.alert && !isEmptyAlert(payload.alert)) {
+		return undefined;
+	}
+
+	const {
+		threadId,
+		category,
+		mutableContent,
+		filterCriteria,
+		interruptionLevel,
+		relevanceScore,
+		targetContentId,
+	} = payload;
+
+	return {
+		...appData,
+		aps: {
+			alert: {},
+			category: category,
+			"thread-id": threadId,
+			"mutable-content": mutableContent,
+			"target-content-id": targetContentId,
+			"interruption-level": interruptionLevel,
+			"relevance-score": relevanceScore,
+			"filter-criteria": filterCriteria,
+		},
+	};
+}
+
+function buildAlertNotificationBody(
+	payload: AlertNotificationBody | undefined,
+	appData: NotificationCustomAppData | undefined,
+): NotificationObject["body"] {
+	if (!payload) {
+		return buildVoidAlertNotificationBody(payload, appData);
+	}
+
+	const {
+		alert,
+		badge,
+		sound,
+		threadId,
+		category,
+		mutableContent,
+		filterCriteria,
+		interruptionLevel,
+		relevanceScore,
+		targetContentId,
+	} = payload;
+
+	return {
+		...appData,
+		aps: {
+			alert,
+			badge: badge ? Math.max(0, badge) : undefined,
+			sound,
+			category,
+			"thread-id": threadId,
+			"mutable-content": mutableContent,
+			"target-content-id": targetContentId,
+			"interruption-level": interruptionLevel,
+			"relevance-score": relevanceScore,
+			"filter-criteria": filterCriteria,
+		},
+	};
 }

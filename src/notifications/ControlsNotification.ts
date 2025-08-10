@@ -36,15 +36,15 @@ export function ControlsNotification(
 
 	assertExpirationValid(expiration);
 
+	const body: NotificationObject["body"] = {
+		aps: {},
+	};
+
 	return {
 		pushType: "controls",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
-		get body() {
-			return {
-				aps: {},
-			};
-		},
+		body,
 		expiration,
 		collapseID,
 		priority,
