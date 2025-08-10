@@ -2,12 +2,33 @@ import { Connector } from "../connectors/connector.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { defineError } from "../errors/define.js";
 import type {
 	APSBody,
 	Notification,
 	NotificationBody,
 	NotificationHeaders,
 } from "./notification.js";
+
+const ALERT_PROPERTY_REQUIRED = defineError(
+	"ALERT_PROPERTY_REQUIRED",
+	"Alert property is required in order to send a 'start' event.",
+);
+
+const ALERT_FIELD_INVALID = defineError(
+	"ALERT_FIELD_INVALID",
+	"Invalid alert field: must be a string or an object with 'loc-key' property.",
+);
+
+const ALERT_OBJECT_INVALID = defineError(
+	"ALERT_TITLE_BODY_MISSING",
+	"Alert must be an object with 'title' and 'body' properties. Cannot create live notification.",
+);
+
+const ALERT_TITLE_BODY_INVALID = defineError(
+	"ALERT_TITLE_BODY_INVALID",
+	"Alert object specified but either 'title' or 'body' are invalid strings or objects. Cannot create live notification.",
+);
 
 /**
  * Empty interface on purpose to allow for TS
@@ -297,11 +318,7 @@ export function LiveActivityNotification(
 							"input-push-token": inputPushToken,
 							"input-push-channel": inputPushChannel,
 							timestamp,
-							alert: {
-								title: payload.alert?.title,
-								body: payload.alert?.body,
-								sound: payload.alert?.sound || "default",
-							},
+							alert: createNotificationAlertBody(mandatoryAlert(alert)),
 						},
 					},
 				});
@@ -360,9 +377,7 @@ function validateAlertField(content: AlertField): AlertField | undefined {
 	}
 
 	if (typeof content !== "object" || !content["loc-key"]) {
-		throw new TypeError(
-			"Invalid alert field: must be a string or an object with 'loc-key' property.",
-		);
+		throw new ALERT_FIELD_INVALID();
 	}
 
 	const nextBody: AlertField = {
@@ -372,9 +387,23 @@ function validateAlertField(content: AlertField): AlertField | undefined {
 
 	if (Array.isArray(content["loc-args"])) {
 		nextBody["loc-args"] = content["loc-args"].filter((arg) => typeof arg === "string");
+
+		if (nextBody["loc-args"].length !== content["loc-args"].length) {
+			console.warn("Warning: some 'loc-args' were not strings and were filtered out.");
+		}
 	}
 
 	return nextBody;
+}
+
+function mandatoryAlert(
+	alert: LiveActivityNotificationBody["alert"] | undefined,
+): LiveActivityNotificationBody["alert"] {
+	if (!alert) {
+		throw new ALERT_PROPERTY_REQUIRED();
+	}
+
+	return alert;
 }
 
 function createNotificationAlertBody(
@@ -385,18 +414,14 @@ function createNotificationAlertBody(
 	}
 
 	if (typeof alert !== "object") {
-		throw new TypeError(
-			"Alert must be a string or an object with 'title' and 'body' properties. Cannot create live notification.",
-		);
+		throw new ALERT_OBJECT_INVALID();
 	}
 
 	const title = validateAlertField(alert.title);
 	const body = validateAlertField(alert.body);
 
 	if (!title || !body) {
-		throw new TypeError(
-			"Alert object specified but either 'title' or 'body' are invalid strings or objects. Cannot create live notification.",
-		);
+		throw new ALERT_TITLE_BODY_INVALID();
 	}
 
 	return {
