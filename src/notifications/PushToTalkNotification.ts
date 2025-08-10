@@ -50,12 +50,9 @@ export function PushToTalkNotification(
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: Object.create(null, {
-			aps: {
-				enumerable: true,
-				value: {},
-			},
-		}),
+		body: {
+			aps: {},
+		},
 		collapseID,
 		expiration: 0,
 		priority: 10,

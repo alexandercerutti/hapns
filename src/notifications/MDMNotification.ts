@@ -33,12 +33,9 @@ export function MDMNotification(mdmUid: string, data: NotificationData): Notific
 		pushType: "mdm",
 		supportedConnectors: Connector.Certificate,
 		topic: mdmUid,
-		body: Object.create(null, {
-			mdm: {
-				enumerable: true,
-				value: data.payload.mdm,
-			},
-		}),
+		body: {
+			mdm: data.payload.mdm,
+		},
 		expiration,
 		collapseID,
 		priority,

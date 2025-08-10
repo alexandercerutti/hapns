@@ -314,8 +314,6 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 	assertExpirationValid(expiration);
 	assertValidAppData(appData);
 
-	const body = buildAlertNotificationBody(payload, appData);
-
 	return {
 		pushType: "alert",
 		supportedConnectors: Connector.Certificate | Connector.Token,
@@ -323,73 +321,63 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		expiration,
 		collapseID,
 		priority: priority ?? 10,
-		body,
-	};
-}
+		get body() {
+			const { payload, appData } = data;
 
-function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
-	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
-}
+			if (!payload) {
+				return {
+					...appData,
+					aps: {},
+				};
+			}
 
-function buildAlertNotificationBody(
-	payload: AlertNotificationBody | undefined,
-	appData: Record<string, string> | undefined,
-): NotificationObject["body"] {
-	if (!payload) {
-		return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
-			aps: {
-				enumerable: true,
-				value: {},
-			},
-		});
-	}
+			const {
+				threadId,
+				category,
+				mutableContent,
+				filterCriteria,
+				interruptionLevel,
+				relevanceScore,
+				targetContentId,
+			} = payload;
 
-	const {
-		alert,
-		badge,
-		sound,
-		threadId,
-		category,
-		mutableContent,
-		filterCriteria,
-		interruptionLevel,
-		relevanceScore,
-		targetContentId,
-	} = payload;
+			if (!payload.alert || isEmptyAlert(payload.alert)) {
+				return {
+					...appData,
+					aps: {
+						alert: {},
+						category: category,
+						"thread-id": threadId,
+						"mutable-content": mutableContent,
+						"target-content-id": targetContentId,
+						"interruption-level": interruptionLevel,
+						"relevance-score": relevanceScore,
+						"filter-criteria": filterCriteria,
+					} satisfies NotificationObject["body"]["aps"],
+				};
+			}
 
-	if (!alert || isEmptyAlert(alert)) {
-		return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
-			aps: {
-				enumerable: true,
-				value: {
-					alert: {},
-					category: category,
+			const { alert, badge, sound } = payload;
+
+			return {
+				...appData,
+				aps: {
+					alert,
+					badge: badge ? Math.max(0, badge) : undefined,
+					sound,
+					category,
 					"thread-id": threadId,
 					"mutable-content": mutableContent,
 					"target-content-id": targetContentId,
 					"interruption-level": interruptionLevel,
 					"relevance-score": relevanceScore,
 					"filter-criteria": filterCriteria,
-				},
-			},
-		});
-	}
-
-	return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
-		aps: {
-			enumerable: true,
-			value: {
-				alert,
-				badge: badge ? Math.max(0, badge) : undefined,
-				sound,
-				category,
-				"thread-id": threadId,
-				"mutable-content": mutableContent,
-				"target-content-id": targetContentId,
-				"interruption-level": interruptionLevel,
-				"relevance-score": relevanceScore,
-				"filter-criteria": filterCriteria,
-			},
+				} satisfies NotificationObject["body"]["aps"],
+			};
 		},
-	});
+	} satisfies NotificationObject;
+}
+
+function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
+	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
 }

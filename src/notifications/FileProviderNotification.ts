@@ -48,12 +48,11 @@ export function FileProviderNotification(
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: Object.create(null, {
-			aps: {
-				enumerable: true,
-				value: {},
-			},
-		}),
+		get body() {
+			return {
+				aps: {},
+			};
+		},
 		expiration,
 		collapseID,
 		priority,
