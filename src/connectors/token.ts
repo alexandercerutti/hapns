@@ -4,7 +4,7 @@ import type { Dispatcher } from "undici";
 import { Connector } from "./connector.js";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
-import { createError } from "../errors/create.js";
+import { defineError } from "../errors/define.js";
 
 /**
  * 2 minutes earlier. This should let us avoid
@@ -12,27 +12,27 @@ import { createError } from "../errors/create.js";
  */
 const TOKEN_VALIDITY_TIME_1H = 58 * 60 * 1000;
 
-const INVALID_KEY_ERROR = createError(
+const INVALID_KEY_ERROR = defineError(
 	"INVALID_KEY_ERROR",
 	"Cannot setup token connector: field 'key' is missing or is not an Uint8Array.",
 );
 
-const INVALID_KEY_ID_ERROR = createError(
+const INVALID_KEY_ID_ERROR = defineError(
 	"INVALID_KEY_ID_ERROR",
 	"Cannot setup token connector: field 'keyId' is invalid (missing or not a string).",
 );
 
-const INVALID_TEAM_IDENTIFIER_ERROR = createError(
+const INVALID_TEAM_IDENTIFIER_ERROR = defineError(
 	"INVALID_TEAM_IDENTIFIER_ERROR",
 	"Cannot setup token connector: field 'teamIdentifier' is missing or is not a string.",
 );
 
-const INVALID_HEADERS_ERROR = createError(
+const INVALID_HEADERS_ERROR = defineError(
 	"INVALID_HEADERS_ERROR",
 	"Cannot send request: payload headers are missing or are not an object.",
 );
 
-const INVALID_BODY_ERROR = createError(
+const INVALID_BODY_ERROR = defineError(
 	"INVALID_BODY_ERROR",
 	"Cannot send request: payload body is missing or is not an object.",
 );

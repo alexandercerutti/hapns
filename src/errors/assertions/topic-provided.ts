@@ -1,6 +1,6 @@
-import { createError } from "../create.js";
+import { defineError } from "../define.js";
 
-const INVALID_TOPIC_ERROR = createError(
+const INVALID_TOPIC_ERROR = defineError(
 	"INVALID_TOPIC_ERROR",
 	"Cannot create notification: topic not provided or not a string.",
 );

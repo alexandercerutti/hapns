@@ -1,6 +1,6 @@
-import { createError } from "../create.js";
+import { defineError } from "../define.js";
 
-const INVALID_APP_DATA_ERROR = createError(
+const INVALID_APP_DATA_ERROR = defineError(
 	"INVALID_APP_DATA_ERROR",
 	"Cannot create notification: App data were provided but is invalid. Must be an object.",
 );

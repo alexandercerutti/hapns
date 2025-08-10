@@ -1,5 +1,5 @@
 import type { APNsHeaders, ConnectorProtocol, DeliveryResult } from "../connectors/connector.js";
-import { createError } from "../errors/create.js";
+import { defineError } from "../errors/define.js";
 import type { Notification } from "../notifications/notification.js";
 import type { NotificationTarget } from "../targets/target.js";
 
@@ -11,27 +11,27 @@ type SendingOptions = WithSandbox<{
 	apnsId?: string;
 }>;
 
-const CONNECTOR_INVALID_ERROR = createError(
+const CONNECTOR_INVALID_ERROR = defineError(
 	"CONNECTOR_INVALID_ERROR",
 	"Cannot send notification: Connector is missing or is not a valid connector.",
 );
 
-const NOTIFICATION_INVALID_ERROR = createError(
+const NOTIFICATION_INVALID_ERROR = defineError(
 	"NOTIFICATION_INVALID_ERROR",
 	"Cannot send notification: Notification is missing or is not a valid notification.",
 );
 
-const TOPIC_PUSH_TYPE_INVALID_ERROR = createError(
+const TOPIC_PUSH_TYPE_INVALID_ERROR = defineError(
 	"TOPIC_PUSH_TYPE_INVALID_ERROR",
 	"Cannot send notification: Provided notification object is not a valid notification as is missing topic or push type.",
 );
 
-const TARGET_INVALID_ERROR = createError(
+const TARGET_INVALID_ERROR = defineError(
 	"TARGET_INVALID_ERROR",
 	"Cannot send notification: Target is missing or is not a valid target.",
 );
 
-const UNSUPPORTED_CONNECTOR_ERROR = createError(
+const UNSUPPORTED_CONNECTOR_ERROR = defineError(
 	"UNSUPPORTED_CONNECTOR_ERROR",
 	"Cannot send notification: Notification type does not support the provided connector type.",
 );

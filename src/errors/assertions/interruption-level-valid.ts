@@ -1,8 +1,8 @@
-import { createError } from "../create.js";
+import { defineError } from "../define.js";
 
 export type InterruptionLevel = "passive" | "active" | "time-sensitive" | "critical";
 
-const INVALID_INTERRUPTION_LEVEL_ERROR = createError(
+const INVALID_INTERRUPTION_LEVEL_ERROR = defineError(
 	"INVALID_INTERRUPTION_LEVEL_ERROR",
 	"Cannot create notification: Invalid interruption level. Must be one of: 'passive', 'active', 'time-sensitive' or 'critical'. Received: %s",
 );
