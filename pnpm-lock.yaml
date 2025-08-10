@@ -118,11 +118,11 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
 
-  specs/server:
+  specs/e2e/server:
     dependencies:
       '@hapns-internal/utils':
         specifier: workspace:^
-        version: link:../../examples/utils
+        version: link:../../../examples/utils
       fastify:
         specifier: ^5.4.0
         version: 5.4.0

@@ -1,4 +1,4 @@
 packages:
   - "."
   - "examples/*"
-  - "specs/server"
+  - "specs/e2e/*"
