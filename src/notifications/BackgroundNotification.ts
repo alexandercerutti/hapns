@@ -1,5 +1,6 @@
 import { Connector } from "../connectors/connector.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
 	APSBody,
@@ -36,6 +37,16 @@ export function BackgroundNotification(
 	const { expiration = 0, collapseID, appData } = data;
 
 	assertValidAppData(appData);
+	assertExpirationValid(expiration);
+
+	const body = Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+		aps: {
+			enumerable: true,
+			value: {
+				"content-available": 1,
+			},
+		},
+	});
 
 	return {
 		pushType: "background",
@@ -44,13 +55,6 @@ export function BackgroundNotification(
 		expiration,
 		collapseID,
 		priority: 5,
-		get body() {
-			return {
-				...(appData || {}),
-				aps: {
-					"content-available": 1,
-				} satisfies NotificationObject["body"]["aps"],
-			};
-		},
+		body,
 	};
 }

@@ -3,7 +3,7 @@ import type { Dispatcher } from "undici";
 import { Connector } from "./connector.js";
 import type { ConnectorProtocol } from "./connector.js";
 import { getApnsErrorByReasonString } from "./apns-errors/index.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 
 const INVALID_CERT_ERROR = defineError(
 	"INVALID_CERT_ERROR",

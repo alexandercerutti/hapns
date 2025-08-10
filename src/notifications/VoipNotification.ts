@@ -1,6 +1,7 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 import type {
 	APSBody,
 	Notification,
@@ -18,14 +19,9 @@ export interface NotificationCustomAppData {}
 type NotificationData = NotificationHeaders & NotificationBody<never, NotificationCustomAppData>;
 type NotificationObject = Notification<APSBody<Record<string, string>>>;
 
-const EXPIRATION_TOO_BIG_ERROR = defineError(
+const EXPIRATION_OUT_OF_BOUNDARIES_ERROR = defineError(
 	"EXPIRATION_TOO_BIG",
 	"Cannot create notification: expiration time for VoIP notifications must be included between 0 and 5 seconds. This artificial limit reflects a requirement from Apple. Received: %s",
-);
-
-const EXPIRATION_NAN_ERROR = defineError(
-	"EXPIRATION_NAN",
-	"Cannot create notification: expiration time for VoIP notifications must be a number. Received: %s",
 );
 
 const TOPIC_SUFFIX = ".voip";
@@ -51,7 +47,7 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
-	assertExpirationValid(expiration);
+	assertExpirationVoipValid(expiration);
 
 	return {
 		pushType: "voip",
@@ -63,25 +59,22 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 
 			return `${appBundleId}${TOPIC_SUFFIX}`;
 		},
-		body: {
-			aps: {},
-		},
+		body: Object.create(null, {
+			aps: {
+				enumerable: true,
+				value: {},
+			},
+		}),
 		expiration,
 		collapseID,
 		priority,
 	};
 }
 
-function assertExpirationValid(expiration: unknown): asserts expiration is number {
-	if (typeof expiration === "undefined") {
-		return;
-	}
-
-	if (typeof expiration !== "number") {
-		throw new EXPIRATION_NAN_ERROR(expiration);
-	}
+function assertExpirationVoipValid(expiration: unknown): asserts expiration is number {
+	assertExpirationValid(expiration);
 
 	if (expiration < 0 || expiration > 5) {
-		throw new EXPIRATION_TOO_BIG_ERROR(expiration);
+		throw new EXPIRATION_OUT_OF_BOUNDARIES_ERROR(expiration);
 	}
 }

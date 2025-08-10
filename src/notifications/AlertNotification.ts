@@ -12,6 +12,7 @@ import { assertInterruptionLevelValid } from "../errors/assertions/interruption-
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -310,72 +311,85 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		assertRelevanceScoreValid(relevanceScore, 0, 1);
 	}
 
+	assertExpirationValid(expiration);
 	assertValidAppData(appData);
+
+	const body = buildAlertNotificationBody(payload, appData);
 
 	return {
 		pushType: "alert",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
-		expiration: expiration ?? 0,
-		collapseID: collapseID ?? undefined,
+		expiration,
+		collapseID,
 		priority: priority ?? 10,
-		get body() {
-			const { payload, appData } = data;
+		body,
+	};
+}
 
-			if (!payload) {
-				return {
-					...appData,
-					aps: {},
-				};
-			}
+function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
+	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
+}
 
-			const {
-				threadId,
-				category,
-				mutableContent,
-				filterCriteria,
-				interruptionLevel,
-				relevanceScore,
-				targetContentId,
-			} = payload;
+function buildAlertNotificationBody(
+	payload: AlertNotificationBody | undefined,
+	appData: Record<string, string> | undefined,
+): NotificationObject["body"] {
+	if (!payload) {
+		return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+			aps: {
+				enumerable: true,
+				value: {},
+			},
+		});
+	}
 
-			if (!payload.alert || isEmptyAlert(payload.alert)) {
-				return {
-					...appData,
-					aps: {
-						alert: {},
-						category: category,
-						"thread-id": threadId,
-						"mutable-content": mutableContent,
-						"target-content-id": targetContentId,
-						"interruption-level": interruptionLevel,
-						"relevance-score": relevanceScore,
-						"filter-criteria": filterCriteria,
-					} satisfies NotificationObject["body"]["aps"],
-				};
-			}
+	const {
+		alert,
+		badge,
+		sound,
+		threadId,
+		category,
+		mutableContent,
+		filterCriteria,
+		interruptionLevel,
+		relevanceScore,
+		targetContentId,
+	} = payload;
 
-			const { alert, badge, sound } = payload;
-
-			return {
-				...appData,
-				aps: {
-					alert,
-					badge: badge ? Math.max(0, badge) : undefined,
-					sound,
-					category,
+	if (!alert || isEmptyAlert(alert)) {
+		return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+			aps: {
+				enumerable: true,
+				value: {
+					alert: {},
+					category: category,
 					"thread-id": threadId,
 					"mutable-content": mutableContent,
 					"target-content-id": targetContentId,
 					"interruption-level": interruptionLevel,
 					"relevance-score": relevanceScore,
 					"filter-criteria": filterCriteria,
-				} satisfies NotificationObject["body"]["aps"],
-			};
-		},
-	} satisfies NotificationObject;
-}
+				},
+			},
+		});
+	}
 
-function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
-	return typeof alert === "object" && alert !== null && !Object.keys(alert).length;
+	return Object.create<Record<string, string>, NotificationObject["body"]>(appData || {}, {
+		aps: {
+			enumerable: true,
+			value: {
+				alert,
+				badge: badge ? Math.max(0, badge) : undefined,
+				sound,
+				category,
+				"thread-id": threadId,
+				"mutable-content": mutableContent,
+				"target-content-id": targetContentId,
+				"interruption-level": interruptionLevel,
+				"relevance-score": relevanceScore,
+				"filter-criteria": filterCriteria,
+			},
+		},
+	});
 }

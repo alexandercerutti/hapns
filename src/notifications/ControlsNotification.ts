@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
 	APSBody,
@@ -33,15 +34,18 @@ export function ControlsNotification(
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
 
+	assertExpirationValid(expiration);
+
 	return {
 		pushType: "controls",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
-		get body() {
-			return {
-				aps: {},
-			};
-		},
+		body: Object.create(null, {
+			aps: {
+				enumerable: true,
+				value: {},
+			},
+		}),
 		expiration,
 		collapseID,
 		priority,

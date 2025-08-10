@@ -1,13 +1,35 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { defineError } from "../errors/defineError.js";
 import type {
 	APSBody,
 	Notification,
 	NotificationBody,
 	NotificationHeaders,
 } from "./notification.js";
+
+const ALERT_PROPERTY_REQUIRED_ERROR = defineError(
+	"ALERT_PROPERTY_REQUIRED_ERROR",
+	"Alert property is required in order to send a 'start' event.",
+);
+
+const ALERT_FIELD_INVALID_ERROR = defineError(
+	"ALERT_FIELD_INVALID_ERROR",
+	"Invalid alert field: must be a string or an object with 'loc-key' property.",
+);
+
+const ALERT_OBJECT_INVALID_ERROR = defineError(
+	"ALERT_OBJECT_INVALID_ERROR",
+	"Alert must be an object with 'title' and 'body' properties. Cannot create live notification.",
+);
+
+const ALERT_TITLE_BODY_INVALID_ERROR = defineError(
+	"ALERT_TITLE_BODY_INVALID_ERROR",
+	"Alert object specified but either 'title' or 'body' are invalid strings or objects. Cannot create live notification.",
+);
 
 /**
  * Empty interface on purpose to allow for TS
@@ -267,6 +289,7 @@ export function LiveActivityNotification(
 
 	assertValidPayload(payload);
 	assertRelevanceScoreValid(payload.relevanceScore, 0, Infinity);
+	assertExpirationValid(expiration);
 
 	const { event, staleDate, timestamp = Date.now(), relevanceScore, contentState, alert } = payload;
 
@@ -284,54 +307,59 @@ export function LiveActivityNotification(
 			if (event === "start") {
 				const { attributesType, attributes, inputPushToken, inputPushChannel } = payload;
 
-				return {
+				return Object.create<null, NotificationObject["body"]>(null, {
 					aps: {
-						event,
-						"stale-date": staleDate,
-						"attributes-type": attributesType,
-						attributes,
-						"relevance-score": relevanceScore,
-						"content-state": contentState,
-						"input-push-token": inputPushToken,
-						"input-push-channel": inputPushChannel,
-						timestamp,
-						alert: {
-							title: payload.alert?.title,
-							body: payload.alert?.body,
-							sound: payload.alert?.sound || "default",
+						enumerable: true,
+						value: {
+							event,
+							"stale-date": staleDate,
+							"attributes-type": attributesType,
+							attributes,
+							"relevance-score": relevanceScore,
+							"content-state": contentState,
+							"input-push-token": inputPushToken,
+							"input-push-channel": inputPushChannel,
+							timestamp,
+							alert: createNotificationAlertBody(mandatoryAlert(alert)),
 						},
-					} satisfies NotificationObject["body"]["aps"],
-				};
+					},
+				});
 			}
 
 			if (event === "end") {
 				const { dismissalDate } = payload;
 
-				const notificationBody = {
+				const notificationBody = Object.create<null, NotificationObject["body"]>(null, {
 					aps: {
-						event,
-						"stale-date": staleDate,
-						"content-state": contentState,
-						timestamp,
-						"relevance-score": relevanceScore,
-						"dismissal-date": dismissalDate,
-						alert: createNotificationAlertBody(alert),
-					} satisfies NotificationObject["body"]["aps"],
-				};
+						enumerable: true,
+						value: {
+							event,
+							"stale-date": staleDate,
+							"content-state": contentState,
+							timestamp,
+							"relevance-score": relevanceScore,
+							"dismissal-date": dismissalDate,
+							alert: createNotificationAlertBody(alert),
+						},
+					},
+				});
 
 				return notificationBody;
 			}
 
-			const notificationBody = {
+			const notificationBody = Object.create<null, NotificationObject["body"]>(null, {
 				aps: {
-					event,
-					"stale-date": staleDate,
-					"content-state": contentState,
-					"relevance-score": relevanceScore,
-					timestamp,
-					alert: createNotificationAlertBody(alert),
-				} satisfies NotificationObject["body"]["aps"],
-			};
+					enumerable: true,
+					value: {
+						event,
+						"stale-date": staleDate,
+						"content-state": contentState,
+						"relevance-score": relevanceScore,
+						timestamp,
+						alert: createNotificationAlertBody(alert),
+					},
+				},
+			});
 
 			return notificationBody;
 		},
@@ -351,9 +379,7 @@ function validateAlertField(content: AlertField): AlertField | undefined {
 	}
 
 	if (typeof content !== "object" || !content["loc-key"]) {
-		throw new TypeError(
-			"Invalid alert field: must be a string or an object with 'loc-key' property.",
-		);
+		throw new ALERT_FIELD_INVALID_ERROR();
 	}
 
 	const nextBody: AlertField = {
@@ -363,9 +389,23 @@ function validateAlertField(content: AlertField): AlertField | undefined {
 
 	if (Array.isArray(content["loc-args"])) {
 		nextBody["loc-args"] = content["loc-args"].filter((arg) => typeof arg === "string");
+
+		if (nextBody["loc-args"].length !== content["loc-args"].length) {
+			console.warn("Warning: some 'loc-args' were not strings and were filtered out.");
+		}
 	}
 
 	return nextBody;
+}
+
+function mandatoryAlert(
+	alert: LiveActivityNotificationBody["alert"] | undefined,
+): LiveActivityNotificationBody["alert"] {
+	if (!alert) {
+		throw new ALERT_PROPERTY_REQUIRED_ERROR();
+	}
+
+	return alert;
 }
 
 function createNotificationAlertBody(
@@ -376,18 +416,14 @@ function createNotificationAlertBody(
 	}
 
 	if (typeof alert !== "object") {
-		throw new TypeError(
-			"Alert must be a string or an object with 'title' and 'body' properties. Cannot create live notification.",
-		);
+		throw new ALERT_OBJECT_INVALID_ERROR();
 	}
 
 	const title = validateAlertField(alert.title);
 	const body = validateAlertField(alert.body);
 
 	if (!title || !body) {
-		throw new TypeError(
-			"Alert object specified but either 'title' or 'body' are invalid strings or objects. Cannot create live notification.",
-		);
+		throw new ALERT_TITLE_BODY_INVALID_ERROR();
 	}
 
 	return {

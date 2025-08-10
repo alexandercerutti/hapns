@@ -1,4 +1,4 @@
-import { defineError } from "../define.js";
+import { defineError } from "../defineError.js";
 
 export type InterruptionLevel = "passive" | "active" | "time-sensitive" | "critical";
 

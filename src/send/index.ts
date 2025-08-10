@@ -1,5 +1,5 @@
 import type { APNsHeaders, ConnectorProtocol, DeliveryResult } from "../connectors/connector.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 import type { Notification } from "../notifications/notification.js";
 import type { NotificationTarget } from "../targets/target.js";
 
@@ -7,9 +7,15 @@ type WithSandbox<T extends object> = T & {
 	useSandbox?: boolean;
 };
 
-type SendingOptions = WithSandbox<{
-	apnsId?: string;
-}>;
+type WithDebug<T extends object> = T & {
+	debug?: boolean;
+};
+
+type SendingOptions = WithDebug<
+	WithSandbox<{
+		apnsId?: string;
+	}>
+>;
 
 const CONNECTOR_INVALID_ERROR = defineError(
 	"CONNECTOR_INVALID_ERROR",
@@ -62,10 +68,10 @@ export async function send(
 		throw new UNSUPPORTED_CONNECTOR_ERROR();
 	}
 
-	const { useSandbox = false, apnsId } = settings;
+	const { useSandbox = false, apnsId, debug = false } = settings;
 
 	const headers = {
-		"apns-expiration": String(notification.expiration || 0),
+		"apns-expiration": String(Math.max(0, notification.expiration || 0)),
 		"apns-priority": String(notification.priority || 1),
 		"apns-topic": notification.topic,
 		"apns-push-type": notification.pushType,
@@ -83,7 +89,7 @@ export async function send(
 
 	/**
 	 * @support Simulator support to remote push notifications without
-	 * using .apns file starts with XCode 16. It supports only
+	 * using .apns file starts with XCode 14. It supports only
 	 * the sandbox environment.
 	 *
 	 * Only remote "alert" type notifications are supported.
@@ -92,18 +98,24 @@ export async function send(
 		body["Simulator Target Bundle"] = notification.topic;
 	}
 
-	/**
-	 * @developmentonly Will be removed when the code will reach v1.0.0
-	 */
-	console.log("APNS request body:", body);
+	const apnsBaseUrl = target.getBaseUrl(useSandbox);
+
+	if (debug) {
+		console.info("APNS request body:\n\n", notification.body, "\n\n");
+		console.info(`Sending APNS request to '${apnsBaseUrl}'...`);
+	}
 
 	const response = await connector.send({
 		method: "POST",
-		baseUrl: target.getBaseUrl(useSandbox),
+		baseUrl: apnsBaseUrl,
 		requestPath: target.requestPath,
 		headers,
 		body,
 	});
+
+	if (debug) {
+		console.info("APNS response:\n\n", response, "\n\n");
+	}
 
 	const {
 		"apns-id": apnsResponseId,

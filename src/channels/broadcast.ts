@@ -1,5 +1,5 @@
 import type { ConnectorProtocol } from "../connectors/connector.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 import { BroadcastChannel } from "../targets/broadcastchannel.js";
 
 type WithRequestId<T extends object> = T & {
