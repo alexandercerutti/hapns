@@ -1,4 +1,4 @@
-import { defineError } from "../define.js";
+import { defineError } from "../defineError.js";
 
 const INVALID_RELEVANCE_SCORE_RANGE_ERROR = defineError(
 	"INVALID_RELEVANCE_SCORE_RANGE_ERROR",

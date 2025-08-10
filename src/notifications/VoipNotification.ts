@@ -1,7 +1,7 @@
 import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 import type {
 	APSBody,
 	Notification,

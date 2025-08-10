@@ -1,4 +1,4 @@
-import { defineError } from "../define.js";
+import { defineError } from "../defineError.js";
 
 const EXPIRATION_NAN_ERROR = defineError(
 	"EXPIRATION_NAN",

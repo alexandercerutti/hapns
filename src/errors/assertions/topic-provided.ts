@@ -1,4 +1,4 @@
-import { defineError } from "../define.js";
+import { defineError } from "../defineError.js";
 
 const INVALID_TOPIC_ERROR = defineError(
 	"INVALID_TOPIC_ERROR",

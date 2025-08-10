@@ -1,5 +1,5 @@
 import type { APNsHeaders, ConnectorProtocol, DeliveryResult } from "../connectors/connector.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 import type { Notification } from "../notifications/notification.js";
 import type { NotificationTarget } from "../targets/target.js";
 

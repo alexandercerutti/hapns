@@ -3,7 +3,7 @@ import { assertExpirationValid } from "../errors/assertions/expiration-valid.js"
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
-import { defineError } from "../errors/define.js";
+import { defineError } from "../errors/defineError.js";
 import type {
 	APSBody,
 	Notification,
