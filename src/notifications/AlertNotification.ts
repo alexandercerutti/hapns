@@ -12,6 +12,7 @@ import { assertInterruptionLevelValid } from "../errors/assertions/interruption-
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 
 /**
  * Empty interface on purpose to allow for TS
@@ -310,6 +311,7 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		assertRelevanceScoreValid(relevanceScore, 0, 1);
 	}
 
+	assertExpirationValid(expiration);
 	assertValidAppData(appData);
 
 	const body = buildAlertNotificationBody(payload, appData);
@@ -318,8 +320,8 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		pushType: "alert",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
-		expiration: expiration ?? 0,
-		collapseID: collapseID ?? undefined,
+		expiration,
+		collapseID,
 		priority: priority ?? 10,
 		body,
 	};

@@ -71,7 +71,7 @@ export async function send(
 	const { useSandbox = false, apnsId, debug = false } = settings;
 
 	const headers = {
-		"apns-expiration": String(notification.expiration || 0),
+		"apns-expiration": String(Math.max(0, notification.expiration || 0)),
 		"apns-priority": String(notification.priority || 1),
 		"apns-topic": notification.topic,
 		"apns-push-type": notification.pushType,

@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type {
 	APSBody,
@@ -34,6 +35,8 @@ export function FileProviderNotification(
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
+
+	assertExpirationValid(expiration);
 
 	return {
 		pushType: "fileprovider",

@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertRelevanceScoreValid } from "../errors/assertions/relevance-score-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
@@ -288,6 +289,7 @@ export function LiveActivityNotification(
 
 	assertValidPayload(payload);
 	assertRelevanceScoreValid(payload.relevanceScore, 0, Infinity);
+	assertExpirationValid(expiration);
 
 	const { event, staleDate, timestamp = Date.now(), relevanceScore, contentState, alert } = payload;
 

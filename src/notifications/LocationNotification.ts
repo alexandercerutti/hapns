@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { APSBody, Notification, NotificationHeaders } from "./notification.js";
 
@@ -28,6 +29,8 @@ export function LocationNotification(
 	assertTopicProvided(appBundleId);
 
 	const { expiration = 0, collapseID, priority = 5 } = data;
+
+	assertExpirationValid(expiration);
 
 	return {
 		pushType: "location",

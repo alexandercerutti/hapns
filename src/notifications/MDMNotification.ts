@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
@@ -25,6 +26,8 @@ export function MDMNotification(mdmUid: string, data: NotificationData): Notific
 	assertValidPayload(data.payload);
 
 	const { expiration = 0, collapseID, priority = 10 } = data;
+
+	assertExpirationValid(expiration);
 
 	return {
 		pushType: "mdm",
