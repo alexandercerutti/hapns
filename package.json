@@ -27,6 +27,7 @@
 		"./notifications/*": "./lib/notifications/*.js",
 		"./connectors/*": "./lib/connectors/*.js",
 		"./send": "./lib/send/index.js",
+		"./send/apns": "./lib/send/apns.js",
 		"./targets/*": "./lib/targets/*.js",
 		"./channels/*": "./lib/channels/*.js"
 	},
