@@ -8,6 +8,27 @@ type ToDashed<T extends object> = {
 	[K in keyof T as K extends string ? ToDashedKey<K> : K]: T[K];
 };
 
+/**
+ * Recursively freezes an object
+ */
+export function freeze<T>(obj: T): T {
+	if (obj === null || obj === undefined || typeof obj !== "object") {
+		return obj;
+	}
+
+	const propNames = Object.getOwnPropertyNames(obj);
+
+	for (const name of propNames) {
+		const value = (obj as any)[name];
+
+		if (typeof value === "object") {
+			freeze(value);
+		}
+	}
+
+	return Object.freeze(obj);
+}
+
 export interface NotificationBody<
 	NotificationPayload extends object = Record<string, string>,
 	AppPayload extends object = Record<string, string>,
@@ -44,7 +65,7 @@ export interface Notification<Body extends object, Priority extends 1 | 5 | 10 =
 	readonly supportedConnectors: number;
 	readonly pushType: PushType;
 	readonly topic: string;
-	body: Body;
+	readonly body: Body;
 }
 
 export type Sound =

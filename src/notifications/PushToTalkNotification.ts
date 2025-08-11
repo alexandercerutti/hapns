@@ -1,5 +1,6 @@
 import { Connector } from "../connectors/connector.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type {
 	APSBody,
 	Notification,
@@ -44,7 +45,7 @@ export function PushToTalkNotification(
 		aps: {},
 	};
 
-	return {
+	return freeze({
 		pushType: "pushtotalk",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
@@ -58,5 +59,5 @@ export function PushToTalkNotification(
 		collapseID,
 		expiration: 0,
 		priority: 10,
-	};
+	});
 }

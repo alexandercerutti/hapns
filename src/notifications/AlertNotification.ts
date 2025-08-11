@@ -5,6 +5,7 @@ import type {
 	NotificationBody,
 	APSBody,
 } from "./notification.js";
+import { freeze } from "./notification.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import type { InterruptionLevel } from "../errors/assertions/interruption-level-valid.js";
@@ -318,7 +319,7 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		buildEmptyAlertNotificationBody(payload, appData) ||
 		buildAlertNotificationBody(payload, appData);
 
-	return {
+	return freeze({
 		pushType: "alert",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
@@ -326,7 +327,7 @@ export function AlertNotification(appBundleId: string, data: NotificationData): 
 		collapseID,
 		priority: priority ?? 10,
 		body,
-	} satisfies NotificationObject;
+	});
 }
 
 function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
@@ -334,7 +335,6 @@ function isEmptyAlert(alert: Alert | EmptyAlert): alert is EmptyAlert {
 }
 
 function buildVoidAlertNotificationBody(
-	payload: AlertNotificationBody | undefined,
 	appData: NotificationCustomAppData | undefined,
 ): NotificationObject["body"] {
 	return {
@@ -350,7 +350,7 @@ function buildEmptyAlertNotificationBody(
 	appData: NotificationCustomAppData | undefined,
 ): NotificationObject["body"] | undefined {
 	if (!payload) {
-		return buildVoidAlertNotificationBody(payload, appData);
+		return buildVoidAlertNotificationBody(appData);
 	}
 
 	if (payload.alert && !isEmptyAlert(payload.alert)) {
@@ -387,7 +387,7 @@ function buildAlertNotificationBody(
 	appData: NotificationCustomAppData | undefined,
 ): NotificationObject["body"] {
 	if (!payload) {
-		return buildVoidAlertNotificationBody(payload, appData);
+		return buildVoidAlertNotificationBody(appData);
 	}
 
 	const {

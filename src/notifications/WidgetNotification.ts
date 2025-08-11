@@ -1,6 +1,7 @@
 import { Connector } from "../connectors/connector.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type {
 	APSBody,
 	Notification,
@@ -53,7 +54,7 @@ export function WidgetNotification(
 		},
 	};
 
-	return {
+	return freeze({
 		pushType: "widgets",
 		supportedConnectors: Connector.Token,
 		get topic() {
@@ -67,5 +68,5 @@ export function WidgetNotification(
 		collapseID,
 		priority: 5,
 		body,
-	};
+	});
 }

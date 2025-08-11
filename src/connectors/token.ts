@@ -83,7 +83,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 	const pools = new Map<string, Pool>();
 
-	return {
+	return Object.freeze<ConnectorProtocol>({
 		connectionType: Connector.Token,
 		async send(payload) {
 			if (!payload.headers || typeof payload.headers !== "object") {
@@ -155,7 +155,7 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 			return response;
 		},
-	};
+	});
 }
 
 function isTokenExpired(tokenMemory: TokenMemory): boolean {

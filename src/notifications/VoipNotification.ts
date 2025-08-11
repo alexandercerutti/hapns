@@ -2,6 +2,7 @@ import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import { defineError } from "../errors/defineError.js";
+import { freeze } from "./notification.js";
 import type {
 	APSBody,
 	Notification,
@@ -53,7 +54,7 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 		aps: {},
 	};
 
-	return {
+	return freeze({
 		pushType: "voip",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
@@ -67,7 +68,7 @@ export function VoipNotification(appBundleId: string, data: NotificationData): N
 		expiration,
 		collapseID,
 		priority,
-	};
+	});
 }
 
 function assertExpirationVoipValid(expiration: unknown): asserts expiration is number {

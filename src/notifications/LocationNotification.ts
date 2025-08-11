@@ -1,6 +1,7 @@
 import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type { APSBody, Notification, NotificationHeaders } from "./notification.js";
 
 /**
@@ -36,7 +37,7 @@ export function LocationNotification(
 		aps: {},
 	};
 
-	return {
+	return freeze({
 		pushType: "location",
 		supportedConnectors: Connector.Token,
 		get topic() {
@@ -50,5 +51,5 @@ export function LocationNotification(
 		expiration,
 		collapseID,
 		priority,
-	};
+	});
 }
