@@ -4,8 +4,9 @@
 	"description": "Handle APNs notifications delivery without hussle",
 	"type": "module",
 	"scripts": {
-		"build": "pnpm tsc",
-		"prepublishOnly": "pnpm build"
+		"build": "rm -rf lib && pnpm tsc",
+		"prepublishOnly": "pnpm build",
+		"test": "node --test specs/*.spec.mjs"
 	},
 	"keywords": [],
 	"author": "Alexander P. Cerutti <cerutti.alexander@gmail.com>",
