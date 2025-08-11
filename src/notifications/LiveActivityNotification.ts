@@ -10,6 +10,7 @@ import type {
 	NotificationBody,
 	NotificationHeaders,
 } from "./notification.js";
+import { freeze } from "./notification.js";
 
 const ALERT_PROPERTY_REQUIRED_ERROR = defineError(
 	"ALERT_PROPERTY_REQUIRED_ERROR",
@@ -307,7 +308,7 @@ export function LiveActivityNotification(
 			if (event === "start") {
 				const { attributesType, attributes, inputPushToken, inputPushChannel } = payload;
 
-				return {
+				return freeze<NotificationObject["body"]>({
 					aps: {
 						event,
 						"stale-date": staleDate,
@@ -319,14 +320,14 @@ export function LiveActivityNotification(
 						"input-push-channel": inputPushChannel,
 						timestamp,
 						alert: createNotificationAlertBody(mandatoryAlert(alert)),
-					} satisfies NotificationObject["body"]["aps"],
-				};
+					},
+				});
 			}
 
 			if (event === "end") {
 				const { dismissalDate } = payload;
 
-				const notificationBody = {
+				const notificationBody = freeze<NotificationObject["body"]>({
 					aps: {
 						event,
 						"stale-date": staleDate,
@@ -335,13 +336,13 @@ export function LiveActivityNotification(
 						"relevance-score": relevanceScore,
 						"dismissal-date": dismissalDate,
 						alert: createNotificationAlertBody(alert),
-					} satisfies NotificationObject["body"]["aps"],
-				};
+					},
+				});
 
 				return notificationBody;
 			}
 
-			const notificationBody = {
+			const notificationBody = freeze<NotificationObject["body"]>({
 				aps: {
 					event,
 					"stale-date": staleDate,
@@ -349,8 +350,8 @@ export function LiveActivityNotification(
 					"relevance-score": relevanceScore,
 					timestamp,
 					alert: createNotificationAlertBody(alert),
-				} satisfies NotificationObject["body"]["aps"],
-			};
+				},
+			});
 
 			return notificationBody;
 		},

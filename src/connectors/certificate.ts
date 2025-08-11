@@ -76,7 +76,7 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 
 	const pools = new Map<string, Pool>();
 
-	return {
+	return Object.freeze<ConnectorProtocol>({
 		connectionType: Connector.Certificate,
 		async send(payload) {
 			if (!payload.headers || typeof payload.headers !== "object") {
@@ -138,5 +138,5 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 
 			return response;
 		},
-	};
+	});
 }

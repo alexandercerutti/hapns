@@ -1,6 +1,7 @@
 import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type {
 	APSBody,
 	Notification,
@@ -40,7 +41,7 @@ export function ControlsNotification(
 		aps: {},
 	};
 
-	return {
+	return freeze({
 		pushType: "controls",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
@@ -48,5 +49,5 @@ export function ControlsNotification(
 		expiration,
 		collapseID,
 		priority,
-	};
+	});
 }

@@ -1,6 +1,7 @@
 import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type {
 	APSBody,
 	Notification,
@@ -42,7 +43,7 @@ export function ComplicationNotification(
 		aps: {},
 	};
 
-	return {
+	return freeze({
 		pushType: "complication",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		get topic() {
@@ -56,5 +57,5 @@ export function ComplicationNotification(
 		expiration,
 		collapseID,
 		priority,
-	};
+	});
 }

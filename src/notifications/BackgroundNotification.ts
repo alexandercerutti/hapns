@@ -2,6 +2,7 @@ import { Connector } from "../connectors/connector.js";
 import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type {
 	APSBody,
 	Notification,
@@ -46,7 +47,7 @@ export function BackgroundNotification(
 		},
 	};
 
-	return {
+	return freeze({
 		pushType: "background",
 		supportedConnectors: Connector.Certificate | Connector.Token,
 		topic: appBundleId,
@@ -54,5 +55,5 @@ export function BackgroundNotification(
 		collapseID,
 		priority: 5,
 		body,
-	};
+	});
 }

@@ -2,6 +2,7 @@ import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
+import { freeze } from "./notification.js";
 import type { Notification, NotificationBody, NotificationHeaders } from "./notification.js";
 /**
  * Empty interface on purpose to allow for TS
@@ -33,7 +34,7 @@ export function MDMNotification(mdmUid: string, data: NotificationData): Notific
 		mdm: payload.mdm,
 	};
 
-	return {
+	return freeze({
 		pushType: "mdm",
 		supportedConnectors: Connector.Certificate,
 		topic: mdmUid,
@@ -41,5 +42,5 @@ export function MDMNotification(mdmUid: string, data: NotificationData): Notific
 		expiration,
 		collapseID,
 		priority,
-	};
+	});
 }
