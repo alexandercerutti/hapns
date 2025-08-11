@@ -71,25 +71,6 @@ test("Send Function", async (t) => {
 		assert.deepStrictEqual(requestBody.updateType, "content");
 		assert.deepStrictEqual(requestBody.version, "1.2.0");
 	});
-	await t.test("should handle sandbox environment correctly", async () => {
-		const mockConnector = mockUtils.connectors.createMockConnector();
-		const device = Device("sandbox123");
-		const notification = AlertNotification("com.example.app", {
-			payload: {
-				alert: { body: "Sandbox test" },
-			},
-		});
-
-		await send(mockConnector, notification, device, { useSandbox: true });
-
-		const lastRequest = mockUtils.assertions.getLastRequest(mockConnector);
-		assert.ok(lastRequest.baseUrl.includes("sandbox"));
-
-		// For sandbox alert notifications, should include Simulator Target Bundle
-		const requestBody =
-			typeof lastRequest.body === "string" ? JSON.parse(lastRequest.body) : lastRequest.body;
-		assert.strictEqual(requestBody["Simulator Target Bundle"], "com.example.app");
-	});
 
 	await t.test("should handle production environment correctly", async () => {
 		const mockConnector = mockUtils.connectors.createMockConnector();

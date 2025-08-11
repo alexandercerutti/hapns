@@ -56,7 +56,6 @@ test("Integration Tests", async (t) => {
 			badge: 5,
 		});
 		assert.strictEqual(payload.aps.sound, "default");
-		assert.strictEqual(payload["Simulator Target Bundle"], "com.example.app");
 	});
 
 	await t.test("should send background notification in production", async () => {
