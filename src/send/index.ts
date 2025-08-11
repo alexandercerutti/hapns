@@ -44,7 +44,7 @@ const UNSUPPORTED_CONNECTOR_ERROR = defineError(
 
 export async function send(
 	connector: ConnectorProtocol,
-	notification: Notification<object>,
+	notification: Notification<Record<string, string>>,
 	target: NotificationTarget,
 	settings: SendingOptions = {},
 ): Promise<DeliveryResult> {
@@ -82,22 +82,6 @@ export async function send(
 		...(target.headers || {}),
 	} satisfies APNsHeaders;
 
-	const body: (typeof notification)["body"] & { "Simulator Target Bundle": string | undefined } = {
-		...notification.body,
-		"Simulator Target Bundle": undefined,
-	};
-
-	/**
-	 * @support Simulator support to remote push notifications without
-	 * using .apns file starts with XCode 14. It supports only
-	 * the sandbox environment.
-	 *
-	 * Only remote "alert" type notifications are supported.
-	 */
-	if (useSandbox && notification.pushType === "alert") {
-		body["Simulator Target Bundle"] = notification.topic;
-	}
-
 	const apnsBaseUrl = target.getBaseUrl(useSandbox);
 
 	if (debug) {
@@ -110,7 +94,7 @@ export async function send(
 		baseUrl: apnsBaseUrl,
 		requestPath: target.requestPath,
 		headers,
-		body,
+		body: notification.body,
 	});
 
 	if (debug) {
