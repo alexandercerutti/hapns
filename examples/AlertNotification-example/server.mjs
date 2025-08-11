@@ -82,7 +82,7 @@ const connector = TokenConnector({
 const eventBus = fastify.getDecorator("eventBus");
 
 eventBus.on("device-registration", async (data) => {
-	console.log(`Device registered: ${data.deviceId} with token ${data.deviceToken}`, event);
+	console.log(`Device registered: ${data.deviceId} with token ${data.deviceToken}`, data);
 
 	const device = Device(data.deviceToken);
 

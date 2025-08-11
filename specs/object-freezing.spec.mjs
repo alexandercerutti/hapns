@@ -1,10 +1,10 @@
 import { strict as assert } from "node:assert";
 import test from "node:test";
-import { AlertNotification } from "../lib/notifications/AlertNotification.js";
-import { BackgroundNotification } from "../lib/notifications/BackgroundNotification.js";
-import { ComplicationNotification } from "../lib/notifications/ComplicationNotification.js";
-import { VoipNotification } from "../lib/notifications/VoipNotification.js";
-import { WidgetNotification } from "../lib/notifications/WidgetNotification.js";
+import { AlertNotification } from "hapns/notifications/AlertNotification";
+import { BackgroundNotification } from "hapns/notifications/BackgroundNotification";
+import { ComplicationNotification } from "hapns/notifications/ComplicationNotification";
+import { VoipNotification } from "hapns/notifications/VoipNotification";
+import { WidgetNotification } from "hapns/notifications/WidgetNotification";
 
 test("Object Freezing", async (t) => {
 	await t.test("AlertNotification should create frozen objects", () => {
@@ -22,14 +22,17 @@ test("Object Freezing", async (t) => {
 
 		// Test that we cannot modify the frozen objects
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.newProperty = "should fail";
 		}, /TypeError|Cannot add property/);
 
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.aps.newProperty = "should fail";
 		}, /TypeError|Cannot add property/);
 
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.aps.badge = 999;
 		}, /TypeError|Cannot assign to read only property/);
 	});
@@ -52,6 +55,7 @@ test("Object Freezing", async (t) => {
 		assert.ok(Object.isFrozen(notification.body.aps));
 
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.aps.newProperty = "should fail";
 		}, /TypeError|Cannot add property/);
 	});
@@ -72,8 +76,13 @@ test("Object Freezing", async (t) => {
 		assert.ok(Object.isFrozen(notification.body.aps));
 
 		// Test that appData is included but body is still frozen
-		assert.strictEqual(notification.body.customKey, "customValue");
+		assert.strictEqual(
+			// @ts-expect-error
+			notification.body.customKey,
+			"customValue",
+		);
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.customKey = "modified";
 		}, /TypeError|Cannot assign to read only property/);
 	});
@@ -93,16 +102,26 @@ test("Object Freezing", async (t) => {
 		assert.ok(Object.isFrozen(notification.body.aps));
 
 		// Test that appData is merged correctly
-		assert.strictEqual(notification.body.customKey, "customValue");
-		assert.deepStrictEqual(notification.body.nestedObject, { prop: "value" });
+		assert.strictEqual(
+			// @ts-expect-error
+			notification.body.customKey,
+			"customValue",
+		);
+		assert.deepStrictEqual(
+			// @ts-expect-error
+			notification.body.nestedObject,
+			{ prop: "value" },
+		);
 
 		// Test that we cannot modify merged properties
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.customKey = "modified";
 		}, /TypeError|Cannot assign to read only property/);
 
 		// With deep freezing, nested objects from appData are also frozen
 		assert.throws(() => {
+			// @ts-expect-error
 			notification.body.nestedObject.prop = "modified";
 		}, /TypeError|Cannot assign to read only property/);
 	});

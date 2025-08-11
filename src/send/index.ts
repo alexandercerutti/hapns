@@ -44,7 +44,7 @@ const UNSUPPORTED_CONNECTOR_ERROR = defineError(
 
 export async function send(
 	connector: ConnectorProtocol,
-	notification: Notification<Record<string, string>>,
+	notification: Notification<{}>,
 	target: NotificationTarget,
 	settings: SendingOptions = {},
 ): Promise<DeliveryResult> {
