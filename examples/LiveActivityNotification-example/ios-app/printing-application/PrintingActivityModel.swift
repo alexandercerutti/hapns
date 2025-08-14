@@ -12,7 +12,7 @@ import UIKit
 class PrintingActivityViewModel {
     private var printingActivityActor: PrintingActivityActor?
     private var deviceRegistrationTask: Task<Void, Never>?
-    private let baseURL: URL? = URL(string: "http://192.168.1.89:3000")
+    private let baseURL: URL?
     private let registerDeviceEndpoint: String = "/register-device"
     
     var activityType: PrintingActivityType {
@@ -36,6 +36,11 @@ class PrintingActivityViewModel {
     }
     
     init() {
+        let serverBaseURL = getServerBaseURLFromEnv()
+        let serverPort = getServerPortFromEnv()
+
+        baseURL = URL(string: "\(serverBaseURL):\(serverPort)")
+        
         deviceRegistrationTask = Task {
             await startDeviceRegistration()
         }

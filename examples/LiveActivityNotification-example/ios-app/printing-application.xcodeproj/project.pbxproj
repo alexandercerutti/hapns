@@ -49,6 +49,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1122A7372E4E4D0800BF8560 /* Exceptions for "printing-application" folder in "PrintingTimeActivityExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ReadEnvironment.swift,
+			);
+			target = 113263542DED04FB00E35AFF /* PrintingTimeActivityExtension */;
+		};
 		1132636C2DED04FD00E35AFF /* Exceptions for "PrintingTimeActivity" folder in "PrintingTimeActivityExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -75,6 +82,7 @@
 				PrintingActivityModel.swift,
 				PrintingActivityTimer.swift,
 				PrintingApplication.swift,
+				ReadEnvironment.swift,
 				RemotePrintService.swift,
 			);
 			target = 113263422DECAEF800E35AFF /* printing-application */;
@@ -106,6 +114,7 @@
 			exceptions = (
 				113264162DF2200900E35AFF /* Exceptions for "printing-application" folder in "printing-application" target */,
 				11C4C3562E10A72C0042F991 /* Exceptions for "printing-application" folder in "Compile Sources" phase from "printing-application" target */,
+				1122A7372E4E4D0800BF8560 /* Exceptions for "printing-application" folder in "PrintingTimeActivityExtension" target */,
 			);
 			path = "printing-application";
 			sourceTree = "<group>";

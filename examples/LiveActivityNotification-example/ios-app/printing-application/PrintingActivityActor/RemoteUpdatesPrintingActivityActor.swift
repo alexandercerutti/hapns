@@ -39,9 +39,16 @@ class RemoteUpdatesPrintingActivityActor: PrintingActivityActor {
         )
         
         Task {
+            let serverBaseURL = getServerBaseURLFromEnv()
+            let serverPort = getServerPortFromEnv()
+
+            guard let baseURL = URL(string: "\(serverBaseURL):\(serverPort)") else {
+                fatalError("Cannot start task. Invalid server Base URL.")
+            }
+
             let uuid = await UIDevice.current.identifierForVendor?.uuidString ?? ""
-            let url = "http://192.168.1.89:3000/print"
-            var request = URLRequest(url: URL(string: url)!)
+            let url = baseURL.appendingPathComponent("/print")
+            var request = URLRequest(url: url)
             
             request.httpMethod = "POST"
             request.setValue(
