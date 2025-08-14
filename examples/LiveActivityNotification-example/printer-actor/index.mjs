@@ -155,14 +155,14 @@ fastify.get("/jobs/:id", async (request, reply) => {
 	return reply.status(200).send({ job });
 });
 
-const startPrintingJob = () => {
+function startPrintingJob() {
 	const job = createPrintingJob();
 	jobs.push(job);
 
 	return job;
-};
+}
 
-const startPrintingJobSubscription = async (job, subscriptionUrl) => {
+async function startPrintingJobSubscription(job, subscriptionUrl) {
 	if (!subscriptionUrl) {
 		throw new Error("Subscription URL is required to start a printing job.");
 	}
@@ -185,7 +185,7 @@ const startPrintingJobSubscription = async (job, subscriptionUrl) => {
 			break;
 		}
 	}
-};
+}
 
 async function holdCLIUntilJobCompletion(scheduledUpdate, job) {
 	/**
