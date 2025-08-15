@@ -38,6 +38,13 @@ const INVALID_BROADCAST_CHANNEL_ERROR = defineError(
 	"Cannot manage broadcast channel: BroadcastChannel is missing or is not a valid BroadcastChannel object.",
 );
 
+/**
+ * Creates a new broadcast channel.
+ *
+ * @param connector The connector to be used to perform requests
+ * @param settings Settings for the broadcast channel
+ * @returns A new BroadcastChannel instance
+ */
 export async function createBroadcastChannel(
 	connector: ConnectorProtocol,
 	settings: WithSandbox<WithRequestId<BroadcastChannelSettings>>,
@@ -96,6 +103,14 @@ interface ChannelReadResponseBody {
 
 type ChannelReadSettings = WithSandbox<WithRequestId<{}>>;
 
+/**
+ * Reads a specific broadcast channel.
+ *
+ * @param connector The connector to be used to perform requests
+ * @param bChannel The broadcast channel to read
+ * @param settings Optional settings for the request
+ * @returns
+ */
 export async function readChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
@@ -191,10 +206,10 @@ function isBroadcastChannel(channel: {}): channel is BroadcastChannel {
  * Reads all channels for a given bundle ID.
  * Creates an array of valid targets against which notifications can be sent.
  *
- * @param connector
- * @param bundleId
- * @param useSandbox
- * @returns
+ * @param connector The connector to be used to perform requests
+ * @param bundleId The bundle ID for which to read channels
+ * @param useSandbox Whether to use the sandbox environment
+ * @returns An array of broadcast channels
  */
 export async function readAllChannels(
 	connector: ConnectorProtocol,
