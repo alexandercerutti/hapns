@@ -1,10 +1,16 @@
+import { defineError } from "../errors/defineError.js";
 import type { NotificationTarget } from "./target.js";
+
+const DEVICE_TOKEN_INVALID = defineError(
+	"DEVICE_TOKEN_INVALID",
+	"Cannot create device target: 'deviceToken' is missing or is not a string. Received: '%s'.",
+);
 
 const DEVICE_DELIVERY_PATH = "/3/device/";
 
 export function Device(deviceToken: string): NotificationTarget {
-	if (typeof deviceToken !== "string") {
-		throw new Error("Device token must be a string");
+	if (!deviceToken || typeof deviceToken !== "string") {
+		throw new DEVICE_TOKEN_INVALID(deviceToken);
 	}
 
 	return {

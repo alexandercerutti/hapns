@@ -1,4 +1,15 @@
+import { defineError } from "../errors/defineError.js";
 import type { NotificationTarget } from "./target.js";
+
+const CHANNEL_ID_INVALID = defineError(
+	"CHANNEL_ID_INVALID",
+	"Cannot create broadcast channel: channelId is missing or is not a string. Received: '%s'.",
+);
+
+const BUNDLE_ID_INVALID = defineError(
+	"BUNDLE_ID_INVALID",
+	"Cannot create broadcast channel: bundleId is missing or is not a string. Received: '%s'.",
+);
 
 const BROADCAST_DELIVERY_PATH = "/4/device/";
 
@@ -8,12 +19,12 @@ export interface BroadcastChannel extends NotificationTarget {
 }
 
 export function BroadcastChannel(channelId: string, bundleId: string): BroadcastChannel {
-	if (typeof channelId !== "string") {
-		throw new Error("Broadcast channel id not provided.");
+	if (!channelId || typeof channelId !== "string") {
+		throw new CHANNEL_ID_INVALID(channelId);
 	}
 
 	if (!bundleId || typeof bundleId !== "string") {
-		throw new Error("Bundle ID is missing or is not a string.");
+		throw new BUNDLE_ID_INVALID(bundleId);
 	}
 
 	return {
