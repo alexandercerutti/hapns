@@ -42,6 +42,8 @@ type Reasons =
 	| "CannotCreateChannelConfig"
 	| "TopicMismatch"
 	| "Service"
+	// undocumented - This happens when message-storage-policy is send as `undefined` or an invalid value
+	| "MissingChannelQueueSize"
 
 	// Final fallback
 	| "UnknownError";
@@ -230,6 +232,14 @@ BuildApnsError(
 	"The topic is not allowed. Ensure that no push type suffix is added to the bundle ID.",
 );
 BuildApnsError("BadPriorityError", 400, "The apns-priority header is an invalid value.");
+
+// Undocumented - This happens when `message-storage-policy` is sent as undefined
+BuildApnsError(
+	"MissingChannelQueueSizeError",
+	400,
+	"'message-storage-policy' parameter has not been provided.",
+);
+
 BuildApnsError("BadCertificateError", 403, "The certificate is invalid.");
 BuildApnsError(
 	"BadCertificateEnvironmentError",

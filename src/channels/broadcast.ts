@@ -69,9 +69,7 @@ export async function createBroadcastChannel(
 		"apns-request-id": apnsRequestId,
 	};
 
-	const storagePolicy = messageStoragePolicy
-		? Math.max(0, Math.min(messageStoragePolicy, 1))
-		: undefined;
+	const storagePolicy = messageStoragePolicy ? Math.max(0, Math.min(messageStoragePolicy, 1)) : 0;
 
 	const channelCreationResponse = await connector.send({
 		method: "POST",
