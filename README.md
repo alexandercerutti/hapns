@@ -16,9 +16,6 @@
 
 </div>
 
-> [!CAUTION]
-> This library is still in development and not production-ready yet. It lacks of support of some functionalities and complete examples, although everything is setup. Feedback and contributions are very welcome.
-
 ## Architecture
 
 This library aims allowing creating and shipping APNs (Apple Push Notification service) notifications in a very easy way, providing great a Developer Experience.
@@ -95,7 +92,7 @@ const notification = AlertNotification(APNS_TOPIC, {
 	priority: 10,
 });
 
-const deliveryResponse = await send(connector, notification, device, USE_SANDBOX);
+const deliveryResponse = await send(connector, notification, device, { useSandbox: USE_SANDBOX });
 
 console.log(deliveryResponse);
 ```
