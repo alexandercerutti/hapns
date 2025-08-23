@@ -17,7 +17,6 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 	const emitEvent = fastifyInstance.getDecorator("emitEvent");
 
 	fastifyInstance.addHook("onClose", (_request, _reply, done) => {
-		registeredDevices.clear();
 		done();
 	});
 
