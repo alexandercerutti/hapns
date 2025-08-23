@@ -1,5 +1,4 @@
 import type { APSBody, Notification } from "../notifications/notification.js";
-import type { NotificationTarget } from "../targets/target.js";
 
 type APSObject = APSBody<Record<string, string>>;
 
