@@ -85,22 +85,20 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 
 	return Object.freeze<ConnectorProtocol>({
 		connectionType: Connector.Token,
-		async send(payload) {
+		async send(payload, debug = false) {
 			if (!payload.headers || typeof payload.headers !== "object") {
 				throw new INVALID_HEADERS_ERROR();
 			}
 
-			if (!tokenMemory || logIfExpiredToken(isTokenExpired(tokenMemory))) {
+			if (!tokenMemory || logIfExpiredToken(isTokenExpired(tokenMemory), debug)) {
 				tokenMemory = createToken(details);
 			}
 
 			const { token } = tokenMemory;
 
-			/**
-			 * @developmentonly Will be removed when the code will reach v1.0.0
-			 */
-
-			console.log("Using token:", token);
+			if (debug) {
+				console.log("Using token:", token);
+			}
 
 			const headers: typeof payload.headers & { authorization: string } = {
 				...payload.headers,
@@ -165,11 +163,8 @@ function isTokenExpired(tokenMemory: TokenMemory): boolean {
 /**
  * @param expired
  */
-function logIfExpiredToken(expired: boolean): boolean {
-	if (expired) {
-		/**
-		 * @developmentonly Will be removed when the code will reach v1.0.0
-		 */
+function logIfExpiredToken(expired: boolean, debug: boolean): boolean {
+	if (expired && debug) {
 		console.warn("Token is expired, creating a new one.");
 	}
 

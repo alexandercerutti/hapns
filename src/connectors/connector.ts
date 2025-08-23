@@ -53,5 +53,6 @@ export interface ConnectorProtocol {
 	readonly connectionType: Connector;
 	send<Headers extends Record<string, string | undefined>>(
 		payload: ConnectorSendPayload<Headers>,
+		debug?: boolean,
 	): Promise<Dispatcher.ResponseData<null>>;
 }

@@ -89,13 +89,16 @@ export async function send(
 		console.info(`Sending APNS request to '${apnsBaseUrl}'...`);
 	}
 
-	const response = await connector.send({
-		method: "POST",
-		baseUrl: apnsBaseUrl,
-		requestPath: target.requestPath,
-		headers,
-		body: notification.body,
-	});
+	const response = await connector.send(
+		{
+			method: "POST",
+			baseUrl: apnsBaseUrl,
+			requestPath: target.requestPath,
+			headers,
+			body: notification.body,
+		},
+		debug,
+	);
 
 	if (debug) {
 		console.info("APNS response:\n\n", response, "\n\n");
