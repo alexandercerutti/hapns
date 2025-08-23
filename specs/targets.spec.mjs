@@ -41,14 +41,20 @@ test("Device", async (t) => {
 	});
 
 	await t.test("should validate device token", async () => {
-		// Test empty token - this actually works in the current implementation
-		const deviceEmpty = Device("");
-		assert.strictEqual(deviceEmpty.requestPath, "/3/device/");
+		assert.throws(
+			() => Device(""),
+			/Cannot create device target: 'deviceToken' is missing or is not a string. Received: ''./,
+		);
 
-		// Test null/undefined token
-		assert.throws(() => Device(null), /Device token must be a string/);
+		assert.throws(
+			() => Device(null),
+			/Cannot create device target: 'deviceToken' is missing or is not a string. Received: 'null'./,
+		);
 
-		assert.throws(() => Device(undefined), /Device token must be a string/);
+		assert.throws(
+			() => Device(undefined),
+			/Cannot create device target: 'deviceToken' is missing or is not a string. Received: 'undefined'./,
+		);
 	});
 
 	await t.test("should not include additional headers by default", async () => {
@@ -86,21 +92,19 @@ test("BroadcastChannel", async (t) => {
 	});
 
 	await t.test("should validate required parameters", async () => {
-		// BroadcastChannel constructor does validate parameters, but empty string is still a string
-		// Let me test null/undefined which should actually throw
 		assert.throws(
 			() => BroadcastChannel(null, "com.example.app"),
-			/Broadcast channel id not provided/,
+			/Cannot create broadcast channel: channelId is missing or is not a string. Received: 'null'./,
 		);
 
 		assert.throws(
 			() => BroadcastChannel("Y2hhbm5lbC1pZA==", null),
-			/Bundle ID is missing or is not a string/,
+			/Cannot create broadcast channel: bundleId is missing or is not a string. Received: 'null'./,
 		);
 
 		assert.throws(
 			() => BroadcastChannel(undefined, "com.example.app"),
-			/Broadcast channel id not provided/,
+			/Cannot create broadcast channel: channelId is missing or is not a string. Received: 'undefined'./,
 		);
 	});
 
