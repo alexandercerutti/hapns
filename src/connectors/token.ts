@@ -137,6 +137,12 @@ export function TokenConnector(details: TokenConnectorData): ConnectorProtocol {
 				requestOptions.body = JSON.stringify(payload.body);
 			}
 
+			if (debug) {
+				console.log(
+					`Sending request to '${payload.method} ${payload.baseUrl}${payload.requestPath}'...`,
+				);
+			}
+
 			const response = await pool.request(requestOptions);
 
 			if (![200, 201, 204].includes(response.statusCode)) {

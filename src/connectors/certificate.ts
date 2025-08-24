@@ -78,7 +78,7 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 
 	return Object.freeze<ConnectorProtocol>({
 		connectionType: Connector.Certificate,
-		async send(payload) {
+		async send(payload, debug = false) {
 			if (!payload.headers || typeof payload.headers !== "object") {
 				throw new INVALID_HEADERS_ERROR();
 			}
@@ -120,6 +120,12 @@ export function CertificateConnector(details: CertificateConnectorData): Connect
 
 			if (payload.method !== "GET") {
 				requestOptions.body = JSON.stringify(payload.body);
+			}
+
+			if (debug) {
+				console.log(
+					`Sending request to '${payload.method} ${payload.baseUrl}${payload.requestPath}'...`,
+				);
 			}
 
 			const response = await pool.request(requestOptions);
