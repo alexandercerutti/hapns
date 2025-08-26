@@ -11,7 +11,7 @@ const BUNDLE_ID_INVALID = defineError(
 	"Cannot create broadcast channel: bundleId is missing or is not a string. Received: '%s'.",
 );
 
-const BROADCAST_DELIVERY_PATH = "/4/device/";
+const BROADCAST_DELIVERY_PATH = "/4/broadcasts/apps/";
 
 export interface BroadcastChannel extends NotificationTarget {
 	channelId: string;
