@@ -189,7 +189,7 @@ type LiveActivityNotificationBody = {
 				sound?: string;
 			};
 	  }
-	| {
+	| ({
 			/**
 			 * The string that describes whether you start, update, or end an
 			 * ongoing Live Activity with the remote push notification.
@@ -223,23 +223,6 @@ type LiveActivityNotificationBody = {
 			attributes: Record<string, unknown>;
 
 			/**
-			 * When provided, it will make your app to generate a new push token
-			 * for the Live Activity after starting the new live activity.
-			 *
-			 * @see https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications#Construct-the-payload-that-starts-a-Live-Activity
-			 */
-			inputPushToken?: 1;
-
-			/**
-			 * Provide a broadcast channel identifier to start the live activity
-			 * and listen for updates on that channel.
-			 *
-			 * @see https://developer.apple.com/documentation/usernotifications/sending-channel-management-requests-to-apns
-			 * @see https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications#Construct-the-payload-that-starts-a-Live-Activity
-			 */
-			inputPushChannel?: string;
-
-			/**
 			 * Alert will light up the device in case of critical notifications and play
 			 * a sound, if provided.
 			 *
@@ -263,7 +246,48 @@ type LiveActivityNotificationBody = {
 				 */
 				sound?: string;
 			};
-	  }
+	  } & (
+			| {
+					/**
+					 * When provided, it will make your app to generate a new push token
+					 * for the Live Activity after starting the new live activity.
+					 *
+					 * @see https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications#Construct-the-payload-that-starts-a-Live-Activity
+					 *
+					 * ---
+					 *
+					 * This means the part containing the async task for `pushToStartToken`
+					 * gets awakened in order to deliver the token.
+					 *
+					 * This attributes works fine for normal live activities but not
+					 * for broadcast live activities. Starting an activity with this attribute
+					 * doesn't link it to the broadcast activity (so, it cannot be updated).
+					 *
+					 * Cannot be used with input-push-channel: logs report
+					 * "Incoming message contains two forms of push input" and refuses to parse
+					 * the message.
+					 */
+					inputPushToken?: 1;
+					inputPushChannel?: never;
+			  }
+			| {
+					/**
+					 * Provide a broadcast channel identifier to start the live activity
+					 * and listen for updates on that channel.
+					 *
+					 * @see https://developer.apple.com/documentation/usernotifications/sending-channel-management-requests-to-apns
+					 * @see https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications#Construct-the-payload-that-starts-a-Live-Activity
+					 *
+					 * ---
+					 *
+					 * Cannot be used with input-push-token: logs report
+					 * "Incoming message contains two forms of push input" and refuses to parse
+					 * the message.
+					 */
+					inputPushChannel?: string;
+					inputPushToken?: never;
+			  }
+	  ))
 );
 
 type NotificationData = NotificationHeaders &
