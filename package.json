@@ -1,6 +1,6 @@
 {
 	"name": "hapns",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Handle APNs notifications delivery without hussle",
 	"type": "module",
 	"scripts": {
