@@ -122,7 +122,7 @@ type ChannelReadSettings = WithDebug<WithSandbox<WithRequestId<{}>>>;
  * @param settings Optional settings for the request
  * @returns
  */
-export async function readChannel(
+export async function readBroadcastChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
 	settings: ChannelReadSettings = {},
@@ -173,7 +173,7 @@ type ChannelDeleteSettings = WithDebug<WithSandbox<WithRequestId<{}>>>;
  * @param channelId
  * @param bundleId
  */
-export async function deleteChannel(
+export async function deleteBroadcastChannel(
 	connector: ConnectorProtocol,
 	bChannel: BroadcastChannel,
 	settings: ChannelDeleteSettings = {},
@@ -228,7 +228,7 @@ function isBroadcastChannel(channel: {}): channel is BroadcastChannel {
  * @param useSandbox Whether to use the sandbox environment
  * @returns An array of broadcast channels
  */
-export async function readAllChannels(
+export async function readAllBroadcastChannels(
 	connector: ConnectorProtocol,
 	bundleId: string,
 	settings: ChannelReadSettings = {},

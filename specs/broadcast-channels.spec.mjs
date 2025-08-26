@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert";
-import { readAllChannels, createBroadcastChannel, deleteChannel } from "hapns/channels/broadcast";
+import {
+	readAllBroadcastChannels,
+	createBroadcastChannel,
+	deleteBroadcastChannel,
+} from "hapns/channels/broadcast";
 import * as mockUtils from "./mock/index.mjs";
 
 test("Broadcast Channels", async (t) => {
@@ -10,8 +14,7 @@ test("Broadcast Channels", async (t) => {
 			"com.example.app",
 			mockChannels,
 		);
-
-		const channels = await readAllChannels(mockConnector, "com.example.app");
+		const channels = await readAllBroadcastChannels(mockConnector, "com.example.app");
 
 		assert.strictEqual(channels.length, 3);
 		assert.deepStrictEqual(
@@ -28,7 +31,7 @@ test("Broadcast Channels", async (t) => {
 	await t.test("should handle empty channels list", async () => {
 		const mockConnector = mockUtils.broadcastChannels.mockReadAllChannels("com.example.app", []);
 
-		const channels = await readAllChannels(mockConnector, "com.example.app");
+		const channels = await readAllBroadcastChannels(mockConnector, "com.example.app");
 
 		assert.strictEqual(channels.length, 0);
 		assert.deepStrictEqual(channels, []);
@@ -89,7 +92,7 @@ test("Broadcast Channels", async (t) => {
 			"delete-channel-123",
 		);
 
-		const result = await deleteChannel(mockConnector, mockBroadcastChannel, {
+		const result = await deleteBroadcastChannel(mockConnector, mockBroadcastChannel, {
 			useSandbox: true,
 			apnsRequestId: "delete-request-123",
 		});
@@ -135,7 +138,7 @@ test("Broadcast Channels", async (t) => {
 		};
 
 		try {
-			await deleteChannel(mockConnector, mockBroadcastChannel, {
+			await deleteBroadcastChannel(mockConnector, mockBroadcastChannel, {
 				useSandbox: true,
 			});
 			assert.fail("Should have thrown an error");
@@ -156,17 +159,17 @@ test("Broadcast Channels", async (t) => {
 
 		// Test with invalid channel object
 		await assert.rejects(
-			() => deleteChannel(mockConnector, null, { useSandbox: true }),
+			() => deleteBroadcastChannel(mockConnector, null, { useSandbox: true }),
 			/INVALID_BROADCAST_CHANNEL_ERROR/,
 		);
 
 		await assert.rejects(
-			() => deleteChannel(mockConnector, {}, { useSandbox: true }),
+			() => deleteBroadcastChannel(mockConnector, {}, { useSandbox: true }),
 			/INVALID_BROADCAST_CHANNEL_ERROR/,
 		);
 
 		await assert.rejects(
-			() => deleteChannel(mockConnector, { channelId: "test" }, { useSandbox: true }),
+			() => deleteBroadcastChannel(mockConnector, { channelId: "test" }, { useSandbox: true }),
 			/INVALID_BROADCAST_CHANNEL_ERROR/,
 		);
 	});
@@ -182,7 +185,7 @@ test("Broadcast Channels", async (t) => {
 		for (const bundleId of bundleIds) {
 			const mockConnector = mockUtils.broadcastChannels.mockReadAllChannels(bundleId, []);
 
-			const channels = await readAllChannels(mockConnector, bundleId);
+			const channels = await readAllBroadcastChannels(mockConnector, bundleId);
 			assert.strictEqual(channels.length, 0);
 
 			const lastRequest = mockUtils.assertions.getLastRequest(mockConnector);
@@ -194,7 +197,7 @@ test("Broadcast Channels", async (t) => {
 		const mockConnector = mockUtils.networkErrors.timeout("/1/apps/com.example.app/all-channels");
 
 		await assert.rejects(
-			() => readAllChannels(mockConnector, "com.example.app"),
+			() => readAllBroadcastChannels(mockConnector, "com.example.app"),
 			/Network timeout/,
 		);
 	});
@@ -213,6 +216,9 @@ test("Broadcast Channels", async (t) => {
 		);
 
 		// Should throw an error when channels property is missing
-		await assert.rejects(() => readAllChannels(mockConnector, "com.example.app"), /TypeError/);
+		await assert.rejects(
+			() => readAllBroadcastChannels(mockConnector, "com.example.app"),
+			/TypeError/,
+		);
 	});
 });
