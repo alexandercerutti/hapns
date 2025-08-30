@@ -76,6 +76,18 @@ importers:
         specifier: workspace:*
         version: link:../..
 
+  examples/LiveActivityBroadcastChannelNotification-example:
+    dependencies:
+      '@hapns-internal/utils':
+        specifier: workspace:^
+        version: link:../utils
+      fastify:
+        specifier: ^5.4.0
+        version: 5.4.0
+      hapns:
+        specifier: workspace:*
+        version: link:../..
+
   examples/LiveActivityNotification-example:
     dependencies:
       fastify:

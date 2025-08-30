@@ -16,10 +16,6 @@ export function DeviceRegistrationPlugin(fastifyInstance) {
 
 	const emitEvent = fastifyInstance.getDecorator("emitEvent");
 
-	fastifyInstance.addHook("onClose", (_request, _reply, done) => {
-		done();
-	});
-
 	fastifyInstance.post(DEVICE_REGISTRATION_ENDPOINT, async (request, reply) => {
 		const { deviceId, ...deviceData } = request.body;
 
