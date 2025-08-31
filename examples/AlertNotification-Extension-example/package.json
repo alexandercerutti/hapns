@@ -1,5 +1,5 @@
 {
-	"name": "@hapns/alert-notification-extension-example",
+	"name": "@hapns/alert-notification-example",
 	"private": true,
 	"main": "index.js",
 	"scripts": {
@@ -7,6 +7,8 @@
 	},
 	"license": "ISC",
 	"dependencies": {
+		"@hapns-internal/utils": "workspace:^",
+		"fastify": "^5.4.0",
 		"hapns": "workspace:*"
 	},
 	"packageManager": "pnpm@10.11.0"
