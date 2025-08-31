@@ -364,15 +364,8 @@ function buildEmptyAlertNotificationBody(
 		return undefined;
 	}
 
-	const {
-		threadId,
-		category,
-		mutableContent,
-		filterCriteria,
-		interruptionLevel,
-		relevanceScore,
-		targetContentId,
-	} = payload;
+	const { threadId, category, filterCriteria, interruptionLevel, relevanceScore, targetContentId } =
+		payload;
 
 	return {
 		...appData,
@@ -380,7 +373,6 @@ function buildEmptyAlertNotificationBody(
 			alert: {},
 			category: category,
 			"thread-id": threadId,
-			"mutable-content": mutableContent,
 			"target-content-id": targetContentId,
 			"interruption-level": interruptionLevel,
 			"relevance-score": relevanceScore,
