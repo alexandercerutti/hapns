@@ -174,6 +174,7 @@ export type AlertNotificationBody = (
 			alert?: EmptyAlert;
 			badge?: never;
 			sound?: never;
+			mutableContent?: never;
 	  }
 	| {
 			/**
@@ -223,6 +224,21 @@ export type AlertNotificationBody = (
 			 * ```
 			 */
 			sound?: Sound;
+
+			/**
+			 * The notification service app extension flag. If the value is 1,
+			 * the system passes the notification to your notification service
+			 * app extension before delivery. Use your extension to modify the
+			 * notification’s content.
+			 *
+			 * @see https://developer.apple.com/documentation/usernotifications/modifying-content-in-newly-delivered-notifications
+			 *
+			 * From the same page:
+			 *
+			 * - "The payload must include the mutable-content key with a value of 1."
+			 * - "The payload must include an alert dictionary with title, subtitle, or body information."
+			 */
+			mutableContent?: boolean;
 	  }
 ) & {
 	// *************************************************************************** //
@@ -243,15 +259,6 @@ export type AlertNotificationBody = (
 	 * register at launch time. See [Declaring your actionable notification types](https://developer.apple.com/documentation/usernotifications/declaring-your-actionable-notification-types).
 	 */
 	category?: string;
-
-	/**
-	 * The notification service app extension flag. If the value is 1,
-	 * the system passes the notification to your notification service
-	 * app extension before delivery. Use your extension to modify the
-	 * notification’s content. See [Modifying content in newly delivered
-	 * notifications](https://developer.apple.com/documentation/usernotifications/modifying-content-in-newly-delivered-notifications).
-	 */
-	mutableContent?: boolean;
 
 	/**
 	 * The identifier of the window brought forward. The value of this
