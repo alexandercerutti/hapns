@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import { freeze } from "./notification.js";
 import type {
@@ -32,12 +33,15 @@ const TOPIC_SUFFIX = ".voip-ptt";
  * @param appBundleId The topic of the notification. It will be suffixed, if needed, with `.voip-ptt`.
  * @param data
  * @returns
+ *
+ * @see https://developer.apple.com/documentation/pushtotalk/creating-a-push-to-talk-app#Receive-audio
  */
 export function PushToTalkNotification(
 	appBundleId: string,
 	data: NotificationData,
 ): NotificationObject {
 	assertTopicProvided(appBundleId);
+	assertValidAppData(data.appData);
 
 	const { collapseID } = data;
 
@@ -47,7 +51,7 @@ export function PushToTalkNotification(
 
 	return freeze({
 		pushType: "pushtotalk",
-		supportedConnectors: Connector.Certificate | Connector.Token,
+		supportedConnectors: Connector.Certificate,
 		get topic() {
 			if (appBundleId.endsWith(TOPIC_SUFFIX)) {
 				return appBundleId;
