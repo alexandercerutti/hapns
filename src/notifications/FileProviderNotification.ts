@@ -1,12 +1,13 @@
 import { Connector } from "../connectors/connector.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
+import { assertValidPayload } from "../errors/assertions/payload-exists.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import { freeze } from "./notification.js";
 import type {
-	APSBody,
 	Notification,
 	NotificationBody,
 	NotificationHeaders,
+	ToDashed,
 } from "./notification.js";
 
 /**
@@ -17,10 +18,18 @@ import type {
 export interface NotificationCustomAppData {}
 
 type NotificationData = NotificationHeaders &
-	NotificationBody<Record<string, string>, NotificationCustomAppData>;
-type NotificationObject = Notification<APSBody<Record<string, string>>>;
+	NotificationBody<FileProviderNotificationBody, NotificationCustomAppData>;
+type NotificationObject = Notification<ToDashed<FileProviderNotificationBody>>;
 
 const TOPIC_SUFFIX = ".pushkit.fileprovider";
+
+interface FileProviderNotificationBody {
+	contentIdentifier:
+		| string
+		| "NSFileProviderRootContainerItemIdentifier"
+		| "NSFileProviderWorkingSetContainerItemIdentifier";
+	domain: string;
+}
 
 /**
  * Creates a notification about an update to a file provider extension.
@@ -28,6 +37,8 @@ const TOPIC_SUFFIX = ".pushkit.fileprovider";
  * @param appBundleId It will be suffixed, if needed, with `.pushkit.fileprovider`.
  * @param data
  * @returns
+ *
+ * @see https://developer.apple.com/documentation/FileProvider/using-push-notifications-to-signal-changes
  */
 export function FileProviderNotification(
 	appBundleId: string,
@@ -35,12 +46,14 @@ export function FileProviderNotification(
 ): NotificationObject {
 	assertTopicProvided(appBundleId);
 
-	const { expiration = 0, collapseID, priority = 10 } = data;
+	const { expiration = 0, collapseID, priority = 10, payload } = data;
 
 	assertExpirationValid(expiration);
+	assertValidPayload(payload);
 
 	const body: NotificationObject["body"] = {
-		aps: {},
+		"content-identifier": payload.contentIdentifier,
+		domain: payload.domain,
 	};
 
 	return freeze({

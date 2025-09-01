@@ -4,7 +4,7 @@ type ToDashedKey<T extends string> = T extends `${infer FirstLetter}${infer Rest
 		: `${Lowercase<FirstLetter>}${ToDashedKey<Rest>}`
 	: Lowercase<T>;
 
-type ToDashed<T extends object> = {
+export type ToDashed<T extends object> = {
 	[K in keyof T as K extends string ? ToDashedKey<K> : K]: T[K];
 };
 
