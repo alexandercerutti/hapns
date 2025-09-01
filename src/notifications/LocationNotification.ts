@@ -22,6 +22,8 @@ const TOPIC_SUFFIX = ".location-query";
  * @param appBundleId The topic of the notification. It will be suffixed, if needed, with `.location-query`.
  * @param data
  * @returns
+ *
+ * @see https://developer.apple.com/documentation/corelocation/creating-a-location-push-service-extension
  */
 export function LocationNotification(
 	appBundleId: string,
