@@ -1,4 +1,5 @@
 import { Connector } from "../connectors/connector.js";
+import { assertValidAppData } from "../errors/assertions/appdata-exists.js";
 import { assertExpirationValid } from "../errors/assertions/expiration-valid.js";
 import { assertTopicProvided } from "../errors/assertions/topic-provided.js";
 import { defineError } from "../errors/defineError.js";
@@ -46,9 +47,10 @@ const TOPIC_SUFFIX = ".voip";
 export function VoipNotification(appBundleId: string, data: NotificationData): NotificationObject {
 	assertTopicProvided(appBundleId);
 
-	const { expiration = 0, collapseID, priority = 10 } = data;
+	const { expiration = 0, collapseID, priority = 10, appData } = data;
 
 	assertExpirationVoipValid(expiration);
+	assertValidAppData(appData);
 
 	const body: NotificationObject["body"] = {
 		aps: {},
