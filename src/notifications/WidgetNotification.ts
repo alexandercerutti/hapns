@@ -16,14 +16,14 @@ import type {
  */
 export interface NotificationCustomAppData {}
 
-interface WidgetNotificationBody {
-	contentChanged: true;
-}
-
 type NotificationData = NotificationHeaders &
-	Omit<NotificationBody<WidgetNotificationBody, NotificationCustomAppData>, "priority" | "payload">;
+	Omit<NotificationBody<Record<string, string>, NotificationCustomAppData>, "payload">;
 
-type NotificationObject = Notification<APSBody<WidgetNotificationBody>>;
+type NotificationObject = Notification<
+	APSBody<{
+		contentChanged: 1;
+	}>
+>;
 
 const TOPIC_SUFFIX = ".push-type.widgets";
 
@@ -43,7 +43,7 @@ export function WidgetNotification(
 ): NotificationObject {
 	assertTopicProvided(appBundleId);
 
-	const { expiration = 0, collapseID, appData } = data;
+	const { expiration = 0, collapseID, appData, priority = 5 } = data;
 
 	assertValidAppData(appData);
 
@@ -66,7 +66,7 @@ export function WidgetNotification(
 		},
 		expiration,
 		collapseID,
-		priority: 5,
+		priority,
 		body,
 	});
 }
