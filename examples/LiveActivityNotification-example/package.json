@@ -3,6 +3,7 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
+		"run:setup": "pnpm install && pnpm -C ../.. build",
 		"run:printer": "node ./printer-actor/index.mjs",
 		"run:server": "node ./server/index.mjs"
 	},

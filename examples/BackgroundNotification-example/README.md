@@ -10,6 +10,6 @@ The server file contains the instructions to set up the example on the server si
 Run the following commands to run the server. This project uses [`pnpm`](https://pnpm.io/) to assume `hapns` comes from the same repository (workspace).
 
 ```sh
-$ pnpm install
+$ pnpm run:setup
 $ pnpm run:example
 ```

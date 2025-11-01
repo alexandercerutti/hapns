@@ -18,10 +18,10 @@ Once inputted, the server will start a live activity for each device.
 
 This project uses [`pnpm`](https://pnpm.io/) to assume `hapns` comes from the same repository (workspace).
 
-Install the dependencies by running:
+Install the dependencies and build `hapns` by running:
 
 ```sh
-$ pnpm install
+$ pnpm run:setup
 ```
 
 Then run the server with this command:

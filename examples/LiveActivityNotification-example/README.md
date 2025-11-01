@@ -16,10 +16,10 @@ The purpose is to emulate the connection of a physical 3D printer with an applic
 
 This project uses [`pnpm`](https://pnpm.io/) to assume `hapns` comes from the same repository (workspace).
 
-Install the dependencies by running:
+Install the dependencies and build `hapns` by running:
 
 ```sh
-$ pnpm install
+$ pnpm run:setup
 ```
 
 Open two terminals and run these two commands:

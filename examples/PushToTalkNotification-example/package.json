@@ -3,6 +3,7 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
+		"run:setup": "pnpm install && pnpm -C ../.. build",
 		"run:example": "node ./server.mjs"
 	},
 	"license": "ISC",

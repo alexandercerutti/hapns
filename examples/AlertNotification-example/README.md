@@ -13,6 +13,6 @@ More details are available as comments in the `server.mjs`.
 Run the following commands to run the server. This project uses [`pnpm`](https://pnpm.io/) to assume `hapns` comes from the same repository (workspace).
 
 ```sh
-$ pnpm install
+$ pnpm run:setup
 $ pnpm run:example
 ```
